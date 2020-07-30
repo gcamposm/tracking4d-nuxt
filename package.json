@@ -1,8 +1,8 @@
 {
   "name": "facer",
   "version": "1.0.0",
-  "description": "Facer - Realtime Face Recognition in the browser",
-  "author": "Goran Jovanov",
+  "description": "Tracking4D - SPACEWEARE",
+  "author": "José Maureira & Guillermo Campos",
   "private": true,
   "scripts": {
     "api": "cross-env NODE_ENV=development node api/start.js",

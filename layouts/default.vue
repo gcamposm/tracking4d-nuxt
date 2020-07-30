@@ -36,8 +36,8 @@
     </v-content>
     <v-footer :fixed="fixed" app>
       <v-flex class="text-xs-right">
-        <a href="http://gjovanov.com/" style="color: white">
-          <span>gjovanov - &copy; 2019</span>
+        <a href="http://spaceweare.com/" style="color: white">
+          <span>SPACEWEARE - &copy; 2020</span>
         </a>
         &nbsp;
       </v-flex>
@@ -53,15 +53,18 @@ export default {
       drawer: true,
       fixed: false,
       items: [
-        { icon: 'home', title: 'Welcome', to: '/' },
-        { icon: 'people', title: 'Users', to: '/users' },
-        { icon: 'wallpaper', title: 'Train', to: '/train' },
-        { icon: 'camera', title: 'Recognize', to: '/recognize' }
+        { icon: 'bar_chart', title: 'Dashboard', to: '/' },
+        { icon: 'people', title: 'Clientes', to: '/users' },
+        { icon: 'business', title: 'Empresas', to: '/' },
+        { icon: 'flip_camera_android', title: 'Entrenamiento', to: '/train' },
+        { icon: 'menu_book', title: 'Reportes', to: '/' },
+        { icon: 'camera_front', title: 'Reconocimiento Facial', to: '/recognize' },
+        { icon: 'local_fire_department', title: 'Detección Temperatura', to: '/' },
       ],
-      miniVariant: true,
+      miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'face&reg; - Realtime Face Recognition'
+      title: 'Tracking4D - SPACEWEARE &reg'
     }
   },
   computed: {
