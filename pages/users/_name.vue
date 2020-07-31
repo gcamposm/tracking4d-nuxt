@@ -172,7 +172,10 @@ export default {
       const formData = new FormData()
       formData.append('user', self.user.name)
       Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append(fieldName, fileList[x], this.user.name)
+        formData.append(fieldName, fileList[x], 'jpg')
+        console.log(fieldName)
+        console.log(fileList[x])
+        console.log(this.user.name)
       })
       return self.$store.dispatch('user/upload', formData)
         .then((result) => {
