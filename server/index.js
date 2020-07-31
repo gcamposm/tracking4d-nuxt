@@ -12,7 +12,7 @@ let config = require('../nuxt.config.js')
 config.dev = !(process.env.NODE_ENV === 'production')
 
 const host = config.env.HOST || 'localhost'
-const port = config.env.PORT || 3000
+const port = config.env.PORT || 3001
 
 app.set('port', port)
 
