@@ -44,6 +44,37 @@
           value="tab-1"
         >
           <v-card flat>
+            <button @click="uploadFiles()">Upload FILES</button>
+              <v-file-input
+                v-model="files"
+                color="deep-purple accent-4"
+                counter
+                label="File input"
+                multiple
+                placeholder="Select your files"
+                prepend-icon="mdi-paperclip"
+                outlined
+                :show-size="1000"
+              >
+                <template v-slot:selection="{ index, text }">
+                  <v-chip
+                    v-if="index < 2"
+                    color="deep-purple accent-4"
+                    dark
+                    label
+                    small
+                  >
+                    {{ text }}
+                  </v-chip>
+
+                  <span
+                    v-else-if="index === 2"
+                    class="overline grey--text text--darken-3 mx-2"
+                  >
+                    +{{ files.length - 2 }} File(s)
+                  </span>
+                </template>
+              </v-file-input>
             <form method="POST" class="form-documents" enctype="multipart/form-data">
               Upload photos
               <input id="fileUpload" :multiple="multiple" @change="filesChange($event.target.name, $event.target.files)" type="file" name="fileUpload">
@@ -101,6 +132,7 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   data () {
     return {
@@ -108,7 +140,8 @@ export default {
       fab: true,
       tab: 'tab-1',
       multiple: true,
-      selectedPhoto: null
+      selectedPhoto: null,
+      files: []
     }
   },
   computed: {
@@ -139,7 +172,6 @@ export default {
       return store.dispatch('user/getAll')
     }
   },
-
   beforeDestroy () {
     this.$store.dispatch('camera/stopCamera')
   },
@@ -182,6 +214,25 @@ export default {
           if (document) {
             document.getElementById('fileUpload').value = ''
           }
+        })
+    },
+    async uploadFiles () {
+      let formData = new FormData()
+      console.log(this.files)
+      this.files.forEach(element => {
+        formData.append('file', element)
+      });
+      await axios.post(`http://localhost:8080/images/uploadImages/Atanas`, formData)
+        .then(response => {
+          const result = response.data
+          if (result.length !== 0) {
+            console.log('Images loaded')
+          } else {
+            console.log('There is a problem with charge the images.')
+          }
+        })
+        .catch(e => {
+          console.log('getProduct', e, e.response)
         })
     },
 
