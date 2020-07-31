@@ -170,12 +170,18 @@ export default {
       }
     }
   },
-
-  fetch ({ store }) {
-    if (!store.getters['user/isFetched']) {
-      return store.dispatch('user/getAll')
-    }
+  async fetch ({ store }) {
+    const self = this
+    await store.dispatch('user/getAll')
+      .then((users) => {
+        self.step += users.length
+      })
   },
+  // fetch ({ store }) {
+  //   if (!store.getters['user/isFetched']) {
+  //     return store.dispatch('user/getAll')
+  //   }
+  // },
   beforeDestroy () {
     this.$store.dispatch('camera/stopCamera')
   },
@@ -227,14 +233,12 @@ export default {
         formData.append('file', element)
       });
       await axios.post(`http://104.131.15.22:8080/backend-tracking4d/images/uploadImages/${this.user.name}`, formData)
+      //await axios.post(`http://localhost:8080/images/uploadImages/${this.user.name}`, formData)
         .then(response => {
           const result = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
-            this.getUsers()
-              .then((users) => {
-                self.step += users.length
-              })
+            this.fetch
           } else {
             console.log('There is a problem with charge the images.')
           }
@@ -242,13 +246,6 @@ export default {
         .catch(e => {
           console.log('getProduct', e, e.response)
         })
-    },
-    async getUsers ({ store }) {
-    const self = this
-    await store.dispatch('user/getAll')
-      .then((users) => {
-        self.step += users.length
-      })
     },
     async takePhoto () {
       const video = document.getElementById('live-video')
