@@ -243,8 +243,12 @@ export default {
           console.log('getProduct', e, e.response)
         })
     },
-    async getUsers(){
-      await store.dispatch('user/getAll')
+    async getUsers ({ store }) {
+    const self = this
+    await store.dispatch('user/getAll')
+      .then((users) => {
+        self.step += users.length
+      })
     },
     async takePhoto () {
       const video = document.getElementById('live-video')
