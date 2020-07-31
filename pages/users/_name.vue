@@ -1,20 +1,22 @@
 <template>
   <v-layout row wrap align-center>
     <v-flex xs12>
-      <h1>Photos: {{ user.name }}</h1>
+      <center>
+        <h1>Imágenes: {{ user.name }}</h1>
+      </center>
       <v-dialog v-model="dialog" persistent max-width="320">
         <v-card>
           <v-card-title class="headline">
-            Warning!
+            Advertencia!
           </v-card-title>
-          <v-card-text>Are you sure you want to delete this photo</v-card-text>
+          <v-card-text>¿Está seguro que desea eliminar esta imágen?</v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="hideDialog()" color="green darken-1" flat>
-              Disagree
+            <v-btn @click="hideDialog()" color="blue" flat>
+              Cancelar
             </v-btn>
-            <v-btn @click="deleteUpload()" color="green darken-1" flat>
-              Agree
+            <v-btn @click="deleteUpload()" color="blue" flat>
+              Confirmar
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -29,14 +31,13 @@
         icons-and-text
       >
         <v-tabs-slider color="yellow" />
-
         <v-tab href="#tab-1">
-          Upload
+          Subir Fotos
           <v-icon>cloud_upload</v-icon>
         </v-tab>
 
         <v-tab href="#tab-2">
-          Camera
+          Camara
           <v-icon>camera</v-icon>
         </v-tab>
 
@@ -44,14 +45,13 @@
           value="tab-1"
         >
           <v-card flat>
-            <button @click="uploadFiles()">Upload FILES</button>
+            <button @click="uploadFiles()">Cargar Archivos</button>
               <v-file-input
                 v-model="files"
                 color="deep-purple accent-4"
                 counter
-                label="File input"
                 multiple
-                placeholder="Select your files"
+                placeholder="Cargue aquí sus archivos"
                 prepend-icon="mdi-paperclip"
                 outlined
                 :show-size="1000"
@@ -76,9 +76,9 @@
                 </template>
               </v-file-input>
             <form method="POST" class="form-documents" enctype="multipart/form-data">
-              Upload photos
               <input id="fileUpload" :multiple="multiple" @change="filesChange($event.target.name, $event.target.files)" type="file" name="fileUpload">
             </form>
+            <br><br>
           </v-card>
         </v-tab-item>
 
@@ -86,7 +86,7 @@
           value="tab-2"
         >
           <v-card flat>
-            <v-btn v-if="isCameraStarted" @click="takePhoto" color="secondary">
+            <v-btn v-if="isCameraStarted" @click="takePhoto" color="blue">
               Take photo
             </v-btn>
             <v-layout row wrap>
@@ -120,7 +120,7 @@
           @click="showDialog(photo)"
           fab
           small
-          color="primary"
+          color="blue"
           dark
         >
           <v-icon>close</v-icon>
@@ -208,8 +208,6 @@ export default {
       }
     },
     filesChange (fieldName, fileList) {
-      console.log(fieldName)
-      console.log(fileList)
       const self = this
       const formData = new FormData()
       formData.append('user', self.user.name)

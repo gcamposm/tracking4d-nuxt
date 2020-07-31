@@ -3,9 +3,11 @@
             wrap
   >
     <v-flex xs6>
-      <v-btn @click="train()" color="primary">
-        Train
-      </v-btn>
+      <center>
+        <v-btn @click="train()" color="primary">
+          ENTRENAR REDES NEURONALES
+        </v-btn>
+      </center>
     </v-flex>
     <v-flex xs6>
       <v-progress-circular
@@ -14,9 +16,9 @@
         :size="100"
         :width="15"
         :value="progress"
-        color="teal"
+        color="blue"
       >
-        Training...
+        Entrenando
       </v-progress-circular>
     </v-flex>
     <v-flex v-for="user in users" :key="user.name" xs12>
@@ -32,14 +34,17 @@
         <v-layout row
                   wrap
         >
-          <v-flex v-for="(photo, index) in user.photos"
-                  :key="photo"
-                  xs12 md6 lg4
-          >
-            <v-card flat tile class="d-flex">
-              <img :id="user.name + index" :src="photo">
-            </v-card>
-          </v-flex>
+            <v-flex v-for="(photo, index) in user.photos"
+                    :key="photo"
+                    xs12 md6 lg4
+            >
+              <v-card flat tile class="d-flex">
+                <center>
+                  <img :id="user.name + index" :src="photo">
+                </center> 
+              </v-card>
+            </v-flex>
+          
         </v-layout>
       </v-card>
     </v-flex>

@@ -25,17 +25,6 @@
         height="100%"
       >
       <v-container fluid>
-        <v-progress-circular
-          v-if="loading"
-          :size="200"
-          :width="20"
-          color="red"
-          indeterminate
-        >
-          Cargando modelos neuronales
-          <br>
-          Espere porfavor...
-        </v-progress-circular>
         <nuxt />
       </v-container>
       </v-img>

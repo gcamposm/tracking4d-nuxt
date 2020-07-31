@@ -7,7 +7,7 @@
             <v-text-field
               v-model="name"
               :rules="nameRules"
-              label="Your full name"
+              label="Ingrese su nombre"
               required
             />
             <v-spacer />
@@ -16,23 +16,23 @@
               @click="register()"
               color="primary"
             >
-              Register new!
+              Registrar nuevo usuario
             </v-btn>
           </v-form>
         </v-card-actions>
         <v-dialog v-model="dialog" persistent max-width="320">
           <v-card>
             <v-card-title class="headline">
-              Warning!
+              Advertencia!
             </v-card-title>
-            <v-card-text>Are you sure you want to delete this user</v-card-text>
+            <v-card-text>¿Está seguro de eliminar este usuario?</v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn @click="hideDialog()" color="green darken-1" flat>
-                Disagree
+              <v-btn @click="hideDialog()" color="blue" flat>
+                Cancelar
               </v-btn>
-              <v-btn @click="deleteUpload()" color="green darken-1" flat>
-                Agree
+              <v-btn @click="deleteUpload()" color="blue" flat>
+                Confirmar
               </v-btn>
             </v-card-actions>
           </v-card>
