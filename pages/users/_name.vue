@@ -232,10 +232,10 @@ export default {
           const result = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
-            this.getUsers()
-              .then((users) => {
-                self.step += users.length
-              })
+            // this.getUsers()
+            //   .then((users) => {
+            //     self.step += users.length
+            //   })
           } else {
             console.log('There is a problem with charge the images.')
           }
@@ -246,7 +246,7 @@ export default {
     },
     async getUsers ({ store }) {
     const self = this
-    await store.dispatch('user/getAll')
+    await this.$store.dispatch('user/getAll')
       .then((users) => {
         self.step += users.length
       })

@@ -170,3 +170,9 @@ export default {
   }
 }
 </script>
+<style>
+img{
+    width:100%;
+    max-width:200px;
+}
+</style>
