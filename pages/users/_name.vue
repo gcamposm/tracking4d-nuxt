@@ -46,7 +46,7 @@
           <v-card flat>
             <form method="POST" class="form-documents" enctype="multipart/form-data">
               Upload photos
-              <input id="fileUpload" :multiple="multiple" @change="filesChange($user.name, $event.target.files)" type="file" name="fileUpload">
+              <input id="fileUpload" :multiple="multiple" @change="filesChange($event.target.name, $event.target.files)" type="file" name="fileUpload">
             </form>
           </v-card>
         </v-tab-item>
@@ -166,6 +166,8 @@ export default {
       }
     },
     filesChange (fieldName, fileList) {
+      console.log(fieldName)
+      console.log(fileList)
       const self = this
       const formData = new FormData()
       formData.append('user', self.user.name)
