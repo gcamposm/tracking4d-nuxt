@@ -5,9 +5,15 @@
         <v-card-actions>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
-              v-model="name"
+              v-model="customer.firstName"
               :rules="nameRules"
               label="Ingrese su nombre"
+              required
+            />
+            <v-text-field
+              v-model="customer.rut"
+              :rules="nameRules"
+              label="Ingrese su rut"
               required
             />
             <v-spacer />
@@ -90,13 +96,17 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   data () {
     return {
       dialog: false,
       selectedUser: null,
       valid: true,
-      name: null,
+      customer: {
+        firstName: null,
+        rut: null
+      },
       nameRules: [
         v => !!v || 'Full name is required',
         v => (v && v.length > 2) || 'Name must be more than 2 characters'
@@ -107,7 +117,10 @@ export default {
   computed: {
     users () {
       return this.$store.state.user.list
-    }
+    },
+    serverURL () {
+      return this.$store.state.general.serverURL
+    },
   },
   fetch ({ store }) {
     return store.dispatch('user/getAll')
@@ -116,12 +129,24 @@ export default {
   methods: {
     register () {
       const self = this
+      this.createCustomer()
       if (this.$refs.form.validate()) {
-        return this.$store.dispatch('user/register', this.name)
+        return this.$store.dispatch('user/register', this.customer.rut)
           .then(() => {
-            return self.$router.push({ path: `/users/${self.name}` })
+            return self.$router.push({ path: `/users/${self.customer.rut}` })
           })
       }
+    },
+
+    async createCustomer(){
+      await axios
+      .post(`${this.serverURL}/customers/create`, this.customer)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(e => {
+          console.log('error'+e)
+        })
     },
 
     showDialog (name) {

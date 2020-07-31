@@ -65,6 +65,9 @@ export default {
   computed: {
     users () {
       return this.$store.state.user.list
+    },
+    serverURL () {
+      return this.$store.state.general.serverURL
     }
   },
 
@@ -147,8 +150,7 @@ export default {
     },
     async saveDescriptor (formData) {
       await axios
-        .post('http://104.131.15.22:8080/backend-tracking4d/images/create/withData', formData)
-        //.post('http://localhost:8080/images/create/withData', formData)
+        .post(`${this.serverURL}/images/create/withData`, formData)
         .then(response => {
           console.log(response.data)
         })
@@ -168,3 +170,9 @@ export default {
   }
 }
 </script>
+<style>
+img{
+    width:100%;
+    max-width:200px;
+}
+</style>
