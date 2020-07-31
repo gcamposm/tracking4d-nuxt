@@ -101,6 +101,8 @@ export default {
           descriptors
         })
       }))
+      this.faces = faces
+      //this.loadFaces()
       await self.$store.dispatch('face/save', faces)
         .then(() => {
           self.increaseProgress()
@@ -109,6 +111,30 @@ export default {
         .catch((e) => {
           self.isProgressActive = false
           console.error(e)
+        })
+    },
+    async loadFaces (){
+      console.log(this.faces)
+      this.faces.forEach(face => {
+        this.username = face.user
+        console.log(face)
+        face.descriptors.forEach(element => {
+          let formData = new FormData()
+          formData.append('user', this.username)
+          formData.append('descriptor', element.descriptor)
+          formData.append('path', element.path)
+          this.saveDescriptor(formData)
+        });
+      });
+    },
+    async saveDescriptor (formData) {
+      await axios
+        .post('http://localhost:8080/images/create/withData', formData)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(e => {
+          console.log('error'+e)
         })
     },
     increaseProgress () {
