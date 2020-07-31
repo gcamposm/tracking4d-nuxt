@@ -5,7 +5,7 @@
         <v-card-actions>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
-              v-model="customer.name"
+              v-model="customer.firstName"
               :rules="nameRules"
               label="Ingrese su nombre"
               required
@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   data () {
     return {
@@ -103,7 +104,7 @@ export default {
       selectedUser: null,
       valid: true,
       customer: {
-        name: null,
+        firstName: null,
         rut: null
       },
       nameRules: [
@@ -116,7 +117,10 @@ export default {
   computed: {
     users () {
       return this.$store.state.user.list
-    }
+    },
+    serverURL () {
+      return this.$store.state.general.serverURL
+    },
   },
   fetch ({ store }) {
     return store.dispatch('user/getAll')
@@ -125,12 +129,24 @@ export default {
   methods: {
     register () {
       const self = this
+      this.createCustomer()
       if (this.$refs.form.validate()) {
         return this.$store.dispatch('user/register', this.customer.rut)
           .then(() => {
             return self.$router.push({ path: `/users/${self.customer.rut}` })
           })
       }
+    },
+
+    async createCustomer(){
+      await axios
+      .post(`${this.serverURL}/customers/create`, this.customer)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(e => {
+          console.log('error'+e)
+        })
     },
 
     showDialog (name) {

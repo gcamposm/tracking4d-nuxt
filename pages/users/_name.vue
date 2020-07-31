@@ -153,6 +153,9 @@ export default {
     users () {
       return this.$store.state.user.list
     },
+    serverURL () {
+      return this.$store.state.general.serverURL
+    },
     isCameraStarted () {
       return this.$store.getters['camera/isCameraStarted']
     }
@@ -224,7 +227,7 @@ export default {
       this.files.forEach(element => {
         formData.append('file', element)
       });
-      await axios.post(`http://104.131.15.22:8080/backend-tracking4d/images/uploadImages/${this.user.name}`, formData)
+      await axios.post(`${this.serverURL}/images/uploadImages/${this.user.name}`, formData)
         .then(response => {
           const result = response.data
           if (result.length !== 0) {
