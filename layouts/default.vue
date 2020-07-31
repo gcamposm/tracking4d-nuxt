@@ -19,6 +19,11 @@
       <v-toolbar-title v-html="title" />
     </v-app-bar>
     <v-content>
+      <v-img
+        :src="image"
+        gradient="to top right, rgb(5, 5, 251, .1),rgba(240, 189, 36, .35)"
+        height="100%"
+      >
       <v-container fluid>
         <v-progress-circular
           v-if="loading"
@@ -27,12 +32,13 @@
           color="red"
           indeterminate
         >
-          Loading 7MB models.
+          Cargando modelos neuronales
           <br>
-          Please be patient...
+          Espere porfavor...
         </v-progress-circular>
         <nuxt />
       </v-container>
+      </v-img>
     </v-content>
     <v-footer :fixed="fixed" app>
       <v-flex class="text-xs-right">
@@ -49,6 +55,8 @@
 export default {
   data () {
     return {
+      image: require('@/assets/img/background.jpg'),
+      sidebarBackgroundColor: 'rgba(27, 27, 27, 0.74)',
       clipped: false,
       drawer: true,
       fixed: false,
