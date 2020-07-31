@@ -166,8 +166,6 @@ export default {
       }
     },
     filesChange (fieldName, fileList) {
-      console.log(fieldName)
-      console.log(fileList)
       const self = this
       const formData = new FormData()
       formData.append('user', self.user.name)
