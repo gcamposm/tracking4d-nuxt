@@ -1,5 +1,5 @@
 set -ex
 # SET THE FOLLOWING VARIABLES
-USERNAME=gjovanov
-IMAGE=facer
+USERNAME=gcamposg
+IMAGE=tracking4d-nuxt
 docker build -t $USERNAME/$IMAGE:latest .

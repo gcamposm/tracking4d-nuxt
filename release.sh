@@ -1,7 +1,7 @@
 set -ex
 # SET THE FOLLOWING VARIABLES
-USERNAME=gjovanov
-IMAGE=facer
+USERNAME=gcamposg
+IMAGE=tracking4d-nuxt
 
 # ensure we're up to date
 git pull

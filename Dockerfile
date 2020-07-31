@@ -8,7 +8,7 @@ ADD VERSION .
 ENV NODE_ENV production
 ENV HOST 0.0.0.0
 ENV PORT 3000
-ENV API_URL https://facer.xplorify.net
+ENV API_URL https://camsa.tk
 
 # Install packages & git clone source code and build the application
 RUN apk add --update --no-cache --virtual .build-deps \
@@ -17,8 +17,8 @@ RUN apk add --update --no-cache --virtual .build-deps \
   --repository http://nl.alpinelinux.org/alpine/edge/testing/ \
   --repository http://nl.alpinelinux.org/alpine/edge/main && \
   cd / && \
-  git clone https://github.com/gjovanov/facer.git && \
-  cd /facer && \
+  git clone https://github.com/gcamposg/tracking4d-nuxt.git && \
+  cd /tracking4d-nuxt && \
   npm i pm2 -g && \
   npm i --production && \
   npm run build && \
@@ -26,8 +26,8 @@ RUN apk add --update --no-cache --virtual .build-deps \
   rm -rf /var/cache/apk/*
 
 # Volumes
-VOLUME /facer/data
-WORKDIR /facer
+VOLUME /tracking4d-nuxt/data
+WORKDIR /tracking4d-nuxt
 
 EXPOSE 3000
 
