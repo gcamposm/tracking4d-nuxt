@@ -63,9 +63,6 @@ export const actions = {
   },
   async upload ({ commit }, upload) {
     const data = await this.$axios.$post('/api/user/upload', upload)
-    .then(response => {
-      console.log(response);
-    })
     commit('addPhotos', {
       user: upload.get('user'),
       photos: data
