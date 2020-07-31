@@ -166,13 +166,13 @@ export default {
       }
     },
     filesChange (fieldName, fileList) {
+      console.log(fieldName)
+      console.log(fileList)
       const self = this
       const formData = new FormData()
       formData.append('user', self.user.name)
       Array.from(Array(fileList.length).keys()).map((x) => {
-        console.log(fileList[x])
-        console.log(fileList[x].name)
-        formData.append(fieldName, fileList[x], fileList[x].name)
+        formData.append(fieldName, fileList[x], this.user.name)
       })
       return self.$store.dispatch('user/upload', formData)
         .then((result) => {

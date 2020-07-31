@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import axios from "axios"
+
 export default {
   data () {
     return {
@@ -102,7 +102,7 @@ export default {
         })
       }))
       this.faces = faces
-      this.loadFaces()
+      //this.loadFaces()
       await self.$store.dispatch('face/save', faces)
         .then(() => {
           self.increaseProgress()
@@ -117,30 +117,23 @@ export default {
       console.log(this.faces)
       this.faces.forEach(face => {
         this.username = face.user
+        console.log(face)
         face.descriptors.forEach(element => {
           let formData = new FormData()
           formData.append('user', this.username)
           formData.append('descriptor', element.descriptor)
           formData.append('path', element.path)
-          this.saveDescriptorAwait(formData, element.descriptor,element.path)
+          this.saveDescriptor(formData)
         });
       });
     },
-    async saveDescriptorAwait(formData, descriptor, path){
-      await this.saveDescriptor (formData, descriptor, path)
-    },
-    async saveDescriptor (formData, descriptor, path) {
+    async saveDescriptor (formData) {
       await axios
         .post('http://localhost:8080/images/create/withData', formData)
         .then(response => {
-          console.log(descriptor)
-          console.log(path)
           console.log(response.data)
         })
         .catch(e => {
-          console.log('fallo el form form data')
-          console.log(descriptor)
-          console.log(path)
           console.log('error'+e)
         })
     },
