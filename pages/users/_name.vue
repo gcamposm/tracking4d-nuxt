@@ -226,7 +226,7 @@ export default {
       this.files.forEach(element => {
         formData.append('file', element)
       });
-      await axios.post(`http://104.131.15.22:8080/backend-tracking4d/images/uploadImages/Atanas`, formData)
+      await axios.post(`http://104.131.15.22:8080/backend-tracking4d/images/uploadImages/${this.user.name}`, formData)
         .then(response => {
           const result = response.data
           if (result.length !== 0) {
