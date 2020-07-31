@@ -136,6 +136,7 @@ import axios from "axios"
 export default {
   data () {
     return {
+      step: 1,
       dialog: false,
       fab: true,
       tab: 'tab-1',
@@ -148,6 +149,9 @@ export default {
     user () {
       const userByName = this.$store.getters['user/userByName']
       return userByName(this.$route.params.name)
+    },
+    users () {
+      return this.$store.state.user.list
     },
     isCameraStarted () {
       return this.$store.getters['camera/isCameraStarted']
@@ -227,6 +231,10 @@ export default {
           const result = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
+            this.getUsers()
+              .then((users) => {
+                self.step += users.length
+              })
           } else {
             console.log('There is a problem with charge the images.')
           }
@@ -235,7 +243,9 @@ export default {
           console.log('getProduct', e, e.response)
         })
     },
-
+    async getUsers(){
+      await store.dispatch('user/getAll')
+    },
     async takePhoto () {
       const video = document.getElementById('live-video')
       const canvas = document.getElementById('live-canvas')
