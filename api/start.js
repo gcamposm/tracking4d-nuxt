@@ -5,7 +5,7 @@ let config = require('../nuxt.config.js')
 config.dev = !(process.env.NODE_ENV === 'production')
 
 const host = config.env.HOST || 'localhost'
-const port = config.env.PORT_API || 3001
+const port = config.env.PORT_API || 3000
 
 // Listen the server
 api.listen(port, host)
