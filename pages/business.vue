@@ -2,7 +2,6 @@
   <div id="feature" class="mt-5">
     <v-container>
       <v-card
-        :dark="nightMode"
       >
         <v-img
         :src="image"

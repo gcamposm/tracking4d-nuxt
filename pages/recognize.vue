@@ -4,47 +4,45 @@
             justify-center
             wrap
   >
-    <v-flex>
-      <h1>Recognize</h1>
-    </v-flex>
+  <v-container fluid>
+    <center>
+      <v-flex>
+        <h1>Reconocimiento Facial</h1>
+      </v-flex>
+    </center>
     <v-flex xs12>
-      <v-progress-circular
-        v-if="isProgressActive"
-        :rotate="360"
-        :size="100"
-        :width="15"
-        :value="progress"
-        color="teal"
-      >
-        Loading...
-      </v-progress-circular>
+      <center>
+        <v-progress-circular
+          v-if="isProgressActive"
+          :rotate="360"
+          :size="100"
+          :width="15"
+          :value="progress"
+          color="blue"
+        >
+          Cargando
+        </v-progress-circular>
+      </center>
     </v-flex>
     <v-flex v-if="!isProgressActive" xs12>
       <v-card>
-        <p>
-          <span>
-            Make some facial expressions that demonstrate emotions like
-            <v-icon>sentiment_satisfied_alt</v-icon>
-            <v-icon>sentiment_very_dissatisfied</v-icon>
-          </span>
-        </p>
         <v-card-actions class="justify-center">
           <v-btn-toggle v-model="withOptions" multiple>
             <v-btn>
               <v-icon>check_box_outline_blank</v-icon>
-              <span>Detection</span>
+              <span>Detección Simple</span>
             </v-btn>
             <v-btn>
               <v-icon>face</v-icon>
-              <span>Landmarks</span>
+              <span>Puntos Faciales</span>
             </v-btn>
             <v-btn>
               <v-icon>how_to_reg</v-icon>
-              <span>Recognition</span>
+              <span>Reconocimiento</span>
             </v-btn>
             <v-btn>
               <v-icon>insert_emoticon</v-icon>
-              <span>Emotion</span>
+              <span>Emociones</span>
             </v-btn>
           </v-btn-toggle>
         </v-card-actions>
@@ -52,40 +50,44 @@
                   :max="60"
                   :min="1"
                   :step="1"
-                  label="Desired FPS"
+                  label="FPS"
                   prepend-icon="local_movies"
                   thumb-label="always"
                   ticks
         />
         <p>
-          <v-chip label color="orange" text-color="white">
+          <v-chip label color="blue" text-color="white">
             <v-icon left>
               local_movies
-            </v-icon> Real FPS: {{ realFps }}
+            </v-icon> FPS: {{ realFps }}
           </v-chip>
-          <v-chip label color="orange" text-color="white">
+          <v-chip label color="blue" text-color="white">
             <v-icon left>
               timer
-            </v-icon> Duration: {{ duration }} ms
+            </v-icon> Duración: {{ duration }} ms
           </v-chip>
         </p>
       </v-card>
     </v-flex>
-    <v-flex xs12 md6>
+    <v-flex xs12 md12>
       <video
         id="live-video"
-        width="320"
-        height="247"
+        width="1000"
+        height="580"
         autoplay
+        hidden
       />
     </v-flex>
-    <v-flex xs12 md6>
-      <canvas
-        id="live-canvas"
-        width="320"
-        height="247"
-      />
+    <v-flex xs12 md12>
+      <center>
+        <canvas
+          id="live-canvas"
+          width="1000"
+          height="580"
+        />
+      </center>
     </v-flex>
+  </v-container>
   </v-layout>
 </template>
 
@@ -146,7 +148,7 @@ export default {
       }
       self.interval = setInterval(async () => {
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 320, 247)
+        canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,

@@ -25,17 +25,6 @@
         height="100%"
       >
       <v-container fluid>
-        <v-progress-circular
-          v-if="loading"
-          :size="200"
-          :width="20"
-          color="red"
-          indeterminate
-        >
-          Cargando modelos neuronales
-          <br>
-          Espere porfavor...
-        </v-progress-circular>
         <nuxt />
       </v-container>
       </v-img>
@@ -61,7 +50,7 @@ export default {
       drawer: true,
       fixed: false,
       items: [
-        { icon: 'bar_chart', title: 'Dashboard', to: '/dashboard/index' },
+        { icon: 'bar_chart', title: 'Dashboard', to: '/dashboard' },
         { icon: 'people', title: 'Clientes', to: '/users' },
         { icon: 'business', title: 'Empresas', to: '/business' },
         { icon: 'flip_camera_android', title: 'Entrenamiento', to: '/train' },
