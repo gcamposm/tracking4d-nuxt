@@ -44,6 +44,37 @@
           value="tab-1"
         >
           <v-card flat>
+            <button @click="uploadFiles()">Upload FILES</button>
+              <v-file-input
+                v-model="files"
+                color="deep-purple accent-4"
+                counter
+                label="File input"
+                multiple
+                placeholder="Select your files"
+                prepend-icon="mdi-paperclip"
+                outlined
+                :show-size="1000"
+              >
+                <template v-slot:selection="{ index, text }">
+                  <v-chip
+                    v-if="index < 2"
+                    color="deep-purple accent-4"
+                    dark
+                    label
+                    small
+                  >
+                    {{ text }}
+                  </v-chip>
+
+                  <span
+                    v-else-if="index === 2"
+                    class="overline grey--text text--darken-3 mx-2"
+                  >
+                    +{{ files.length - 2 }} File(s)
+                  </span>
+                </template>
+              </v-file-input>
             <form method="POST" class="form-documents" enctype="multipart/form-data">
               Upload photos
               <input id="fileUpload" :multiple="multiple" @change="filesChange($event.target.name, $event.target.files)" type="file" name="fileUpload">
@@ -101,20 +132,26 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   data () {
     return {
+      step: 1,
       dialog: false,
       fab: true,
       tab: 'tab-1',
       multiple: true,
-      selectedPhoto: null
+      selectedPhoto: null,
+      files: []
     }
   },
   computed: {
     user () {
       const userByName = this.$store.getters['user/userByName']
       return userByName(this.$route.params.name)
+    },
+    users () {
+      return this.$store.state.user.list
     },
     isCameraStarted () {
       return this.$store.getters['camera/isCameraStarted']
@@ -139,7 +176,6 @@ export default {
       return store.dispatch('user/getAll')
     }
   },
-
   beforeDestroy () {
     this.$store.dispatch('camera/stopCamera')
   },
@@ -170,7 +206,10 @@ export default {
       const formData = new FormData()
       formData.append('user', self.user.name)
       Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append(fieldName, fileList[x], fileList[x].name)
+        formData.append(fieldName, fileList[x], 'jpg')
+        console.log(fieldName)
+        console.log(fileList[x])
+        console.log(this.user.name)
       })
       return self.$store.dispatch('user/upload', formData)
         .then((result) => {
@@ -179,7 +218,36 @@ export default {
           }
         })
     },
-
+    async uploadFiles () {
+      let formData = new FormData()
+      console.log(this.files)
+      this.files.forEach(element => {
+        formData.append('file', element)
+      });
+      await axios.post(`http://104.131.15.22:8080/backend-tracking4d/images/uploadImages/${this.user.name}`, formData)
+        .then(response => {
+          const result = response.data
+          if (result.length !== 0) {
+            console.log('Images loaded')
+            this.getUsers()
+              .then((users) => {
+                self.step += users.length
+              })
+          } else {
+            console.log('There is a problem with charge the images.')
+          }
+        })
+        .catch(e => {
+          console.log('getProduct', e, e.response)
+        })
+    },
+    async getUsers ({ store }) {
+    const self = this
+    await store.dispatch('user/getAll')
+      .then((users) => {
+        self.step += users.length
+      })
+    },
     async takePhoto () {
       const video = document.getElementById('live-video')
       const canvas = document.getElementById('live-canvas')

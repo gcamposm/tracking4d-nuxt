@@ -62,7 +62,9 @@ export const actions = {
     commit('removeUser', name)
   },
   async upload ({ commit }, upload) {
+    console.log(upload);
     const data = await this.$axios.$post('/api/user/upload', upload)
+    console.log(data)
     commit('addPhotos', {
       user: upload.get('user'),
       photos: data
