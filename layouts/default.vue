@@ -61,7 +61,7 @@ export default {
       drawer: true,
       fixed: false,
       items: [
-        { icon: 'bar_chart', title: 'Dashboard', to: '/dashboard' },
+        { icon: 'bar_chart', title: 'Dashboard', to: '/dashboard/index' },
         { icon: 'people', title: 'Clientes', to: '/users' },
         { icon: 'business', title: 'Empresas', to: '/business' },
         { icon: 'flip_camera_android', title: 'Entrenamiento', to: '/train' },
