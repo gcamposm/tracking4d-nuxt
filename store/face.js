@@ -101,6 +101,8 @@ export const actions = {
   },
   async getFaceDetections ({ commit, state }, { canvas, options }) {
     let detections = faceapi
+    console.log('canvas')
+    console.log(canvas)
       .detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions({
         scoreThreshold: state.detections.scoreThreshold,
         inputSize: state.detections.inputSize
@@ -118,12 +120,37 @@ export const actions = {
     detections = await detections
     return detections
   },
-  async recognize ({ commit, state }, { descriptor, options }) {
+  async recognize({ commit, state }, { descriptor, options, matchList, unknownList }) {
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
+
+      if (bestMatch._label === "unknown"){
+        console.log("salio unknown")
+        unknownList.push(bestMatch)
+      }
+      else{
+        matchList.push(bestMatch)
+      }
+      if (matchList.length >= 20) {
+        let filteredMatches = [...new Set(matchList)];
+        let filteredUnknowns = [...new Set(unknownList)];
+        state.saveMatches(filteredMatches)
+        saveMatches(filteredMatches)
+        // saveUnknowns(filteredUnknowns)
+        matchList.length = 0
+        unknownList.length = 0
+      }
+      console.log("bestMatch")
+      console.log(bestMatch)
+
       return bestMatch
     }
     return null
+  },
+
+  saveMatches(filteredMatches){
+    console.log('filteredMatches')
+    console.log(filteredMatches)
   },
 
   draw ({ commit, state }, { canvasDiv, canvasCtx, detection, options }) {
@@ -142,18 +169,6 @@ export const actions = {
     let name = ''
     if (options.descriptorsEnabled && detection.recognition) {
       name = detection.recognition.toString(state.descriptors.withDistance)
-      var matchList = state.matches
-      matchList.push(name)
-      commit('setMatches', matchList)
-      if (matchList.length >= 50) {
-        let filteredMatches = [...new Set(matchList)];
-        state.saveMatches(filteredMatches)
-        matchList.length = 0
-        commit('setMatches', matchList)
-        console.log('matches')
-        console.log(state.matches)
-      }
-      console.log(name)
     }
 
     const text = `${name}${emotions ? (name ? ' is ' : '') : ''}${emotions}`
@@ -175,11 +190,6 @@ export const actions = {
     if (options.landmarksEnabled && detection.landmarks) {
       faceapi.draw.drawFaceLandmarks(canvasDiv, detection.landmarks, { lineWidth: state.landmarks.lineWidth, drawLines: state.landmarks.drawLines })
     }
-  },
-
-  async saveMatches(matches){
-    console.log('filtered')
-    console.log(matches)
   },
 
   async createCanvas ({ commit, state }, elementId) {
