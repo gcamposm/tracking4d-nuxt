@@ -5,7 +5,7 @@ const env = {
   PORT: process.env.PORT || 3000,
   PORT_API: process.env.PORT_API || 3000
 }
-env.API_URL = process.env.API_URL || `http://localhost:${env.PORT_API}`
+env.API_URL = process.env.API_URL || `https://localhost:${env.PORT_API}`
 
 const isDev = env.NODE_ENV === 'development'
 const config = {
