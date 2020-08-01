@@ -133,6 +133,7 @@
 
 <script>
 import axios from "axios"
+import { mapActions } from "vuex"
 export default {
   data () {
     return {
@@ -143,6 +144,12 @@ export default {
       multiple: true,
       selectedPhoto: null,
       files: []
+    }
+  },
+
+  async fetch ({ store }) {
+    if (!store.getters['user/isFetched']) {
+      return store.dispatch('user/getAll')
     }
   },
   computed: {
@@ -173,18 +180,6 @@ export default {
       }
     }
   },
-  async fetch ({ store }) {
-    const self = this
-    await store.dispatch('user/getAll')
-      .then((users) => {
-        self.step += users.length
-      })
-  },
-  // fetch ({ store }) {
-  //   if (!store.getters['user/isFetched']) {
-  //     return store.dispatch('user/getAll')
-  //   }
-  // },
   beforeDestroy () {
     this.$store.dispatch('camera/stopCamera')
   },
@@ -238,13 +233,15 @@ export default {
           const result = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
-            this.fetch
+            console.log('llegué')
+            return this.$store.dispatch('user/getAll')
+            console.log('llegué 2');
           } else {
             console.log('There is a problem with charge the images.')
           }
         })
         .catch(e => {
-          console.log('getProduct', e, e.response)
+          console.log('uploadFiles', e, e.response)
         })
     },
     async takePhoto () {
