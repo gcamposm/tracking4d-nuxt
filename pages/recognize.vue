@@ -148,6 +148,7 @@ export default {
       }
       var matchList = []
       var unknownList = []
+      var count = 0
       self.interval = setInterval(async () => {
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
@@ -168,7 +169,8 @@ export default {
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownList
+              unknownList,
+              count
             })
             self.$store.dispatch('face/draw',
               {

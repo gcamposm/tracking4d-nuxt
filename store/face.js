@@ -100,9 +100,9 @@ export const actions = {
     return matcher
   },
   async getFaceDetections ({ commit, state }, { canvas, options }) {
-    let detections = faceapi
     console.log('canvas')
     console.log(canvas)
+    let detections = faceapi
       .detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions({
         scoreThreshold: state.detections.scoreThreshold,
         inputSize: state.detections.inputSize
@@ -120,7 +120,8 @@ export const actions = {
     detections = await detections
     return detections
   },
-  async recognize({ commit, state, dispatch }, { descriptor, options, matchList, unknownList }) {
+  async recognize({ commit, state, dispatch }, { descriptor, options, matchList, unknownList, count }) {
+    count = count + 1
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
 
@@ -131,13 +132,14 @@ export const actions = {
       else{
         matchList.push(bestMatch)
       }
-      if (matchList.length >= 20) {
+      if (count >= 20) {
         let filteredMatches = [...new Set(matchList)];
         let filteredUnknowns = [...new Set(unknownList)];
         await dispatch('saveMatches')
         // saveUnknowns(filteredUnknowns)
         matchList.length = 0
         unknownList.length = 0
+        count = 0
       }
       console.log("bestMatch")
       console.log(bestMatch)
