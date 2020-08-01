@@ -149,7 +149,10 @@ export default {
       var matchList = []
       var unknownList = []
       var count = 0
+      var time = 1000 / fps
+      var totalTime = 60000
       self.interval = setInterval(async () => {
+        count++
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
         const options = {
