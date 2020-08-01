@@ -233,9 +233,7 @@ export default {
           const result = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
-            console.log('llegué')
             return this.$store.dispatch('user/getAll')
-            console.log('llegué 2');
           } else {
             console.log('There is a problem with charge the images.')
           }
