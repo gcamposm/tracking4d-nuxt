@@ -5,7 +5,7 @@ export const state = () => ({
   loading: false,
   loaded: false,
   faceMatcher: null,
-
+  matches: [],
   useTiny: false,
 
   detections: {
@@ -45,6 +45,10 @@ export const mutations = {
 
   setFaceMatcher (state, matcher) {
     state.faceMatcher = matcher
+  },
+
+  setMatches(state, matches) {
+    state.matches = matches
   }
 }
 
@@ -138,6 +142,18 @@ export const actions = {
     let name = ''
     if (options.descriptorsEnabled && detection.recognition) {
       name = detection.recognition.toString(state.descriptors.withDistance)
+      var matchList = state.matches
+      matchList.push(name)
+      commit('setMatches', matchList)
+      if (matchList.length >= 50) {
+        let filteredMatches = [...new Set(matchList)];
+        state.saveMatches(filteredMatches)
+        matchList.length = 0
+        commit('setMatches', matchList)
+        console.log('matches')
+        console.log(state.matches)
+      }
+      console.log(name)
     }
 
     const text = `${name}${emotions ? (name ? ' is ' : '') : ''}${emotions}`
@@ -159,6 +175,11 @@ export const actions = {
     if (options.landmarksEnabled && detection.landmarks) {
       faceapi.draw.drawFaceLandmarks(canvasDiv, detection.landmarks, { lineWidth: state.landmarks.lineWidth, drawLines: state.landmarks.drawLines })
     }
+  },
+
+  async saveMatches(matches){
+    console.log('filtered')
+    console.log(matches)
   },
 
   async createCanvas ({ commit, state }, elementId) {
