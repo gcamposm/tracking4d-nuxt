@@ -1,31 +1,36 @@
 <template>
-  <v-layout row
-            wrap
-  >
-    <v-flex xs6>
-      <center>
-        <v-btn @click="train()" color="primary">
-          ENTRENAR REDES NEURONALES
-        </v-btn>
-      </center>
-    </v-flex>
-    <v-flex xs6>
-      <v-progress-circular
-        v-if="isProgressActive"
-        :rotate="360"
-        :size="100"
-        :width="15"
-        :value="progress"
-        color="blue"
-      >
-        Entrenando
-      </v-progress-circular>
-    </v-flex>
-    <v-flex v-for="user in users" :key="user.name" xs12>
+    <v-container >
+      <v-layout row wrap>
+        <v-flex xs12 sm12 align-center justify-center>
+          <v-card class="elevation-12">
+            <div>
+              <br><br>
+              <center><h1>Entrenamiento redes neuronales</h1></center>
+              <br><br>
+              <div class="grid">
+                <center>
+                  <v-btn @click="train()" color="primary">
+                    ENTRENAR REDES NEURONALES
+                  </v-btn>
+                  <div>
+                    <br><br>
+                  <v-progress-circular
+                    v-if="isProgressActive"
+                    :rotate="360"
+                    :size="100"
+                    :width="15"
+                    :value="progress"
+                    color="blue"
+                  >
+                    Entrenando
+                  </v-progress-circular>
+                  </div>
+                  <v-flex v-for="user in users" :key="user.name" xs12>
+                  
       <v-card>
         <v-card-title>
-          <strong class="headline">{{ user.name }}</strong>
-          <v-btn :to="{ path: `/users/${user.name}`}" fab dark small color="primary">
+          <strong class="headline"> Cliente Rut: {{ user.name }}</strong>
+          <v-btn :to="{ path: `/users/${user.name}`}" style="margin-left: 3%;" fab dark small color="primary">
             <v-icon dark>
               add_a_photo
             </v-icon>
@@ -38,18 +43,24 @@
                     :key="photo"
                     xs12 md6 lg4
             >
-              <v-card flat tile class="d-flex">
                 <center>
                   <img :id="user.name + index" :src="photo">
                 </center> 
-              </v-card>
             </v-flex>
           
         </v-layout>
       </v-card>
     </v-flex>
-  </v-layout>
+                </center>
+              </div>
+            </div>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
 </template>
+
+
 
 <script>
 import axios from "axios"

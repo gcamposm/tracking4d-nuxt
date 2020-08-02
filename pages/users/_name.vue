@@ -39,7 +39,6 @@
         <v-tab-item
           value="tab-1"
         >
-          <v-card flat>
               <v-file-input
                 v-model="files"
                 color="deep-purple accent-4"
@@ -75,7 +74,6 @@
                 </v-btn>
               </center>
             <br><br>
-          </v-card>
         </v-tab-item>
 
         <v-tab-item
@@ -253,3 +251,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  img{
+      width:100%;
+      max-width:200px;
+  }
+</style>
