@@ -66,7 +66,11 @@ const config = {
     {
       src: "@/plugins/chart",
       ssr: false
-    }
+    },
+    {
+      src: '~/plugins/vue-datepicker',
+      ssr: false
+    }, // datepicker plugin here
     // '@/plugins/vuetify'
   ],
 

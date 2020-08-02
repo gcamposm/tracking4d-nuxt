@@ -1,41 +1,126 @@
 <template>
-  <div id="feature" class="mt-5">
+  <div id="chart-saleTotals">
     <v-container>
-      <v-card
-      >
-        <v-img
-        :src="image"
-        height="660"
-        >
-          <v-layout align-center justify-center column fill-height>
-            <h1 class="display-2 font-weight-heavy mb-4">¡PRÓXIMAMENTE!</h1>
-            <h4 class="subheading font-weight-heavy">ESTAMOS TRABAJANDO DURO PARA TRAER NUEVAS ACTUALIZACIONES</h4>
-          </v-layout>
-        </v-img>
-      </v-card>
+      <v-row>
+        <v-col cols="6">
+          <v-menu
+            ref="firstMenu"
+            v-model="firstMenu"
+            :close-on-content-click="false"
+            :return-value.sync="InitialDate"
+            transition="scale-transition"
+            offset-y
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="InitialDate"
+                label="Fecha inicial"
+                prepend-icon="event"
+                readonly
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker :max="today" v-model="InitialDate" no-title scrollable>
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="firstMenu = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="$refs.firstMenu.save(InitialDate)">Aceptar</v-btn>
+            </v-date-picker>
+          </v-menu>
+        </v-col>
+        <v-col cols="6">
+          <v-menu
+            ref="secondMenu"
+            v-model="secondMenu"
+            :close-on-content-click="false"
+            :return-value.sync="FinalDate"
+            transition="scale-transition"
+            offset-y
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field
+                v-model="FinalDate"
+                label="Fecha final"
+                prepend-icon="event"
+                readonly
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker :max="today" v-model="FinalDate" no-title scrollable>
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="secondMenu = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="$refs.secondMenu.save(FinalDate)">Aceptar</v-btn>
+            </v-date-picker>
+          </v-menu>
+          <center>
+            <v-btn @click="getStatisticsDays()" color="primary">
+              Obtener Estadísticas
+            </v-btn>
+          </center>
+        </v-col>
+      </v-row>
+<!--       <template>
+        <v-progress-linear color="warning" indeterminate></v-progress-linear>
+      </template> -->
     </v-container>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+
+import axios from 'axios'
+import moment from 'moment'
+import { mapState, mapActions } from 'vuex'
 
 export default {
-  name: 'feature',
+  name: 'chart-saleTotals',
+  components: {
+  },
   data () {
     return {
-      image: require('@/assets/img/futureFeature.jpg')
+      /* General Stuffs */
+      today: '',
+      firstMenu: false,
+      secondMenu: false,
+      /* Chart  Stuffs */
     }
+  },
+  async created () {
+    this.today = moment().format('YYYY-MM-DD')
+    this.InitialDate = moment().subtract(1, 'month').format('YYYY-MM-DD')
+    this.FinalDate = this.today
+  },
+  methods: {
+    ...mapActions([
+    ]),
+    async getStatisticsDays () {
+      let formData = new FormData()
+      formData.append('firstDate', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
+      formData.append('secondDate', moment(this.FinalDate).format('YYYY-MM-DD HH:mm'))
+      await axios
+        .post(`${this.serverURL}/matches/getMatchesByDate`, formData)
+        .then(async (response) => {
+          const result = response.data
+          if (result.length !== 0) {
+            console.log(result)
+          }
+        })
+        .catch(e => {
+          console.log('getStatisticsDays', e, e.response)
+        })
+    },
   },
   computed: {
     ...mapState([
-    ])
+    ]),
+    serverURL () {
+      return this.$store.state.general.serverURL
+    }
   }
 }
 </script>
 
-<style>
-  .font-weight-heavy {
-    color: white !important;
-  }
+<style scoped>
+
 </style>
