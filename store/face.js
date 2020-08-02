@@ -120,7 +120,7 @@ export const actions = {
     detections = await detections
     return detections
   },
-  async recognize({ commit, state, dispatch }, { descriptor, options, matchList, unknownList, count }) {
+  async recognize({ commit, state, dispatch }, { descriptor, options, matchList, unknownList, count, matchTime }) {
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
       if (bestMatch._label === "unknown"){
@@ -130,11 +130,16 @@ export const actions = {
         matchList.push(bestMatch._label)
       }
       //console.log(count)
-      if (matchList.length >= 10) {
+      console.log("count")
+      console.log(count)
+      console.log("matchTime")
+      console.log(matchTime)
+      if (count >= matchTime) {
         let filteredMatches = [...new Set(matchList)];
         //commit('setMatches', matchList)
         await dispatch('saveMatches', {
-          matches: filteredMatches
+          matches: filteredMatches,
+          count: count
         })
         // saveUnknowns(unknownList)
         matchList.length = 0
@@ -146,9 +151,11 @@ export const actions = {
     return null
   },
 
-  saveMatches({ state}, { matches }){
+  saveMatches({ state}, { matches, count }){
     //commit('setMatches', [...new Set(state.matches)])
+    console.log("Estamos en save")
     console.log(matches);
+    console.log(count);
   },
 
   draw ({ commit, state }, { canvasDiv, canvasCtx, detection, options }) {

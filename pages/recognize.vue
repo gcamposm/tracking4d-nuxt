@@ -150,9 +150,10 @@ export default {
       var unknownList = []
       var count = 0
       var time = 1000 / fps
-      var totalTime = 60000
+      var matchTime = 5000
       self.interval = setInterval(async () => {
-        count++
+        count = count + time
+        //console.log(count)
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
         const options = {
@@ -173,7 +174,8 @@ export default {
               options,
               matchList,
               unknownList,
-              count
+              count,
+              matchTime
             })
             self.$store.dispatch('face/draw',
               {
@@ -183,6 +185,10 @@ export default {
                 options
               })
           })
+        }
+        if(count >= matchTime){
+          console.log(matchTime.toString().concat(" seg"))
+          count = 0
         }
         const t1 = performance.now()
         self.duration = (t1 - t0).toFixed(2)
