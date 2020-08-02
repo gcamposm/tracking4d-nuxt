@@ -17,14 +17,14 @@
         <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
       </v-btn>
       <v-toolbar-title v-html="title" />
-      <div v-if="$auth.loggedIn">
+      <!-- <div v-if="$auth.loggedIn">
         {{ $auth.user.email }}
         <v-btn text>Cerrar sesión</v-btn>
       </div>
       <div v-else>
         <v-btn text to="/login>">Login</v-btn>
         <v-btn text to="/register>">Registrarse</v-btn>
-      </div>
+      </div> -->
     </v-app-bar>
     <v-content>
       <v-img

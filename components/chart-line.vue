@@ -53,7 +53,7 @@ export default {
       dataLabel: "Foo",
       labels: {
         day: [8, 10, 12, 14, 16],
-        week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        week: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado", "Domingo"]
       },
       radio: "day"
     };

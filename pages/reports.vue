@@ -118,8 +118,16 @@ export default {
       await axios
         .post(`${this.serverURL}/matches/getMatchesByDate`, formData)
         .then(async (response) => {
+          console.log('québergaswey');
           const result = response.data
+<<<<<<< Updated upstream
           console.log(result)
+=======
+          console.log(response);
+            console.log(result)
+          if (result.length !== 0) {
+          }
+>>>>>>> Stashed changes
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)

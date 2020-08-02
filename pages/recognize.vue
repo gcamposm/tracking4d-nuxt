@@ -149,6 +149,7 @@ export default {
     async saveMatches (filteredMatches){
       let formData = new FormData()
           formData.append('matches', filteredMatches)
+          formData.append('faceId', this.faceId)
           await axios
           .post(`${this.serverURL}/matches/create/withFilteredMatches`, formData)
           .then(response => {
