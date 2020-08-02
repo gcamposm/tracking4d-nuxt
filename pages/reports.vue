@@ -57,6 +57,9 @@
             <v-btn @click="getStatisticsDays()" color="primary">
               Obtener Estadísticas
             </v-btn>
+            <v-btn @click="getIncomeOutcome()" color="primary">
+              In y Out
+            </v-btn>
           </center>
         </v-col>
       </v-row>
@@ -94,6 +97,20 @@ export default {
   methods: {
     ...mapActions([
     ]),
+    async getIncomeOutcome (){
+      let formData = new FormData()
+      formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
+      formData.append('customerId', 1)
+      await axios
+        .post(`${this.serverURL}/matches/getIncomeOutcome`, formData)
+        .then(async (response) => {
+          const result = response.data
+          console.log(result)
+        })
+        .catch(e => {
+          console.log('getStatisticsDays', e, e.response)
+        })
+    },
     async getStatisticsDays () {
       let formData = new FormData()
       formData.append('firstDate', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
@@ -102,9 +119,7 @@ export default {
         .post(`${this.serverURL}/matches/getMatchesByDate`, formData)
         .then(async (response) => {
           const result = response.data
-          if (result.length !== 0) {
-            console.log(result)
-          }
+          console.log(result)
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)

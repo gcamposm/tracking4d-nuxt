@@ -122,7 +122,7 @@ export const actions = {
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
       if (bestMatch._label === "unknown"){
-        unknownList.push(bestMatch)
+        unknownList.push(descriptor)
       }
       else{
         matchList.push(bestMatch._label)

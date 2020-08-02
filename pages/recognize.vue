@@ -159,6 +159,24 @@ export default {
             console.log(e, e.response)
           })
     },
+    async saveUnknowns (unknownList){
+      unknownList.forEach(unknown => {
+        this.saveUnknown(unknown)
+      });
+    },
+    async saveUnknown (unknown){
+      let formData = new FormData()
+          formData.append('unknown', unknown)
+          await axios
+          .post(`${this.serverURL}/detections/saveUnknown`, formData)
+          .then(response => {
+            // mensaje
+            console.log('unknown saved')
+          })
+          .catch(e => {
+            console.log(e, e.response)
+          })
+    },
     start (videoDiv, canvasDiv, canvasCtx, fps) {
       const self = this
       if (self.interval) {
@@ -175,6 +193,8 @@ export default {
           let filteredMatches = [...new Set(matchList)];
           console.log(filteredMatches)
           this.saveMatches(filteredMatches)
+          this.saveUnknowns(unknownList)
+          console.log(unknownList)
           filteredMatches.length=0
         }
         const t0 = performance.now()
