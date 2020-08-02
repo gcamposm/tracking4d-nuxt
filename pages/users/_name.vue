@@ -29,7 +29,7 @@
         icons-and-text
       >
       <center>
-        <h1>Imágenes Cliente Rut: {{ user.name }}</h1>
+        <h1>Imágenes Cliente : {{ actualCustomer.rut }}</h1>
       </center>
         <v-tabs-slider color="blue" />
 <!--         <v-tab href="#tab-2">
@@ -105,7 +105,7 @@
         </v-tab-item>
       </v-tabs>
     </v-flex>
-    <v-flex v-for="(photo, index) in user.photos"
+    <v-flex v-for="(photo, index) in actualCustomer.photos"
             :key="photo"
             xs12 md6 lg4
     >
@@ -119,7 +119,7 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
-        <img :id="user.name + index" :src="photo">
+        <img :id="actualCustomer.rut + index" :src="photo">
       </v-card>
     </v-flex>
   </v-layout>
@@ -138,10 +138,14 @@ export default {
       tab: 'tab-1',
       multiple: true,
       selectedPhoto: null,
-      files: []
+      files: [],
+      customers: [],
+      actualCustomer: null
     }
   },
-
+  created(){
+    this.actualCustomer = this.customer
+  },
   async fetch ({ store }) {
     if (!store.getters['user/isFetched']) {
       return store.dispatch('user/getAll')
@@ -160,7 +164,10 @@ export default {
     },
     isCameraStarted () {
       return this.$store.getters['camera/isCameraStarted']
-    }
+    },
+    customer () {
+      return this.$store.state.general.customer
+    },
   },
   watch: {
     async tab (val) {
@@ -179,6 +186,19 @@ export default {
     this.$store.dispatch('camera/stopCamera')
   },
   methods: {
+    async loadPaths(){
+      await axios
+          .get(`${this.serverURL}/images/pathsByCustomer/${this.actualCustomer.id}`)
+          .then(response => {
+            // mensaje
+            this.actualCustomer.photos = response.data
+            console.log('paths loaded')
+            console.log(this.actualCustomer)
+          })
+          .catch(e => {
+            console.log(e, e.response)
+          })
+    },
     showDialog (photo) {
       this.dialog = true
       this.selectedPhoto = photo

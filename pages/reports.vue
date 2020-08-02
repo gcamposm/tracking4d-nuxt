@@ -61,12 +61,12 @@
                   <v-btn @click="getStatisticsDays()" color="primary">
                     Obtener Estadísticas
                   </v-btn>
-                  <v-btn @click="obtainExcel()" color="primary">
+                  <!-- <v-btn @click="obtainExcel()" color="primary">
                     Obtener Excel
                   </v-btn>
                   <v-btn @click="contacts()" color="primary">
                     Obtener Contactos
-                  </v-btn>
+                  </v-btn> -->
                 </center>
               </v-col>
             </v-row>

@@ -7,37 +7,37 @@
             <v-container>
               <v-form ref="form" v-model="valid" lazy-validation>
                 <v-text-field
-                  v-model="customer.firstName"
+                  v-model="customerToUpload.firstName"
                   :rules="nameRules"
                   label="Nombres"
                   required
                 />
                 <v-text-field
-                  v-model="customer.lastName"
+                  v-model="customerToUpload.lastName"
                   :rules="lastNameRules"
                   label="Apellidos"
                   required
                 />
                 <v-text-field
-                  v-model="customer.rut"
+                  v-model="customerToUpload.rut"
                   :rules="rutRules"
                   label="Rut"
                   required
                 />
                 <v-text-field
-                  v-model="customer.activity"
+                  v-model="customerToUpload.activity"
                   :rules="activityRules"
                   label="Sección de trabajo o actividad"
                   required
                 />
                 <v-text-field
-                  v-model="customer.mail"
+                  v-model="customerToUpload.mail"
                   label="Correo electrónico"
                   type="email"
                   required
                 />
                 <v-text-field
-                  v-model="customer.phoneNumber"
+                  v-model="customerToUpload.phoneNumber"
                   :rules="phoneRules"
                   label="Celular"
                   type="number"
@@ -80,15 +80,15 @@
           <v-card-text>
             <v-container>
               <v-list two-line subheader>
-                <v-list-item v-for="user in users" :key="user.name">
+                <v-list-item v-for="customer in customers" :key="customer.rut">
                   <v-list-item-avatar>
                     <v-avatar
                       slot="activator"
                       size="32px"
                     >
                       <img
-                        v-if="user.photos.length"
-                        :src="user.photos[0]"
+                        v-if="customer.photos.length"
+                        :src="customer.photos[0]"
                         alt="Avatar"
                       >
                       <v-icon
@@ -101,12 +101,12 @@
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-subtitle>
-                      <h2> Rut Cliente: {{ user.name }} </h2>
+                      <h2> Nombre Cliente: {{ customer.firstName }} {{ customer.lastName }} </h2>
                       <v-divider />
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-btn @click="showDialog(user.name)" color="primary" fab small>
+                    <v-btn @click="showDialog(customer.rut)" color="primary" fab small>
                       <v-icon>
                         close
                       </v-icon>
@@ -114,7 +114,7 @@
                     <v-divider />
                   </v-list-item-action>
                   <v-list-item-action>
-                    <v-btn :to="'/users/' + user.name" color="primary" fab small>
+                    <v-btn :to="'/users/' + customer.rut" color="primary" fab small>
                       <v-icon>
                         add_a_photo
                       </v-icon>
@@ -122,7 +122,7 @@
                     <v-divider />
                   </v-list-item-action>
                   <v-list-item-action>
-                    <v-btn @click="showDialog(user.name)" color="#3fc151" fab small>
+                    <v-btn @click="sendWhatsapp(customer.phoneNumber)" color="#3fc151" fab small>
                       <v-icon>
                         smartphone
                       </v-icon>
@@ -147,10 +147,12 @@ export default {
       dialog: false,
       selectedUser: null,
       valid: true,
-      customer: {
+      callingCode: '56',
+      customerToUpload: {
         firstName: null,
         rut: null
       },
+      customers: [],
       nameRules: [
         v => !!v || 'Debe ingresar su nombre',
         v => (v && v.length > 2) || 'El nombre debe tener más de 2 caracters'
@@ -184,28 +186,61 @@ export default {
     serverURL () {
       return this.$store.state.general.serverURL
     },
+    customer () {
+      return this.$store.state.general.customer
+    }
   },
   fetch ({ store }) {
     return store.dispatch('user/getAll')
   },
+  async created(){
+    await this.getCustomers()
+  },
 
   methods: {
-    register () {
+    async getCustomers(){
+      await axios
+          .get(this.serverURL + '/images/pathsWithCustomer')
+          .then(response => {
+            // mensaje
+            //this.customers = response.data
+            console.log('customers loaded')
+            console.log(response.data)
+            response.data.forEach(element => {
+              var customer = null
+              console.log(element)
+              customer = element.customer
+              customer.photos = element.paths
+              this.customers.push(customer)
+            });
+          })
+          .catch(e => {
+            console.log(e, e.response)
+            this.file = ''
+          })
+    },
+    sendWhatsapp(phoneNumber){
+      window.open('whatsapp://send?' + '&phone=' + this.callingCode + phoneNumber + '&abid=' + this.callingCode + phoneNumber)
+      console.log(phoneNumber)
+    },
+    async register () {
       const self = this
-      this.createCustomer()
+      await this.createCustomer()
       if (this.$refs.form.validate()) {
-        return this.$store.dispatch('user/register', this.customer.rut)
+        return this.$store.dispatch('user/register', this.customerToUpload.rut)
           .then(() => {
-            return self.$router.push({ path: `/users/${self.customer.rut}` })
+            return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
           })
       }
     },
 
     async createCustomer(){
       await axios
-      .post(`${this.serverURL}/customers/create`, this.customer)
+      .post(`${this.serverURL}/customers/create`, this.customerToUpload)
         .then(response => {
+          this.state.commit('setCustomer', response.data)
           console.log(response.data)
+
         })
         .catch(e => {
           console.log('error'+e)
