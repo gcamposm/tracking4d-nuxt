@@ -2,8 +2,9 @@
   <div class="card">
     <div class="card-body">
       <h2 class="card-title">Grafico de barras - Visitas última semana</h2>
+      <br>
     </div>
-
+    
     <div class="card-img-bottom">
       <canvas id="fooCanvas" count="2" />
 
@@ -34,13 +35,13 @@ export default {
           bgColor: "#de98ab",
           borderColor: "0c0306",
           data: [1, 3, 5, 7, 2, 4, 6],
-          dataLabel: "Bar"
+          dataLabel: "Visitas registradas"
         },
         {
           bgColor: "#98ddde",
           borderColor: "030c0c",
           data: [1, 5, 2, 6, 3, 7, 4],
-          dataLabel: "Baz"
+          dataLabel: "Visitas NN"
         }
       ]
     };

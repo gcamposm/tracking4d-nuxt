@@ -7,7 +7,6 @@
             <div>
               <center><h1>Estádisticas Generales</h1></center>
               <div class="grid">
-                
                 <br><br><br>
                 <ChartBar/>
                 <br><br><br>

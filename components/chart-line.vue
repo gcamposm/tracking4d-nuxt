@@ -1,8 +1,8 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h2 class="card-title">Line</h2>
-
+      <h2 class="card-title">Gráfico lineal - Visitas totales</h2>
+      <br>
       <div class="btn-group btn-group-toggle">
         <label
           v-for="(item, index) in btn"
@@ -43,8 +43,8 @@ export default {
       beginZero: true,
       borderColor: "#81894e",
       btn: [
-        { label: "Hoy", value: "Día" },
-        { label: "Esta semana", value: "Semana" }
+        { label: "Hoy", value: "day" },
+        { label: "Esta semana", value: "week" }
       ],
       data: {
         day: [1, 3, 5, 3, 1],
