@@ -32,7 +32,6 @@
                 />
                 <v-text-field
                   v-model="customer.mail"
-                  :rules="mailRules"
                   label="Correo electrónico"
                   type="email"
                   required

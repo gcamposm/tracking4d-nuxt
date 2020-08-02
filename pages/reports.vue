@@ -57,9 +57,6 @@
             <v-btn @click="getStatisticsDays()" color="primary">
               Obtener Estadísticas
             </v-btn>
-            <v-btn @click="getIncomeOutcome()" color="primary">
-              In y Out
-            </v-btn>
           </center>
         </v-col>
       </v-row>
@@ -118,16 +115,11 @@ export default {
       await axios
         .post(`${this.serverURL}/matches/getMatchesByDate`, formData)
         .then(async (response) => {
-          console.log('québergaswey');
           const result = response.data
-<<<<<<< Updated upstream
-          console.log(result)
-=======
           console.log(response);
             console.log(result)
           if (result.length !== 0) {
           }
->>>>>>> Stashed changes
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)
