@@ -149,12 +149,18 @@ export default {
       }
       var matchList = []
       var unknownList = []
-      var count = 0
-      var time = 1000 / fps
-      var matchTime = 5000
       self.interval = setInterval(async () => {
-        count = count + time
-        //console.log(count)
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var second = today.getSeconds();
+        if(second == "0"){
+          console.log("A guardar")
+          let filteredMatches = [...new Set(matchList)];
+          await self.$store.dispatch('face/saveMatches', {
+              filteredMatches
+            })
+        }
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
         const options = {
@@ -174,9 +180,7 @@ export default {
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownList,
-              count,
-              matchTime
+              unknownList
             })
             self.$store.dispatch('face/draw',
               {
@@ -186,10 +190,6 @@ export default {
                 options
               })
           })
-        }
-        if(count >= matchTime){
-          console.log(matchTime.toString().concat(" seg"))
-          count = 0
         }
         const t1 = performance.now()
         self.duration = (t1 - t0).toFixed(2)
