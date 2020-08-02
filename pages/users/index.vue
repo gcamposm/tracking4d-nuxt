@@ -121,6 +121,14 @@
                     </v-btn>
                     <v-divider />
                   </v-list-item-action>
+                  <v-list-item-action>
+                    <v-btn @click="showDialog(user.name)" color="#3fc151" fab small>
+                      <v-icon>
+                        smartphone
+                      </v-icon>
+                    </v-btn>
+                    <v-divider />
+                  </v-list-item-action>
                 </v-list-item>
               </v-list>
             </v-container>

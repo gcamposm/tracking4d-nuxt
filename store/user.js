@@ -54,7 +54,7 @@ export const actions = {
     return data
   },
   async register ({ commit }, name) {
-    await this.$axios.$post('/api/user/register', { name })
+    // await this.$axios.$post('/api/user/register', { name })
     commit('addUser', name)
   },
   async delete ({ commit }, name) {

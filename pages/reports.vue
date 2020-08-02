@@ -61,6 +61,12 @@
                   <v-btn @click="getStatisticsDays()" color="primary">
                     Obtener Estadísticas
                   </v-btn>
+                  <v-btn @click="obtainExcel()" color="primary">
+                    Obtener Excel
+                  </v-btn>
+                  <v-btn @click="contacts()" color="primary">
+                    Obtener Contactos
+                  </v-btn>
                 </center>
               </v-col>
             </v-row>
@@ -118,12 +124,27 @@ export default {
           console.log('getStatisticsDays', e, e.response)
         })
     },
+    async contacts (){
+      let formData = new FormData()
+      formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
+      await axios
+        .post(`${this.serverURL}/customers/contactsBetweenCustomers`, formData)
+        .then(async (response) => {
+          const result = response.data
+          console.log(result)
+        })
+        .catch(e => {
+          console.log('getStatisticsDays', e, e.response)
+        })
+    },
     async obtainExcel () {
       let formData = new FormData()
       formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
       await axios
         .post(`${this.serverURL}/customers/write`, formData)
-        .then(async (response) => {})
+        .then(async (response) => {
+          console.log("Write correct")
+        })
         .catch(e => {
           console.log('getMostSoldProducts', e, e.response)
         })
