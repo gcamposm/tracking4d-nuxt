@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h2 class="card-title">Bar</h2>
+      <h2 class="card-title">Grafico de barras - Visitas última semana</h2>
     </div>
 
     <div class="card-img-bottom">
@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       beginZero: true,
-      labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      labels: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
       types: [
         {
           bgColor: "#de98ab",

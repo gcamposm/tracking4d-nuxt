@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h2 class="card-title">Doughnut</h2>
+      <h2 class="card-title">Gráfica de anillo</h2>
     </div>
 
     <div class="card-img-bottom">
@@ -26,7 +26,7 @@ export default {
           hoverBackgroundColor: ["#fbd2cd", "#fef5c9", "#d1e3f7"]
         }
       ],
-      labels: ["Foo", "Bar", "Baz"],
+      labels: ["Visitas totales", "Visitas registradas", "Visitas NN"],
       option: {}
     };
   }

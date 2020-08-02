@@ -60,7 +60,7 @@ export default {
       items: [
         { icon: 'bar_chart', title: 'Dashboard', to: '/dashboard' },
         { icon: 'people', title: 'Clientes', to: '/users' },
-        { icon: 'business', title: 'Empresas', to: '/business' },
+        { icon: 'map', title: 'Mapa de Calor', to: '/map' },
         { icon: 'flip_camera_android', title: 'Entrenamiento', to: '/train' },
         { icon: 'menu_book', title: 'Reportes', to: '/reports' },
         { icon: 'camera_front', title: 'Camara 1', to: '/recognize' },

@@ -76,6 +76,7 @@
       <v-flex xs12 sm8 offset-sm2 align-center justify-center>
       <br><br><br><br>
         <v-card class="elevation-12">
+          <h1><center>Clientes registrados</center></h1>
           <v-card-text>
             <v-container>
               <v-list two-line subheader>
@@ -100,22 +101,22 @@
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-subtitle>
-                      {{ user.name }}
+                      <h2> Rut Cliente: {{ user.name }} </h2>
                       <v-divider />
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-btn :to="'/users/' + user.name" color="primary" fab small>
+                    <v-btn @click="showDialog(user.name)" color="primary" fab small>
                       <v-icon>
-                        add_a_photo
+                        close
                       </v-icon>
                     </v-btn>
                     <v-divider />
                   </v-list-item-action>
                   <v-list-item-action>
-                    <v-btn @click="showDialog(user.name)" color="primary" fab small>
+                    <v-btn :to="'/users/' + user.name" color="primary" fab small>
                       <v-icon>
-                        close
+                        add_a_photo
                       </v-icon>
                     </v-btn>
                     <v-divider />

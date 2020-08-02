@@ -1,14 +1,25 @@
 <template>
   <no-ssr>
-    <div>
-      <h1>Chart Demo</h1>
-
-      <div class="grid">
-        <ChartDoughnut/>
-        <ChartBar/>
-        <ChartLine/>
-      </div>
-    </div>
+    <v-container >
+      <v-layout row wrap>
+        <v-flex xs12 sm12 align-center justify-center>
+          <v-card class="elevation-12">
+            <div>
+              <center><h1>Estádisticas Generales</h1></center>
+              <div class="grid">
+                
+                <br><br><br>
+                <ChartBar/>
+                <br><br><br>
+                <ChartDoughnut/>
+                <br><br><br>
+                <ChartLine/>
+              </div>
+            </div>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </no-ssr>
 </template>
 
