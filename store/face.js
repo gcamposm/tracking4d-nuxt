@@ -132,11 +132,6 @@ export const actions = {
     return null
   },
 
-  saveMatches({ state }, { filteredMatches }){
-    console.log(filteredMatches)
-    matchList.length = 0
-  },
-
   saveUnknowns({ state }, { unknownList }) {
     unknownList.length = 0
   },
