@@ -7,7 +7,7 @@
   <v-container fluid>
     <center>
       <v-flex>
-        <h1>Reconocimiento Facial - Cámara {{camId}} </h1>
+        <h1>Reconocimiento Facial - Cámara {{camId}}</h1>
       </v-flex>
     </center>
     <v-flex xs12>
@@ -105,7 +105,7 @@ export default {
       isProgressActive: true,
       recognition: '',
       withOptions: [0, 1, 2, 3],
-      camId: 1,
+      camId: 2
     }
   },
 
