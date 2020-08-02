@@ -1,76 +1,85 @@
 <template>
-  <div id="chart-saleTotals">
-    <v-container>
-      <v-row>
-        <v-col cols="6">
-          <v-menu
-            ref="firstMenu"
-            v-model="firstMenu"
-            :close-on-content-click="false"
-            :return-value.sync="InitialDate"
-            transition="scale-transition"
-            offset-y
-            min-width="290px"
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="InitialDate"
-                label="Fecha inicial"
-                prepend-icon="event"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker :max="today" v-model="InitialDate" no-title scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="firstMenu = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.firstMenu.save(InitialDate)">Aceptar</v-btn>
-            </v-date-picker>
-          </v-menu>
-        </v-col>
-        <v-col cols="6">
-          <v-menu
-            ref="secondMenu"
-            v-model="secondMenu"
-            :close-on-content-click="false"
-            :return-value.sync="FinalDate"
-            transition="scale-transition"
-            offset-y
-            min-width="290px"
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="FinalDate"
-                label="Fecha final"
-                prepend-icon="event"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker :max="today" v-model="FinalDate" no-title scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="secondMenu = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.secondMenu.save(FinalDate)">Aceptar</v-btn>
-            </v-date-picker>
-          </v-menu>
-          <center>
-            <v-btn @click="getStatisticsDays()" color="primary">
-              Obtener Estadísticas
-            </v-btn>
-          </center>
-        </v-col>
-      </v-row>
-<!--       <template>
-        <v-progress-linear color="warning" indeterminate></v-progress-linear>
-      </template> -->
-    </v-container>
-  </div>
+  <v-container>
+    <v-layout row wrap align-center>
+      <v-flex xs12 md10 lg10>
+        <v-card>
+        <div id="chart-saleTotals">
+          <v-container>
+            <v-row>
+              <v-col cols="6">
+                <v-menu
+                  ref="firstMenu"
+                  v-model="firstMenu"
+                  :close-on-content-click="false"
+                  :return-value.sync="InitialDate"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="InitialDate"
+                      label="Fecha inicial"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker :language="es" :max="today" v-model="InitialDate" no-title scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="firstMenu = false">Cancelar</v-btn>
+                    <v-btn text color="primary" @click="$refs.firstMenu.save(InitialDate)">Aceptar</v-btn>
+                  </v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="6">
+                <v-menu
+                  ref="secondMenu"
+                  v-model="secondMenu"
+                  :close-on-content-click="false"
+                  :return-value.sync="FinalDate"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="FinalDate"
+                      label="Fecha final"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker :language="es" :max="today" v-model="FinalDate" no-title scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="secondMenu = false">Cancelar</v-btn>
+                    <v-btn text color="primary" @click="$refs.secondMenu.save(FinalDate)">Aceptar</v-btn>
+                  </v-date-picker>
+                </v-menu>
+                <center>
+                  <v-btn @click="getStatisticsDays()" color="primary">
+                    Obtener Estadísticas
+                  </v-btn>
+                </center>
+              </v-col>
+            </v-row>
+        <!--       <template>
+              <v-progress-linear color="warning" indeterminate></v-progress-linear>
+            </template> -->
+          </v-container>
+        </div>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 
 import axios from 'axios'
 import moment from 'moment'
+import { es } from 'vuejs-datepicker/dist/locale'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -79,6 +88,7 @@ export default {
   },
   data () {
     return {
+      es: es,
       /* General Stuffs */
       today: '',
       firstMenu: false,
