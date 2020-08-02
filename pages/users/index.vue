@@ -157,7 +157,7 @@ export default {
       ],
       rutRules: [
         v => !!v || 'Debe ingresar su rut',
-        v => (v && v.length > 7 && v.length < 10) || 'Debe ingresar su rut de la siguiente forma: 12345678-9'
+        v => (v && v.length > 8 && v.length < 11) || 'Debe ingresar su rut de la siguiente forma: 12345678-9'
       ],
       phoneRules: [
         v => !!v || 'Debe ingresar su celular',

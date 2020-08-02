@@ -43,14 +43,14 @@ export default {
       beginZero: true,
       borderColor: "#81894e",
       btn: [
-        { label: "Today", value: "day" },
-        { label: "This Week", value: "week" }
+        { label: "Hoy", value: "Día" },
+        { label: "Esta semana", value: "Semana" }
       ],
       data: {
         day: [1, 3, 5, 3, 1],
         week: [12, 14, 16, 18, 11, 13, 15]
       },
-      dataLabel: "Foo",
+      dataLabel: "Visitas",
       labels: {
         day: [8, 10, 12, 14, 16],
         week: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado", "Domingo"]
