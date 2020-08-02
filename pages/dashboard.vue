@@ -1,5 +1,5 @@
 <template>
-  <no-ssr>
+  <client-only>
     <v-container >
       <v-layout row wrap>
         <v-flex xs12 sm12 align-center justify-center>
@@ -7,10 +7,10 @@
             <div>
               <center><h1>Estádisticas Generales</h1></center>
               <div class="grid">
+                <ChartDoughnut/>
                 <br><br><br>
                 <ChartBar/>
                 <br><br><br>
-                <ChartDoughnut/>
                 <br><br><br>
                 <ChartLine/>
               </div>
@@ -19,7 +19,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </no-ssr>
+  </client-only>
 </template>
 
 <script>

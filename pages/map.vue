@@ -6,7 +6,69 @@
             <div>
               <br><br>
               <center><h1>Mapa de Calor</h1></center>
-              <br><br>
+              <br>
+
+                              <v-row>
+              <v-col cols="6">
+                <v-menu
+                  ref="firstMenu"
+                  v-model="firstMenu"
+                  :close-on-content-click="false"
+                  :return-value.sync="InitialDate"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="InitialDate"
+                      label="Fecha inicial"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker :max="today" v-model="InitialDate" no-title scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="firstMenu = false">Cancelar</v-btn>
+                    <v-btn text color="primary" @click="$refs.firstMenu.save(InitialDate)">Aceptar</v-btn>
+                  </v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="6">
+                <v-menu
+                  ref="secondMenu"
+                  v-model="secondMenu"
+                  :close-on-content-click="false"
+                  :return-value.sync="FinalDate"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="FinalDate"
+                      label="Fecha final"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker :max="today" v-model="FinalDate" no-title scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="secondMenu = false">Cancelar</v-btn>
+                    <v-btn text color="primary" @click="$refs.secondMenu.save(FinalDate)">Aceptar</v-btn>
+                  </v-date-picker>
+                </v-menu>
+                <center>
+                  <v-btn @click="getStatisticsDays()" color="primary">
+                    Obtener Estadísticas
+                  </v-btn>
+                </center>
+              </v-col>
+            </v-row>
+
+
               <div class="grid">
                 <center>
                   <div id="plano" class="tab-pane pt-6 fade in active">
@@ -15,6 +77,8 @@
                     <div class="camera_01_div" id="camera_01_div"> </div>
                     <img src="@/assets/img/camera.png" alt="" class="camera_2">
                     <div class="camera_02_div" id="camera_02_div"> </div>
+                    <img src="@/assets/img/mapclip.png" alt="" class="clipmap">
+                    <img :title=point.customer.firstName+point.customer.lastName+point.hour class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
                   </div>
                 </center>
               </div>
@@ -26,18 +90,91 @@
 </template>
 
 <script>
+
+import axios from 'axios'
+import moment from 'moment'
+import { mapState, mapActions } from 'vuex'
+
 export default {
   data () {
     return {
-      posts: null
+      today: '',
+      firstMenu: false,
+      secondMenu: false,
+      posts: null,
+      statistics: []
     }
   },
-  async created (){
-    console.log('holi');
-    return this.$router.push({ path: '/map' })
+ async created () {
+    this.today = moment().format('YYYY-MM-DD')
+    this.InitialDate = moment().subtract(1, 'day').format('YYYY-MM-DD')
+    this.FinalDate = this.today
+  },
+  methods: {
+    async getStatisticsDays () {
+      let formData = new FormData()
+      formData.append('firstDate', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
+      formData.append('secondDate', moment(this.FinalDate).format('YYYY-MM-DD HH:mm'))
+      await axios
+        .post(`${this.serverURL}/detections/getVisitsBetweenDates`, formData)
+        .then(async (response) => {
+          const result = response.data
+          console.log(response);
+          console.log(result)
+          result.forEach(element => {
+            this.unknowns = element.unknown+this.unknowns
+            this.matches = element.matches+this.matches
+            this.totals = element.total+this.totals
+          });
+          if (result.length !== 0) {
+          }
+        })
+        .catch(e => {
+          console.log('getStatisticsDays', e, e.response)
+        })
+    },
+    async contacts (){
+      let formData = new FormData()
+      formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
+      await axios
+        .post(`${this.serverURL}/customers/contactsBetweenCustomers`, formData)
+        .then(async (response) => {
+          const result = response.data
+          console.log(result)
+        })
+        .catch(e => {
+          console.log('getStatisticsDays', e, e.response)
+        })
+    },
+    async getStatisticsDays () {
+      let formData = new FormData()
+      formData.append('firstDate', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
+      formData.append('secondDate', moment(this.FinalDate).format('YYYY-MM-DD HH:mm'))
+      await axios
+        .post(`${this.serverURL}/matches/getMatchesByDate`, formData)
+        .then(async (response) => {
+          const result = response.data
+          console.log(response);
+          console.log(result)
+          this.statistics = result
+          if (result.length !== 0) {
+          }
+        })
+        .catch(e => {
+          console.log('getStatisticsDays', e, e.response)
+        })
+    },
+  },
+  computed: {
+    ...mapState([
+    ]),
+    serverURL () {
+      return this.$store.state.general.serverURL
+    }
   }
-}
+};
 </script>
+
 
 <style type="text/css">
   .camera_1{
@@ -63,6 +200,22 @@ export default {
   left:78%;
   width: 30px;
   height: 30px;
+}
+.clipmap{
+  position: absolute;
+  top: 68%;
+  left:68%;
+  width: 30px;
+  height: 30px;
+  cursor:pointer;
+}
+.clipmap2{
+  position: absolute;
+  top: 77%;
+  left:42%;
+  width: 30px;
+  height: 30px;
+  cursor:pointer;
 }
 
 .camera_02_div{
@@ -225,4 +378,6 @@ export default {
   height: 15px;
   width: 15px;
 }
+
+
 </style>
