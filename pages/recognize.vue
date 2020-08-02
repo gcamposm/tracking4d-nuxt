@@ -46,7 +46,7 @@
             </v-btn>
           </v-btn-toggle>
         </v-card-actions>
-        <v-slider v-model="fps"
+        <!-- <v-slider v-model="fps"
                   :max="60"
                   :min="1"
                   :step="1"
@@ -54,7 +54,7 @@
                   prepend-icon="local_movies"
                   thumb-label="always"
                   ticks
-        />
+        /> -->
         <p>
           <v-chip label color="blue" text-color="white">
             <v-icon left>
@@ -92,11 +92,12 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   data () {
     return {
       interval: null,
-      fps: 15,
+      fps: 1,
       realFps: 0,
       step: 2,
       counter: 0,
@@ -112,6 +113,9 @@ export default {
   computed: {
     models () {
       return this.$store.state.model.list
+    },
+    serverURL () {
+      return this.$store.state.general.serverURL
     }
   },
 
@@ -142,6 +146,19 @@ export default {
   },
 
   methods: {
+    async saveMatches (filteredMatches){
+      let formData = new FormData()
+          formData.append('matches', filteredMatches)
+          await axios
+          .post(`${this.serverURL}/matches/create/withFilteredMatches`, formData)
+          .then(response => {
+            // mensaje
+            console.log('matches saved')
+          })
+          .catch(e => {
+            console.log(e, e.response)
+          })
+    },
     start (videoDiv, canvasDiv, canvasCtx, fps) {
       const self = this
       if (self.interval) {
@@ -149,12 +166,17 @@ export default {
       }
       var matchList = []
       var unknownList = []
-      var count = 0
-      var time = 1000 / fps
-      var matchTime = 5000
       self.interval = setInterval(async () => {
-        count = count + time
-        //console.log(count)
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var second = today.getSeconds();
+        if(second == "0"){
+          let filteredMatches = [...new Set(matchList)];
+          console.log(filteredMatches)
+          this.saveMatches(filteredMatches)
+          filteredMatches.length=0
+        }
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
         const options = {
@@ -174,9 +196,7 @@ export default {
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownList,
-              count,
-              matchTime
+              unknownList
             })
             self.$store.dispatch('face/draw',
               {
@@ -186,10 +206,6 @@ export default {
                 options
               })
           })
-        }
-        if(count >= matchTime){
-          console.log(matchTime.toString().concat(" seg"))
-          count = 0
         }
         const t1 = performance.now()
         self.duration = (t1 - t0).toFixed(2)
