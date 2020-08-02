@@ -118,6 +118,32 @@ export default {
           console.log('getStatisticsDays', e, e.response)
         })
     },
+    async obtainExcel () {
+      let formData = new FormData()
+      formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
+      await axios
+        .post(`${this.serverURL}/customers/write`, formData)
+        .then(async (response) => {})
+        .catch(e => {
+          console.log('getMostSoldProducts', e, e.response)
+        })
+        await axios({
+        url: `${this.serverURL}/customers/download`,
+        method: 'GET',
+        responseType: 'blob' // important
+      })
+        .then(response => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', 'Clientes - ' + moment().format('YYYY-MM-DD') + '.xlsx') // or any other extension
+          document.body.appendChild(link)
+          link.click()
+        })
+        .catch(e => {
+          console.log('No se ha podido descargar el archivo: ', e, e.response)
+        })
+    },
     async getStatisticsDays () {
       let formData = new FormData()
       formData.append('firstDate', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
