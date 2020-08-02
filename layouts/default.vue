@@ -34,7 +34,7 @@
       >
       <v-container fluid>
         <nuxt />
-        <v-spacer></v-spacer>
+        <!-- <v-spacer></v-spacer>
         <v-list-item
           :active-class="color"
           class="v-list-item"
@@ -47,7 +47,7 @@
           </v-list-item-action>
           <v-list-item-title v-text="'Modo nocturo'"/>
           <v-switch v-model="nightMode" color="blue"/>
-        </v-list-item>
+        </v-list-item> -->
       </v-container>
       </v-img>
     </v-content>
@@ -66,7 +66,7 @@
 export default {
   data () {
     return {
-      nightMode: false,
+      nightMode: true,
       image: require('@/assets/img/background.jpg'),
       sidebarBackgroundColor: 'rgba(27, 27, 27, 0.74)',
       clipped: false,
@@ -94,7 +94,7 @@ export default {
     }
   },
   created () {
-    this.$vuetify.theme.dark = true
+    this.$vuetify.theme.dark = this.nightMode
   },
   async mounted () {
     const self = this
