@@ -7,7 +7,7 @@
   <v-container fluid>
     <center>
       <v-flex>
-        <h1>Reconocimiento Facial - Cámara {{camId}} </h1>
+        <h1>Reconocimiento Facial - Cámara {{camId}}</h1>
       </v-flex>
     </center>
     <v-flex xs12>
@@ -105,7 +105,7 @@ export default {
       isProgressActive: true,
       recognition: '',
       withOptions: [0, 1, 2, 3],
-      camId: 1,
+      camId: 2
     }
   },
 
@@ -151,10 +151,9 @@ export default {
       var unknownList = []
       var count = 0
       var time = 1000 / fps
-      var matchTime = 5000
+      var totalTime = 60000
       self.interval = setInterval(async () => {
-        count = count + time
-        //console.log(count)
+        count++
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
         const options = {
@@ -175,8 +174,7 @@ export default {
               options,
               matchList,
               unknownList,
-              count,
-              matchTime
+              count
             })
             self.$store.dispatch('face/draw',
               {
@@ -186,10 +184,6 @@ export default {
                 options
               })
           })
-        }
-        if(count >= matchTime){
-          console.log(matchTime.toString().concat(" seg"))
-          count = 0
         }
         const t1 = performance.now()
         self.duration = (t1 - t0).toFixed(2)
