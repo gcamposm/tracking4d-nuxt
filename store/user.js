@@ -65,9 +65,8 @@ export const actions = {
     // await this.$axios.$post('/api/user/register', { name })
     commit('addUser', name)
   },
-  async delete ({ commit }, name) {
-    await this.$axios.$post('/api/user/delete', { name })
-    commit('removeUser', name)
+  async delete ({ commit }, rut) {
+    await this.$axios.$post('/api/user/delete', { rut })
   },
   async upload ({ commit }, upload) {
     console.log(upload);

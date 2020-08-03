@@ -93,27 +93,14 @@ userRoutes.post("/register", (req, res) => {
 })
 
 userRoutes.post("/delete", async(req, res) => {
-  res.header("Content-Type", "application/json")
-  if (req.body.name) {
-    const oldFolder = join(usersFolder, req.body.name)
-    if (existsSync(oldFolder)) {
-      await deleteFolder(oldFolder)
-        .then(() => res.send('ok'))
-        .catch(e => res.sendStatus(500).send({
-          error: e
-        }))
-    } else {
-      res.sendStatus(500)
-        .send({
-          error: 'User doesn\'t exist'
-        })
-    }
-  } else {
-    res.sendStatus(500)
-      .send({
-        error: 'User name is required'
-      })
-  }
+  await axios
+    .delete(`http://localhost:8443/customers/delete/byRut/` + req.body.rut)
+    .then(response => {
+      console.log('delete customer with rut ' + req.body.rut)
+    })
+    .catch(e => {
+      console.log('error' + e)
+    })
 })
 
 userRoutes.post("/upload", async(req, res) => {
