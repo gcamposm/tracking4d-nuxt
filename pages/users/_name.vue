@@ -238,7 +238,7 @@ export default {
       this.files.forEach(element => {
         formData.append('file', element)
       });
-      await axios.post(`${this.serverURL}/images/uploadImages/${this.user.name}`, formData)
+      await axios.post(`${this.serverURL}/images/uploadImages/${this.customer.rut}`, formData)
         .then(response => {
           const result = response.data
           this.photos = response.data

@@ -26,7 +26,7 @@
         <v-btn text to="/register>">Registrarse</v-btn>
       </div> -->
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-img
         :src="image"
         gradient="to top right, rgb(5, 5, 251, .1),rgba(240, 189, 36, .35)"
@@ -50,7 +50,7 @@
         </v-list-item> -->
       </v-container>
       </v-img>
-    </v-content>
+    </v-main>
     <v-footer :fixed="fixed" app>
       <v-flex class="text-xs-right">
         <a href="http://spaceweare.com/" style="color: white">
