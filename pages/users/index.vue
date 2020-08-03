@@ -171,7 +171,7 @@ export default {
       ],
       phoneRules: [
         v => !!v || 'Debe ingresar su celular',
-        v => (v && v.length > 7 && v.length < 12) || 'Debe ingresar su celular de la siguiente manera: 56912345678'
+        v => (v && v.length > 8 && v.length < 10) || 'Ingresar su celular de la siguiente manera: 912345678, sin anteponer +56'
       ],
       mailRules: [
         v => !!v || 'Debe ingresar su correo electrónico',

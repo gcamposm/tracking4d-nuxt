@@ -67,23 +67,34 @@
                 </center>
               </v-col>
             </v-row>
-
-
               <div class="grid">
                 <center>
                   <div id="plano" class="tab-pane pt-6 fade in active">
                     <img src="@/assets/img/plano.jpg" alt="" class="plano">
-                    <img src="@/assets/img/camera.png" alt="" class="camera_1">
+                    <img src="@/assets/img/camera.png" alt="" class="camera_1" title="Cámara 1">
                     <div class="camera_01_div" id="camera_01_div"> </div>
-                    <img src="@/assets/img/camera.png" alt="" class="camera_2">
+                    <img src="@/assets/img/camera.png" alt="" class="camera_2" title="Cámara 2">
                     <div class="camera_02_div" id="camera_02_div"> </div>
                     <img v-if="statistics.length>0" src="@/assets/img/mapclip.png" alt="" class="clipmap">
-                    <img :title=point.match.customer.firstName+point.match.customer.lastName+point.match.hour style="'top:' + point.top + 3 + '%; left:' + point.left + '%;" class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
                     <img :title=point.match.customer.firstName+point.match.customer.lastName+point.match.hour style="'top:' + point.top + '%; left:' + point.left + '%;" class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
                   </div>
                 </center>
               </div>
             </div>
+          </v-card>
+          <br><br>
+          <v-card v-if="statistics.length>0" class="elevation-12">
+            <center>
+              <h1>Información Generada entre el {{InitialDate}} y el {{FinalDate}}</h1>
+            </center>
+            <br><br>
+            <center>
+              <ul>
+                <li v-for="item in statistics" :value="item.value" :key="item.value">
+                  El cliente {{ item.match.customer.firstName}} {{item.match.customer.lastName }} se reconoció en la cámara Nº1 a las {{ item.match.hour }}
+                </li>
+              </ul>
+            </center>
           </v-card>
         </v-flex>
       </v-layout>
@@ -184,6 +195,7 @@ export default {
   left:53%;
   width: 30px;
   height: 30px;
+  cursor: pointer;
 }
 
 .camera_01_div{
@@ -201,16 +213,17 @@ export default {
   left:78%;
   width: 30px;
   height: 30px;
+  cursor: pointer;
 }
-.clipmap{
+.clipmap2{
   position: absolute;
-  top: 68%;
-  left:68%;
+  top: 77%;
+  left:40%;
   width: 30px;
   height: 30px;
   cursor:pointer;
 }
-.clipmap2{
+.clipmap{
   position: absolute;
   top: 77%;
   left:50%;

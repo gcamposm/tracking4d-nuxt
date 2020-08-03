@@ -98,7 +98,7 @@ export default {
       secondMenu: false,
       datasets: [
         {
-          data: [10, 5, 5],
+          data: [10, 10, 10],
           backgroundColor: ["#f36e60", "#ffdb3b", "#185190"],
           hoverBackgroundColor: ["#fbd2cd", "#fef5c9", "#d1e3f7"]
         }
@@ -113,7 +113,13 @@ async created () {
     this.FinalDate = this.today
   },
   methods: {
+    updateChart () {
+
+    },
     async getStatisticsDays () {
+      this.unknowns = 0
+      this.matches = 0
+      this.totals = 0
       let formData = new FormData()
       formData.append('firstDate', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
       formData.append('secondDate', moment(this.FinalDate).format('YYYY-MM-DD HH:mm'))
@@ -124,12 +130,14 @@ async created () {
           console.log(response);
           console.log(result)
           result.forEach(element => {
-            this.unknowns = element.unknown+this.unknowns
-            this.matches = element.matches+this.matches
-            this.totals = element.total+this.totals
-            console.log(this.matches);
+            this.unknowns += element.unknowns
+            this.matches += element.matches
+            this.totals += element.totals
           });
           if (result.length !== 0) {
+            this.datasets[0].data[0] = this.matches
+            console.log(this.datasets[0].data);
+            this.renderChart(this.chartData)
           }
         })
         .catch(e => {
