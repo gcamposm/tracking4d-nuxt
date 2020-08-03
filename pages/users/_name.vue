@@ -1,9 +1,7 @@
 <template>
+<v-container>
   <v-layout row wrap align-center>
-    <v-flex xs12>
-      <center>
-        <h1>Imágenes: {{ user.name }}</h1>
-      </center>
+    <v-flex xs12 md10 lg10>
       <v-dialog v-model="dialog" persistent max-width="320">
         <v-card>
           <v-card-title class="headline">
@@ -26,26 +24,21 @@
       <v-tabs
         v-model="tab"
         centered
-        color="green-lighten2"
+        color="white"
         dark
         icons-and-text
       >
-        <v-tabs-slider color="yellow" />
-        <v-tab href="#tab-1">
-          Subir Fotos
-          <v-icon>cloud_upload</v-icon>
-        </v-tab>
-
-        <v-tab href="#tab-2">
+      <center>
+        <h1>Imágenes Cliente : {{ customer.firstName }} {{ customer.lastName }}</h1>
+      </center>
+        <v-tabs-slider color="blue" />
+<!--         <v-tab href="#tab-2">
           Camara
           <v-icon>camera</v-icon>
-        </v-tab>
-
+        </v-tab> -->
         <v-tab-item
           value="tab-1"
         >
-          <v-card flat>
-            <button @click="uploadFiles()">Cargar Archivos</button>
               <v-file-input
                 v-model="files"
                 color="deep-purple accent-4"
@@ -75,11 +68,12 @@
                   </span>
                 </template>
               </v-file-input>
-            <form method="POST" class="form-documents" enctype="multipart/form-data">
-              <input id="fileUpload" :multiple="multiple" @change="filesChange($event.target.name, $event.target.files)" type="file" name="fileUpload">
-            </form>
+              <center>
+                <v-btn @click="uploadFiles()" color="primary">
+                  <v-icon>cloud_upload_</v-icon> Subir Imágenes
+                </v-btn>
+              </center>
             <br><br>
-          </v-card>
         </v-tab-item>
 
         <v-tab-item
@@ -111,7 +105,7 @@
         </v-tab-item>
       </v-tabs>
     </v-flex>
-    <v-flex v-for="(photo, index) in user.photos"
+    <v-flex v-for="(photo, index) in photos"
             :key="photo"
             xs12 md6 lg4
     >
@@ -125,10 +119,11 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
-        <img :id="user.name + index" :src="photo">
+        <img :id="customer.rut + index" :src="photo">
       </v-card>
     </v-flex>
   </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -143,10 +138,11 @@ export default {
       tab: 'tab-1',
       multiple: true,
       selectedPhoto: null,
-      files: []
+      files: [],
+      customers: [],
+      photos:[]
     }
   },
-
   async fetch ({ store }) {
     if (!store.getters['user/isFetched']) {
       return store.dispatch('user/getAll')
@@ -165,6 +161,9 @@ export default {
     },
     isCameraStarted () {
       return this.$store.getters['camera/isCameraStarted']
+    },
+    customer () {
+      return this.$store.getters['user/getCustomer']
     }
   },
   watch: {
@@ -184,6 +183,18 @@ export default {
     this.$store.dispatch('camera/stopCamera')
   },
   methods: {
+    async loadPaths(){
+      await axios
+          .get(`${this.serverURL}/images/pathsByCustomer/${this.actualCustomer.id}`)
+          .then(response => {
+            // mensaje
+            console.log('paths loaded')
+            console.log(this.actualCustomer)
+          })
+          .catch(e => {
+            console.log(e, e.response)
+          })
+    },
     showDialog (photo) {
       this.dialog = true
       this.selectedPhoto = photo
@@ -224,18 +235,16 @@ export default {
     },
     async uploadFiles () {
       let formData = new FormData()
-      console.log(this.files)
       this.files.forEach(element => {
         formData.append('file', element)
       });
       await axios.post(`${this.serverURL}/images/uploadImages/${this.user.name}`, formData)
         .then(response => {
           const result = response.data
+          this.photos = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
-            console.log('llegué')
             return this.$store.dispatch('user/getAll')
-            console.log('llegué 2');
           } else {
             console.log('There is a problem with charge the images.')
           }
@@ -258,3 +267,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  img{
+      width:100%;
+      max-width:200px;
+  }
+</style>

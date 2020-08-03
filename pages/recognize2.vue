@@ -106,7 +106,7 @@ export default {
       isProgressActive: true,
       recognition: '',
       withOptions: [0, 1, 2, 3],
-      camId: 1,
+      camId: 2,
     }
   },
 

@@ -17,6 +17,14 @@
         <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
       </v-btn>
       <v-toolbar-title v-html="title" />
+      <!-- <div v-if="$auth.loggedIn">
+        {{ $auth.user.email }}
+        <v-btn text>Cerrar sesión</v-btn>
+      </div>
+      <div v-else>
+        <v-btn text to="/login>">Login</v-btn>
+        <v-btn text to="/register>">Registrarse</v-btn>
+      </div> -->
     </v-app-bar>
     <v-content>
       <v-img
@@ -26,6 +34,20 @@
       >
       <v-container fluid>
         <nuxt />
+        <!-- <v-spacer></v-spacer>
+        <v-list-item
+          :active-class="color"
+          class="v-list-item"
+          exact
+        >
+          <v-list-item-action>
+            
+            <v-icon @click="nightMode = !nightMode" v-if="!nightMode">far fa-moon</v-icon>
+            <v-icon @click="nightMode = !nightMode" v-if="nightMode">fas fa-moon</v-icon>
+          </v-list-item-action>
+          <v-list-item-title v-text="'Modo nocturo'"/>
+          <v-switch v-model="nightMode" color="blue"/>
+        </v-list-item> -->
       </v-container>
       </v-img>
     </v-content>
@@ -44,6 +66,7 @@
 export default {
   data () {
     return {
+      nightMode: true,
       image: require('@/assets/img/background.jpg'),
       sidebarBackgroundColor: 'rgba(27, 27, 27, 0.74)',
       clipped: false,
@@ -52,10 +75,11 @@ export default {
       items: [
         { icon: 'bar_chart', title: 'Dashboard', to: '/dashboard' },
         { icon: 'people', title: 'Clientes', to: '/users' },
-        { icon: 'business', title: 'Empresas', to: '/business' },
+        { icon: 'map', title: 'Mapa de Calor', to: '/map' },
         { icon: 'flip_camera_android', title: 'Entrenamiento', to: '/train' },
         { icon: 'menu_book', title: 'Reportes', to: '/reports' },
-        { icon: 'camera_front', title: 'Reconocimiento Facial', to: '/recognize' },
+        { icon: 'camera_front', title: 'Cámara 1', to: '/recognize' },
+        { icon: 'camera_front', title: 'Cámara 2', to: '/recognize2' },
         { icon: 'local_fire_department', title: 'Detección Temperatura', to: '/feature' },
       ],
       miniVariant: false,
@@ -70,7 +94,7 @@ export default {
     }
   },
   created () {
-    this.$vuetify.theme.dark = true
+    this.$vuetify.theme.dark = this.nightMode
   },
   async mounted () {
     const self = this

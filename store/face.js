@@ -5,7 +5,7 @@ export const state = () => ({
   loading: false,
   loaded: false,
   faceMatcher: null,
-
+  matches: [],
   useTiny: false,
 
   detections: {
@@ -45,6 +45,10 @@ export const mutations = {
 
   setFaceMatcher (state, matcher) {
     state.faceMatcher = matcher
+  },
+
+  setMatches(state, matches) {
+    state.matches = matches
   }
 }
 
@@ -114,12 +118,22 @@ export const actions = {
     detections = await detections
     return detections
   },
-  async recognize ({ commit, state }, { descriptor, options }) {
+  async recognize({ commit, state, dispatch }, { descriptor, options, matchList, unknownList }) {
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
+      if (bestMatch._label === "unknown"){
+        unknownList.push(descriptor)
+      }
+      else{
+        matchList.push(bestMatch._label)
+      }
       return bestMatch
     }
     return null
+  },
+
+  saveUnknowns({ state }, { unknownList }) {
+    unknownList.length = 0
   },
 
   draw ({ commit, state }, { canvasDiv, canvasCtx, detection, options }) {

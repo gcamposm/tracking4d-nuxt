@@ -66,7 +66,11 @@ const config = {
     {
       src: "@/plugins/chart",
       ssr: false
-    }
+    },
+    {
+      src: '~/plugins/vue-datepicker',
+      ssr: false
+    }, // datepicker plugin here
     // '@/plugins/vuetify'
   ],
 
@@ -76,7 +80,8 @@ const config = {
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    '@nuxtjs/auth'
   ],
   /*
    ** Axios module configuration
