@@ -77,7 +77,8 @@
                     <div class="camera_01_div" id="camera_01_div"> </div>
                     <img src="@/assets/img/camera.png" alt="" class="camera_2">
                     <div class="camera_02_div" id="camera_02_div"> </div>
-                    <img src="@/assets/img/mapclip.png" alt="" class="clipmap">
+                    <img v-if="statistics.length>0" src="@/assets/img/mapclip.png" alt="" class="clipmap">
+                    <img :title=point.match.customer.firstName+point.match.customer.lastName+point.match.hour style="'top:' + point.top + 3 + '%; left:' + point.left + '%;" class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
                     <img :title=point.match.customer.firstName+point.match.customer.lastName+point.match.hour style="'top:' + point.top + '%; left:' + point.left + '%;" class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
                   </div>
                 </center>
@@ -187,7 +188,7 @@ export default {
 
 .camera_01_div{
   position: absolute;
-  border: #117cc1 1px dashed;
+  border: #117cc1 5px dashed;
   top: 73%;
   left:33%;
   width: 20%;
@@ -220,7 +221,7 @@ export default {
 
 .camera_02_div{
   position: absolute;
-  border: #c11111 1px dashed;
+  border: #c11111 5px dashed;
   top: 52%;
   left:60%;
   width: 18%;

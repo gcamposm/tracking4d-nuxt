@@ -9,7 +9,7 @@
       sm8
       md6
     >
-      <img width="500" height=auto src="~/assets/img/logo.png"/>
+      <a href="http://spaceweare.com/"><img width="500" height=auto style="margin-top: 35%;" src="~/assets/img/logo.png"/></a>
     </v-flex>
   </v-layout>
 </template>

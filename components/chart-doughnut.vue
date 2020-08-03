@@ -98,7 +98,7 @@ export default {
       secondMenu: false,
       datasets: [
         {
-          data: [this.totals, this.matches, this.unknowns],
+          data: [10, 5, 5],
           backgroundColor: ["#f36e60", "#ffdb3b", "#185190"],
           hoverBackgroundColor: ["#fbd2cd", "#fef5c9", "#d1e3f7"]
         }
@@ -127,6 +127,7 @@ async created () {
             this.unknowns = element.unknown+this.unknowns
             this.matches = element.matches+this.matches
             this.totals = element.total+this.totals
+            console.log(this.matches);
           });
           if (result.length !== 0) {
           }
