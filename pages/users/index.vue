@@ -114,7 +114,7 @@
                     <v-divider />
                   </v-list-item-action>
                   <v-list-item-action>
-                    <v-btn :to="'/users/' + customer.rut" color="primary" fab small>
+                    <v-btn @click="toUploadPhotosView(customer.rut)" color="primary" fab small>
                       <v-icon>
                         add_a_photo
                       </v-icon>
@@ -152,6 +152,7 @@ export default {
         firstName: null,
         rut: null
       },
+      rutToGetCustomer: null,
       customers: [],
       nameRules: [
         v => !!v || 'Debe ingresar su nombre',
@@ -233,10 +234,32 @@ export default {
           })
       }
     },
+    async toUploadPhotosView (rut) {
+      const self = this
+      this.rutToGetCustomer = rut
+      await this.getCustomerByRut()
+      return this.$store.dispatch('user/register', this.customerToUpload.rut)
+          .then(() => {
+            return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
+          })
+    },
 
     async createCustomer(store){
       await axios
       .post(`${this.serverURL}/customers/create`, this.customerToUpload)
+        .then(response => {
+          this.$store.dispatch('user/editCustomer', response.data)
+          console.log(response.data)
+
+        })
+        .catch(e => {
+          console.log('error'+e)
+        })
+    },
+
+    async getCustomerByRut(store){
+      await axios
+      .get(`${this.serverURL}/customers/byRut/`+ this.rutToGetCustomer)
         .then(response => {
           this.$store.dispatch('user/editCustomer', response.data)
           console.log(response.data)
