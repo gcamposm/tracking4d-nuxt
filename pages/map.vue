@@ -78,7 +78,7 @@
                     <img src="@/assets/img/camera.png" alt="" class="camera_2">
                     <div class="camera_02_div" id="camera_02_div"> </div>
                     <img src="@/assets/img/mapclip.png" alt="" class="clipmap">
-                    <img :title=point.customer.firstName+point.customer.lastName+point.hour class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
+                    <img :title=point.match.customer.firstName+point.match.customer.lastName+point.match.hour style="'top:' + point.top + '%; left:' + point.left + '%;" class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
                   </div>
                 </center>
               </div>
@@ -151,7 +151,7 @@ export default {
       formData.append('firstDate', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
       formData.append('secondDate', moment(this.FinalDate).format('YYYY-MM-DD HH:mm'))
       await axios
-        .post(`${this.serverURL}/matches/getMatchesByDate`, formData)
+        .post(`${this.serverURL}/matches/getMatchesByDateWithRandomLocation`, formData)
         .then(async (response) => {
           const result = response.data
           console.log(response);
@@ -212,7 +212,7 @@ export default {
 .clipmap2{
   position: absolute;
   top: 77%;
-  left:42%;
+  left:50%;
   width: 30px;
   height: 30px;
   cursor:pointer;
