@@ -234,11 +234,11 @@ export default {
       }
     },
 
-    async createCustomer(){
+    async createCustomer(store){
       await axios
       .post(`${this.serverURL}/customers/create`, this.customerToUpload)
         .then(response => {
-          this.state.commit('setCustomer', response.data)
+          this.$store.dispatch('user/editCustomer', response.data)
           console.log(response.data)
 
         })
