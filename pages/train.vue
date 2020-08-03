@@ -25,7 +25,7 @@
                     Entrenando
                   </v-progress-circular>
                   </div>
-                  <v-flex v-for="user in users" :key="user.name" xs12>
+                  <v-flex v-for="user in customers" :key="user.name" xs12>
                   
       <v-card>
         <v-card-title>
@@ -44,7 +44,7 @@
                     xs12 md6 lg4
             >
                 <center>
-                  <img :id="user.name + index" :src="photo">
+                  <img :id="user.rut + index" :src="photo">
                 </center> 
             </v-flex>
           
@@ -70,7 +70,8 @@ export default {
       step: 1,
       counter: 0,
       progress: 0,
-      isProgressActive: false
+      isProgressActive: false,
+      customers: []
     }
   },
   computed: {
@@ -80,6 +81,9 @@ export default {
     serverURL () {
       return this.$store.state.general.serverURL
     }
+  },
+  async created(){
+    await this.getCustomers()
   },
 
   async fetch ({ store }) {
@@ -91,15 +95,38 @@ export default {
   },
 
   methods: {
+    async getCustomers(){
+      await axios
+          .get(this.serverURL + '/images/pathsWithCustomer')
+          .then(response => {
+            // mensaje
+            //this.customers = response.data
+            console.log('customers loaded')
+            console.log(response.data)
+            response.data.forEach(element => {
+              var customer = null
+              console.log(element)
+              customer = element.customer
+              customer.photos = element.paths
+              this.customers.push(customer)
+            });
+          })
+          .catch(e => {
+            console.log(e, e.response)
+            this.file = ''
+          })
+    },
     async train () {
       const self = this
       self.resetProgress()
       const faces = []
-      await Promise.all(self.users.map(async (user) => {
+      await Promise.all(self.customers.map(async (customer) => {
         const descriptors = []
-        await Promise.all(user.photos.map(async (photo, index) => {
-          const photoId = `${user.name}${index}`
+        await Promise.all(customer.photos.map(async (photo, index) => {
+          const photoId = `${customer.rut}${index}`
           const img = document.getElementById(photoId)
+          console.log('img')
+          console.log(img)
           const options = {
             detectionsEnabled: true,
             landmarksEnabled: true,
@@ -107,6 +134,8 @@ export default {
             expressionsEnabled: false
           }
           const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: img, options })
+          console.log('detections')
+        console.log(detections)
           detections.forEach((d) => {
             descriptors.push({
               path: photo,
@@ -116,7 +145,7 @@ export default {
           self.increaseProgress()
         }))
         faces.push({
-          user: user.name,
+          user: customer.rut,
           descriptors
         })
       }))
