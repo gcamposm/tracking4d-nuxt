@@ -29,7 +29,7 @@
         icons-and-text
       >
       <center>
-        <h1>Imágenes Cliente : {{ actualCustomer.rut }}</h1>
+        <h1>Imágenes Cliente : {{ customer.firstName }} {{ customer.lastName }}</h1>
       </center>
         <v-tabs-slider color="blue" />
 <!--         <v-tab href="#tab-2">
@@ -105,7 +105,7 @@
         </v-tab-item>
       </v-tabs>
     </v-flex>
-    <v-flex v-for="(photo, index) in actualCustomer.photos"
+    <v-flex v-for="(photo, index) in photos"
             :key="photo"
             xs12 md6 lg4
     >
@@ -119,7 +119,7 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
-        <img :id="actualCustomer.rut + index" :src="photo">
+        <img :id="customer.rut + index" :src="photo">
       </v-card>
     </v-flex>
   </v-layout>
@@ -140,11 +140,8 @@ export default {
       selectedPhoto: null,
       files: [],
       customers: [],
-      actualCustomer: null
+      photos:[]
     }
-  },
-  created(){
-    this.actualCustomer = this.customer
   },
   async fetch ({ store }) {
     if (!store.getters['user/isFetched']) {
@@ -166,8 +163,8 @@ export default {
       return this.$store.getters['camera/isCameraStarted']
     },
     customer () {
-      return this.$store.state.general.customer
-    },
+      return this.$store.getters['user/getCustomer']
+    }
   },
   watch: {
     async tab (val) {
@@ -191,7 +188,6 @@ export default {
           .get(`${this.serverURL}/images/pathsByCustomer/${this.actualCustomer.id}`)
           .then(response => {
             // mensaje
-            this.actualCustomer.photos = response.data
             console.log('paths loaded')
             console.log(this.actualCustomer)
           })
@@ -239,13 +235,13 @@ export default {
     },
     async uploadFiles () {
       let formData = new FormData()
-      console.log(this.files)
       this.files.forEach(element => {
         formData.append('file', element)
       });
       await axios.post(`${this.serverURL}/images/uploadImages/${this.user.name}`, formData)
         .then(response => {
           const result = response.data
+          this.photos = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
             return this.$store.dispatch('user/getAll')

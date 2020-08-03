@@ -97,5 +97,8 @@ export const getters = {
   },
   isFetched: (state) => {
     return !!state.fetched
-  }
+  },
+  getCustomer: state => {
+    return state.customer
+  },
 }
