@@ -82,3 +82,9 @@ dist
 
 # IDE
 .idea
+
+.DS_Store
+
+package-lock.json
+
+package.json
