@@ -64,15 +64,15 @@
                   <v-btn @click="obtainExcel()" color="primary">
                     Obtener Excel
                   </v-btn>
-                  <v-btn @click="contacts()" color="primary">
+                  <!-- <v-btn @click="contacts()" color="primary">
                     Obtener Contactos
-                  </v-btn>
+                  </v-btn> -->
                 </center>
               </v-col>
             </v-row>
-        <!--       <template>
+               <template>
               <v-progress-linear color="warning" indeterminate></v-progress-linear>
-            </template> -->
+            </template>
           </v-container>
         </div>
         </v-card>
