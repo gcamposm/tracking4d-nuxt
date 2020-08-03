@@ -25,12 +25,12 @@
                     Entrenando
                   </v-progress-circular>
                   </div>
-                  <v-flex v-for="user in customers" :key="user.name" xs12>
+                  <v-flex v-for="customer in customers" :key="customer.firstName" xs12>
                   
       <v-card>
         <v-card-title>
-          <strong class="headline"> Cliente Rut: {{ user.name }}</strong>
-          <v-btn :to="{ path: `/users/${user.name}`}" style="margin-left: 3%;" fab dark small color="primary">
+          <strong class="headline"> {{ customer.firstName }} {{ customer.lastName }}</strong>
+          <v-btn @click="toUploadPhotosView(customer.rut)" style="margin-left: 3%;" fab dark small color="primary">
             <v-icon dark>
               add_a_photo
             </v-icon>
@@ -39,12 +39,12 @@
         <v-layout row
                   wrap
         >
-            <v-flex v-for="(photo, index) in user.photos"
+            <v-flex v-for="(photo, index) in customer.photos"
                     :key="photo"
                     xs12 md6 lg4
             >
                 <center>
-                  <img :id="user.rut + index" :src="photo">
+                  <img :id="customer.rut + index" :src="photo">
                 </center> 
             </v-flex>
           
@@ -71,7 +71,12 @@ export default {
       counter: 0,
       progress: 0,
       isProgressActive: false,
-      customers: []
+      customers: [],
+      rutToGetCustomer: null,
+      customerToUpload: {
+        firstName: null,
+        rut: null
+      },
     }
   },
   computed: {
@@ -95,6 +100,24 @@ export default {
   },
 
   methods: {
+    async toUploadPhotosView (rut) {
+      const self = this
+      this.rutToGetCustomer = rut
+      await this.getCustomerByRut()
+      return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
+    },
+    async getCustomerByRut(store){
+      await axios
+      .get(`${this.serverURL}/customers/byRut/`+ this.rutToGetCustomer)
+        .then(response => {
+          this.$store.dispatch('user/editCustomer', response.data)
+          console.log(response.data)
+
+        })
+        .catch(e => {
+          console.log('error'+e)
+        })
+    },
     async getCustomers(){
       await axios
           .get(this.serverURL + '/images/pathsWithCustomer')
