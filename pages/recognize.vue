@@ -149,7 +149,7 @@ export default {
     async saveMatches (filteredMatches){
       let formData = new FormData()
           formData.append('matches', filteredMatches)
-          formData.append('cameraId', this.camId)
+          formData.append('cameraId', 1)
           await axios
           .post(`${this.serverURL}/matches/create/withFilteredMatches`, formData)
           .then(response => {

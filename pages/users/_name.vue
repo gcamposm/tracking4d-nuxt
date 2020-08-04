@@ -143,19 +143,7 @@ export default {
       photos:[]
     }
   },
-  async fetch ({ store }) {
-    if (!store.getters['user/isFetched']) {
-      return store.dispatch('user/getAll')
-    }
-  },
   computed: {
-    user () {
-      const userByName = this.$store.getters['user/userByName']
-      return userByName(this.$route.params.name)
-    },
-    users () {
-      return this.$store.state.user.list
-    },
     serverURL () {
       return this.$store.state.general.serverURL
     },
@@ -216,29 +204,12 @@ export default {
         this.dialog = false
       }
     },
-    filesChange (fieldName, fileList) {
-      const self = this
-      const formData = new FormData()
-      formData.append('user', self.user.name)
-      Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append(fieldName, fileList[x], 'jpg')
-        console.log(fieldName)
-        console.log(fileList[x])
-        console.log(this.user.name)
-      })
-      return self.$store.dispatch('user/upload', formData)
-        .then((result) => {
-          if (document) {
-            document.getElementById('fileUpload').value = ''
-          }
-        })
-    },
     async uploadFiles () {
       let formData = new FormData()
       this.files.forEach(element => {
         formData.append('file', element)
       });
-      await axios.post(`${this.serverURL}/images/uploadImages/${this.user.name}`, formData)
+      await axios.post(`${this.serverURL}/images/uploadImages/${this.customer.rut}`, formData)
         .then(response => {
           const result = response.data
           this.photos = response.data

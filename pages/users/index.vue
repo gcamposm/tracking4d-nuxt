@@ -181,18 +181,12 @@ export default {
   },
 
   computed: {
-    users () {
-      return this.$store.state.user.list
-    },
     serverURL () {
       return this.$store.state.general.serverURL
     },
     customer () {
       return this.$store.state.general.customer
     }
-  },
-  fetch ({ store }) {
-    return store.dispatch('user/getAll')
   },
   async created(){
     await this.getCustomers()
@@ -228,20 +222,14 @@ export default {
       const self = this
       await this.createCustomer()
       if (this.$refs.form.validate()) {
-        return this.$store.dispatch('user/register', this.customerToUpload.rut)
-          .then(() => {
-            return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
-          })
+        return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
       }
     },
     async toUploadPhotosView (rut) {
       const self = this
       this.rutToGetCustomer = rut
       await this.getCustomerByRut()
-      return this.$store.dispatch('user/register', this.customerToUpload.rut)
-          .then(() => {
-            return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
-          })
+      return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
     },
 
     async createCustomer(store){
@@ -270,9 +258,9 @@ export default {
         })
     },
 
-    showDialog (name) {
+    showDialog (rut) {
       this.dialog = true
-      this.selectedUser = name
+      this.selectedUser = rut
     },
 
     hideDialog () {

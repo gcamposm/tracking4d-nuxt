@@ -8,32 +8,6 @@
             <v-row>
               <v-col cols="6">
                 <v-menu
-                  ref="firstMenu"
-                  v-model="firstMenu"
-                  :close-on-content-click="false"
-                  :return-value.sync="InitialDate"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="InitialDate"
-                      label="Fecha inicial"
-                      prepend-icon="event"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker :language="es" :max="today" v-model="InitialDate" no-title scrollable>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="firstMenu = false">Cancelar</v-btn>
-                    <v-btn text color="primary" @click="$refs.firstMenu.save(InitialDate)">Aceptar</v-btn>
-                  </v-date-picker>
-                </v-menu>
-              </v-col>
-              <v-col cols="6">
-                <v-menu
                   ref="secondMenu"
                   v-model="secondMenu"
                   :close-on-content-click="false"
@@ -58,9 +32,9 @@
                   </v-date-picker>
                 </v-menu>
                 <center>
-                  <v-btn @click="getStatisticsDays()" color="primary">
+                  <!-- <v-btn @click="getStatisticsDays()" color="primary">
                     Obtener Estadísticas
-                  </v-btn>
+                  </v-btn> -->
                   <v-btn @click="obtainExcel()" color="primary">
                     Obtener Excel
                   </v-btn>
@@ -139,7 +113,7 @@ export default {
     },
     async obtainExcel () {
       let formData = new FormData()
-      formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
+      formData.append('day', moment(this.FinalDate).format('YYYY-MM-DD HH:mm'))
       await axios
         .post(`${this.serverURL}/customers/write`, formData)
         .then(async (response) => {
