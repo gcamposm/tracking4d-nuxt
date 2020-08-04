@@ -1,33 +1,34 @@
-const api = require('./').handler
-const consola = require('consola')
+// Dependencies
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const express = require('express');
 
-let config = require('../nuxt.config.js')
-config.dev = !(process.env.NODE_ENV === 'production')
+const app = express();
 
-const host = config.env.HOST || 'localhost'
-const port = config.env.PORT_API || 3000
+// Certificate
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/tracking4dd.tk/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/tracking4dd.tk/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/tracking4dd.tk/chain.pem', 'utf8');
 
-// Listen the server
-api.listen(port, host)
-consola.ready({
-  message: `API listening on http://${host}:${port}`,
-  badge: true
-})
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
 
+app.use((req, res) => {
+	res.send('Hello there !');
+});
 
-const fs = require('fs')
-const https = require('https')
-const app = express()
+// Starting both http & https servers
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
 
-app.get('/', (req, res) => {
-  res.send('Hello HTTPS!')
-})
+httpServer.listen(3001, () => {
+	console.log('HTTP Server running on port 80');
+});
 
-
-https.createServer({
-  key: fs.readFileSync('/etc/letsencrypt/live/tracking4dd.tk/key.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/tracking4dd.tk/cert.pem'),
-  ca: fs.readFileSync('/etc/letsencrypt/live/tracking4dd.tk/chain.pem')
-}, app).listen(3000, () => {
-  console.log('Listening...')
-})
+httpsServer.listen(443, () => {
+	console.log('HTTPS Server running on port 443');
+});

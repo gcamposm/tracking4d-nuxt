@@ -3,9 +3,9 @@ const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   HOST: process.env.HOST || 'localhost',
   PORT: process.env.PORT || 3000,
-  PORT_API: process.env.PORT_API || 3000
+  PORT_API: process.env.PORT_API || 443
 }
-env.API_URL = process.env.API_URL || `http://localhost:${env.PORT_API}`
+env.API_URL = process.env.API_URL || `https://tracking4dd.tk:${env.PORT_API}`
 
 const isDev = env.NODE_ENV === 'development'
 const config = {
