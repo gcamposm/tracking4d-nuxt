@@ -64,10 +64,10 @@
           <v-card-text>¿Está seguro de eliminar este usuario?</v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="hideDialog()" color="blue" flat>
+            <v-btn @click="hideDialog()" color="blue" text>
               Cancelar
             </v-btn>
-            <v-btn @click="deleteUpload()" color="blue" flat>
+            <v-btn @click="deleteUpload()" color="blue" text>
               Confirmar
             </v-btn>
           </v-card-actions>
@@ -270,9 +270,17 @@ export default {
 
     async deleteUpload () {
       if (this.selectedUser) {
-        await this.$store.dispatch('user/delete', this.selectedUser)
-        this.selectedUser = null
-        this.dialog = false
+        await axios
+        .delete(`${this.serverURL}/customers/delete/byRut/`+ this.selectedUser)
+          .then(response => {
+            console.log(response.data)
+
+          })
+          .catch(e => {
+            console.log('error'+e)
+          })
+          this.selectedUser = null
+          this.dialog = false
       }
     }
   }
