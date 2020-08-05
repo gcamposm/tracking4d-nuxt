@@ -24,6 +24,7 @@
                   v-model="customerToUpload.rut"
                   :rules="rutRules"
                   label="Rut"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
@@ -37,6 +38,7 @@
                   v-model="customerToUpload.mail"
                   label="Correo electrónico"
                   type="email"
+                  :rules="mailRules"
                   autocomplete="off"
                   required
                 />
@@ -181,6 +183,7 @@ export default {
       ],
       mailRules: [
         v => !!v || 'Debe ingresar su correo electrónico',
+        v => (v && v.length > 4) || 'Ingresar correo corectamente, ejemplo: nombre@gmail.com'
       ]
     }
   },
