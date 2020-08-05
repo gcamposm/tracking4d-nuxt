@@ -10,12 +10,14 @@
                   v-model="customerToUpload.firstName"
                   :rules="nameRules"
                   label="Nombres"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
                   v-model="customerToUpload.lastName"
                   :rules="lastNameRules"
                   label="Apellidos"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
@@ -28,12 +30,14 @@
                   v-model="customerToUpload.activity"
                   :rules="activityRules"
                   label="Sección de trabajo o actividad"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
                   v-model="customerToUpload.mail"
                   label="Correo electrónico"
                   type="email"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
@@ -41,6 +45,7 @@
                   :rules="phoneRules"
                   label="Celular"
                   type="number"
+                  autocomplete="off"
                   required
                 />
                 <v-spacer />
