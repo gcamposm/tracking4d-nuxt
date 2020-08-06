@@ -205,6 +205,7 @@ export default {
       await axios
           .get(this.serverURL + '/images/pathsWithCustomer')
           .then(response => {
+            //this.customers.length = 0
             // mensaje
             //this.customers = response.data
             console.log('customers loaded')
@@ -241,6 +242,7 @@ export default {
     },
 
     async createCustomer(store){
+      this.customerToUpload.deleted = false
       await axios
       .post(`${this.serverURL}/customers/create`, this.customerToUpload)
         .then(response => {
@@ -281,7 +283,9 @@ export default {
         await axios
         .delete(`${this.serverURL}/customers/delete/byRut/`+ this.selectedUser)
           .then(response => {
+            //this.getCustomers()
             console.log(response.data)
+            //return this.$router.push({ path: `/users` })
 
           })
           .catch(e => {
