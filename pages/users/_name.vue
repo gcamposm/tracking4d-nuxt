@@ -249,14 +249,31 @@ export default {
         });
       });
     },
+    async saveDescriptorAwait(formData){
+      await this.saveDescriptor(formData)
+    },
+    async saveDescriptor (formData) {
+      await axios
+        .post(`${this.serverURL}/images/create/withData`, formData)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(e => {
+          console.log('error'+e)
+        })
+    },
     async train () {
+      console.log("in train")
+      console.log("rut")
+      console.log(this.customer.rut)
       const self = this
       self.resetProgress()
       const faces = []
-      await Promise.all(self.customers.map(async (customer) => {
         const descriptors = []
-        await Promise.all(customer.photos.map(async (photo, index) => {
-          const photoId = `${customer.rut}${index}`
+        await Promise.all(this.photos.map(async (photo, index) => {
+          const photoId = `${this.customer.rut}${index}`
+          console.log(photoId)
+          console.log('photoId')
           const img = document.getElementById(photoId)
           console.log('img')
           console.log(img)
@@ -278,10 +295,9 @@ export default {
           self.increaseProgress()
         }))
         faces.push({
-          user: customer.rut,
+          user: this.customer.rut,
           descriptors
         })
-      }))
       this.faces = faces
       this.loadFaces()
       await self.$store.dispatch('face/save', faces)
@@ -329,6 +345,10 @@ export default {
       }
     },
     async uploadFiles () {
+      await this.uploadFilesAux()
+      await this.train()
+    },
+    async uploadFilesAux () {
       let formData = new FormData()
       this.files.forEach(element => {
         formData.append('file', element)
@@ -339,8 +359,6 @@ export default {
           this.photos = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
-            return this.$store.dispatch('user/getAll')
-            this.train()
           } else {
             console.log('There is a problem with charge the images.')
           }
