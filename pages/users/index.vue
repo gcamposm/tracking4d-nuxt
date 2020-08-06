@@ -10,30 +10,36 @@
                   v-model="customerToUpload.firstName"
                   :rules="nameRules"
                   label="Nombres"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
                   v-model="customerToUpload.lastName"
                   :rules="lastNameRules"
                   label="Apellidos"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
                   v-model="customerToUpload.rut"
                   :rules="rutRules"
                   label="Rut"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
                   v-model="customerToUpload.activity"
                   :rules="activityRules"
                   label="Sección de trabajo o actividad"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
                   v-model="customerToUpload.mail"
                   label="Correo electrónico"
                   type="email"
+                  :rules="mailRules"
+                  autocomplete="off"
                   required
                 />
                 <v-text-field
@@ -41,6 +47,7 @@
                   :rules="phoneRules"
                   label="Celular"
                   type="number"
+                  autocomplete="off"
                   required
                 />
                 <v-spacer />
@@ -176,6 +183,7 @@ export default {
       ],
       mailRules: [
         v => !!v || 'Debe ingresar su correo electrónico',
+        v => (v && v.length > 4) || 'Ingresar correo corectamente, ejemplo: nombre@gmail.com'
       ]
     }
   },
@@ -197,6 +205,7 @@ export default {
       await axios
           .get(this.serverURL + '/images/pathsWithCustomer')
           .then(response => {
+            //this.customers.length = 0
             // mensaje
             //this.customers = response.data
             console.log('customers loaded')
@@ -233,6 +242,7 @@ export default {
     },
 
     async createCustomer(store){
+      this.customerToUpload.deleted = false
       await axios
       .post(`${this.serverURL}/customers/create`, this.customerToUpload)
         .then(response => {
@@ -273,7 +283,9 @@ export default {
         await axios
         .delete(`${this.serverURL}/customers/delete/byRut/`+ this.selectedUser)
           .then(response => {
+            //this.getCustomers()
             console.log(response.data)
+            //return this.$router.push({ path: `/users` })
 
           })
           .catch(e => {

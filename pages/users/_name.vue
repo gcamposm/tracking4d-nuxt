@@ -73,7 +73,19 @@
                   <v-icon>cloud_upload_</v-icon> Subir Imágenes
                 </v-btn>
               </center>
-            <br><br>
+            <div>
+              <br><br>
+              <v-progress-circular
+                v-if="isProgressActive"
+                :rotate="360"
+                :size="100"
+                :width="15"
+                :value="progress"
+                color="blue"
+              >
+                Entrenando
+              </v-progress-circular>
+            </div>
         </v-tab-item>
 
         <v-tab-item
@@ -140,12 +152,23 @@ export default {
       selectedPhoto: null,
       files: [],
       customers: [],
-      photos:[]
+      photos:[],
+      counter: 0,
+      progress: 0,
+      isProgressActive: false,
+      rutToGetCustomer: null,
+      customerToUpload: {
+        firstName: null,
+        rut: null
+      },
     }
   },
   computed: {
     serverURL () {
       return this.$store.state.general.serverURL
+    },
+    users () {
+      return this.$store.state.user.list
     },
     isCameraStarted () {
       return this.$store.getters['camera/isCameraStarted']
@@ -153,6 +176,17 @@ export default {
     customer () {
       return this.$store.getters['user/getCustomer']
     }
+  },
+  async created(){
+    await this.getCustomers()
+  },
+
+  async fetch ({ store }) {
+    const self = this
+    await store.dispatch('user/getAll')
+      .then((users) => {
+        self.step += users.length
+      })
   },
   watch: {
     async tab (val) {
@@ -171,6 +205,112 @@ export default {
     this.$store.dispatch('camera/stopCamera')
   },
   methods: {
+    async getCustomers(){
+      await axios
+          .get(this.serverURL + '/images/pathsWithCustomer')
+          .then(response => {
+            // mensaje
+            //this.customers = response.data
+            console.log('customers loaded')
+            console.log(response.data)
+            response.data.forEach(element => {
+              var customer = null
+              console.log(element)
+              customer = element.customer
+              customer.photos = element.paths
+              this.customers.push(customer)
+            });
+          })
+          .catch(e => {
+            console.log(e, e.response)
+            this.file = ''
+          })
+    },
+    increaseProgress () {
+      const self = this
+      self.progress = (100 / self.step) * ++self.counter
+    },
+    resetProgress () {
+      const self = this
+      self.progress = self.counter = 0
+      self.isProgressActive = true
+    },
+    async loadFaces (){
+      console.log(this.faces)
+      //this.saveOneFace(this.faces[N])
+      this.faces.forEach(face => {
+        this.username = face.user
+        face.descriptors.forEach(element => {
+          let formData = new FormData()
+          formData.append('user', this.username)
+          formData.append('descriptor', element.descriptor)
+          formData.append('path', element.path)
+          this.saveDescriptorAwait(formData)
+        });
+      });
+    },
+    async saveDescriptorAwait(formData){
+      await this.saveDescriptor(formData)
+    },
+    async saveDescriptor (formData) {
+      await axios
+        .post(`${this.serverURL}/images/create/withData`, formData)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(e => {
+          console.log('error'+e)
+        })
+    },
+    async train () {
+      console.log("in train")
+      console.log("rut")
+      console.log(this.customer.rut)
+      const self = this
+      self.resetProgress()
+      const faces = []
+        const descriptors = []
+        await Promise.all(this.photos.map(async (photo, index) => {
+          const photoId = `${this.customer.rut}${index}`
+          console.log(photoId)
+          console.log('photoId')
+          const img = document.getElementById(photoId)
+          console.log('img')
+          console.log(img)
+          const options = {
+            detectionsEnabled: true,
+            landmarksEnabled: true,
+            descriptorsEnabled: true,
+            expressionsEnabled: false
+          }
+          const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: img, options })
+          console.log('detections')
+        console.log(detections)
+          detections.forEach((d) => {
+            descriptors.push({
+              path: photo,
+              descriptor: d.descriptor
+            })
+          })
+          self.increaseProgress()
+        }))
+        faces.push({
+          user: this.customer.rut,
+          descriptors
+        })
+      this.faces = faces
+      this.loadFaces()
+      await self.$store.dispatch('face/save', faces)
+        .then(() => {
+          self.increaseProgress()
+          self.isProgressActive = false
+          console.log('todo bien');
+        })
+        .catch((e) => {
+          self.isProgressActive = false
+          console.error(e)
+        })
+    },
     async loadPaths(){
       await axios
           .get(`${this.serverURL}/images/pathsByCustomer/${this.actualCustomer.id}`)
@@ -205,6 +345,10 @@ export default {
       }
     },
     async uploadFiles () {
+      await this.uploadFilesAux()
+      await this.train()
+    },
+    async uploadFilesAux () {
       let formData = new FormData()
       this.files.forEach(element => {
         formData.append('file', element)
@@ -215,7 +359,6 @@ export default {
           this.photos = response.data
           if (result.length !== 0) {
             console.log('Images loaded')
-            return this.$store.dispatch('user/getAll')
           } else {
             console.log('There is a problem with charge the images.')
           }
