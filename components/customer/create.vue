@@ -217,8 +217,6 @@ export default {
         await axios
           .post(this.serverURL + '/customers/' + `${this.customer.id}` + '/uploadImage', formData)
           .then(response => {
-            // mensaje
-            console.log('uploadImage')
             this.file = ''
           })
           .catch(e => {
@@ -232,8 +230,6 @@ export default {
         await axios
           .post(this.serverURL + '/customers/' + `${this.customer.id}` + '/changePrincipalImage', formData)
           .then(response => {
-            // mensaje
-            console.log('changePrincipalImage')
             this.file = ''
           })
           .catch(e => {

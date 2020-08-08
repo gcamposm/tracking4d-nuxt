@@ -84,8 +84,6 @@ export const actions = {
   },
   getFaceMatcher ({ commit, state }) {
     const labeledDescriptors = []
-    console.log('faces')
-    console.log(state.faces)
     state.facesBackend.forEach((face) => {
       const descriptors = face.descriptors.map((desc) => {
         if (desc.descriptor) {

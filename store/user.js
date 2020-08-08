@@ -54,7 +54,6 @@ export const mutations = {
 
 export const actions = {
   editCustomer({ commit },customer){
-    console.log(customer)
     var customerToUpdate = customer.customer
     customerToUpdate.photos = customer.paths
     commit('setCustomer', customerToUpdate)
@@ -72,9 +71,7 @@ export const actions = {
     await this.$axios.$post('/api/user/delete', { rut })
   },
   async upload ({ commit }, upload) {
-    console.log(upload);
     const data = await this.$axios.$post('/api/user/upload', upload)
-    console.log(data)
     commit('addPhotos', {
       user: upload.get('user'),
       photos: data
