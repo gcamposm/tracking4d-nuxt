@@ -54,7 +54,10 @@ export const mutations = {
 
 export const actions = {
   editCustomer({ commit },customer){
-    commit('setCustomer', customer)
+    console.log(customer)
+    var customerToUpdate = customer.customer
+    customerToUpdate.photos = customer.paths
+    commit('setCustomer', customerToUpdate)
   },
   async getAll ({ commit }) {
     const data = await this.$axios.$get('/api/user/getAll')

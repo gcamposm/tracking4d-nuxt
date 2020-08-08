@@ -134,6 +134,23 @@
         <img :id="customer.rut + index" :src="photo">
       </v-card>
     </v-flex>
+    <v-flex v-for="(photo, index) in customer.photos"
+            :key="photo"
+            xs12 md6 lg4
+    >
+      <v-card flat tile class="d-flex">
+        <v-btn
+          @click="showDialog(photo)"
+          fab
+          small
+          color="blue"
+          dark
+        >
+          <v-icon>close</v-icon>
+        </v-btn>
+        <img :id="customer.firstName + index" :src="photo">
+      </v-card>
+    </v-flex>
   </v-layout>
   </v-container>
 </template>
@@ -263,9 +280,6 @@ export default {
         })
     },
     async train () {
-      console.log("in train")
-      console.log("rut")
-      console.log(this.customer.rut)
       const self = this
       self.resetProgress()
       const faces = []
@@ -275,8 +289,6 @@ export default {
           console.log(photoId)
           console.log('photoId')
           const img = document.getElementById(photoId)
-          console.log('img')
-          console.log(img)
           const options = {
             detectionsEnabled: true,
             landmarksEnabled: true,

@@ -242,8 +242,6 @@ export default {
       await axios
       .post(`${this.serverURL}/customers/create`, this.customerToUpload)
         .then(response => {
-          console.log("response")
-          console.log(response.data)
           this.$store.dispatch('user/editCustomer', response.data)
         })
         .catch(e => {
