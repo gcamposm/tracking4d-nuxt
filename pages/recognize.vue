@@ -92,11 +92,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import axios from "axios"
 export default {
   data () {
     return {
       interval: null,
+      realEmotion: 'neutral',
+      emotion: 0,
       fps: 1,
       realFps: 0,
       step: 2,
@@ -111,6 +114,8 @@ export default {
   },
 
   computed: {
+    ...mapState([
+    ]),
     models () {
       return this.$store.state.model.list
     },
@@ -214,11 +219,41 @@ export default {
             self.isProgressActive = false
           }
           detections.forEach(async (detection) => {
+            console.log(detection);
+            this.emotion = 0
+            if (detection.expressions.angry > this.emotion){
+              this.emotion = detection.expressions.angry
+              this.realEmotion = 'Enojado'
+            }
+            if (detection.expressions.digusted > this.emotion) {
+              this.emotion = detection.expressions.disgusted
+              this.realEmotion = 'Disgustado'
+            }
+            if (detection.expressions.fearful > this.emotion) {
+              this.emotion = detection.expressions.fearful
+              this.realEmotion = 'Temeroso'
+            }
+            if (detection.expressions.happy > this.emotion) {
+              this.emotion = detection.expressions.happy
+              this.realEmotion = 'Feliz'
+            }
+            if (detection.expressions.neutral > this.emotion) {
+              this.emotion = detection.expressions.neutral
+              this.realEmotion = 'Neutral'
+            }
+            if (detection.expressions.sad > this.emotion) {
+              this.emotion = detection.expressions.sad
+              this.realEmotion = 'Triste'
+            }
+            if (detection.expressions.surprised > this.emotion) {
+              this.emotion = detection.expressions.surprised
+              this.realEmotion = 'Sorprendido'
+            }
             detection.recognition = await self.$store.dispatch('face/recognize', {
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownList
+              unknownList,
             })
             self.$store.dispatch('face/draw',
               {

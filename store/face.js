@@ -7,6 +7,7 @@ export const state = () => ({
   faceMatcher: null,
   matches: [],
   useTiny: false,
+  finalEmotion: '',
 
   detections: {
     scoreThreshold: 0.5,
@@ -156,6 +157,7 @@ export const actions = {
 
     const text = `${name}${emotions ? (name ? ' is ' : '') : ''}${emotions}`
     const box = detection.box || detection.detection.box
+    this.state.finalEmotion = emotions
     if (options.detectionsEnabled && box) {
       // draw box
       canvasCtx.strokeStyle = state.detections.boxColor
