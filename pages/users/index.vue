@@ -205,11 +205,7 @@ export default {
       await axios
           .get(this.serverURL + '/images/pathsWithCustomer')
           .then(response => {
-            //this.customers.length = 0
-            // mensaje
-            //this.customers = response.data
             console.log('customers loaded')
-            console.log(response.data)
             response.data.forEach(element => {
               var customer = null
               console.log(element)
@@ -246,9 +242,9 @@ export default {
       await axios
       .post(`${this.serverURL}/customers/create`, this.customerToUpload)
         .then(response => {
-          this.$store.dispatch('user/editCustomer', response.data)
+          console.log("response")
           console.log(response.data)
-
+          this.$store.dispatch('user/editCustomer', response.data)
         })
         .catch(e => {
           console.log('error'+e)
@@ -283,10 +279,8 @@ export default {
         await axios
         .delete(`${this.serverURL}/customers/delete/byRut/`+ this.selectedUser)
           .then(response => {
-            //this.getCustomers()
-            console.log(response.data)
-            //return this.$router.push({ path: `/users` })
-
+            console.log("Person deleted")
+            this.customers = response.data
           })
           .catch(e => {
             console.log('error'+e)
