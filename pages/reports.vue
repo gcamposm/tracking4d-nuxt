@@ -45,7 +45,7 @@
               </v-col>
             </v-row>
                <template>
-              <v-progress-linear color="warning" indeterminate></v-progress-linear>
+              <!-- <v-progress-linear color="warning" indeterminate></v-progress-linear> -->
             </template>
           </v-container>
         </div>
