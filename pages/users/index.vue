@@ -208,7 +208,6 @@ export default {
             console.log('customers loaded')
             response.data.forEach(element => {
               var customer = null
-              console.log(element)
               customer = element.customer
               customer.photos = element.paths
               this.customers.push(customer)
@@ -221,7 +220,6 @@ export default {
     },
     sendWhatsapp(phoneNumber){
       window.open('whatsapp://send?' + '&phone=' + this.callingCode + phoneNumber + '&abid=' + this.callingCode + phoneNumber)
-      console.log(phoneNumber)
     },
     async register () {
       const self = this
@@ -254,7 +252,7 @@ export default {
       .get(`${this.serverURL}/customers/byRut/`+ this.rutToGetCustomer)
         .then(response => {
           this.$store.dispatch('user/editCustomer', response.data)
-          console.log(response.data)
+          console.log('correct edit')
 
         })
         .catch(e => {

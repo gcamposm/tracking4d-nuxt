@@ -135,7 +135,9 @@ export default {
 
   async beforeMount () {
     const self = this
-    await self.$store.dispatch('face/getAll')
+    //await self.$store.dispatch('face/getAll')
+      //.then(() => self.$store.dispatch('face/getFaceMatcher'))
+    await this.getFaces()
       .then(() => self.$store.dispatch('face/getFaceMatcher'))
   },
 
@@ -151,6 +153,17 @@ export default {
   },
 
   methods: {
+    async getFaces (){
+          await axios
+          .get(`${this.serverURL}/images/getAllFaces`)
+          .then(response => {
+            this.$store.dispatch('face/editFaces', response.data)
+            console.log('Faces loaded')
+          })
+          .catch(e => {
+            console.log(e, e.response)
+          })
+    },
     async saveMatches (filteredMatches){
       let formData = new FormData()
           formData.append('matches', filteredMatches)
@@ -158,7 +171,6 @@ export default {
           await axios
           .post(`${this.serverURL}/matches/create/withFilteredMatches`, formData)
           .then(response => {
-            // mensaje
             console.log('matches saved')
           })
           .catch(e => {
@@ -198,10 +210,8 @@ export default {
         var second = today.getSeconds();
         if(second == "0"){
           let filteredMatches = [...new Set(matchList)];
-          console.log(filteredMatches)
           this.saveMatches(filteredMatches)
           this.saveUnknowns(unknownList)
-          console.log(unknownList)
           filteredMatches.length=0
         }
         const t0 = performance.now()

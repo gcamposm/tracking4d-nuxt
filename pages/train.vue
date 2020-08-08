@@ -111,8 +111,7 @@ export default {
       .get(`${this.serverURL}/customers/byRut/`+ this.rutToGetCustomer)
         .then(response => {
           this.$store.dispatch('user/editCustomer', response.data)
-          console.log(response.data)
-
+          console.log('Edit correct')
         })
         .catch(e => {
           console.log('error'+e)
@@ -125,10 +124,8 @@ export default {
             // mensaje
             //this.customers = response.data
             console.log('customers loaded')
-            console.log(response.data)
             response.data.forEach(element => {
               var customer = null
-              console.log(element)
               customer = element.customer
               customer.photos = element.paths
               this.customers.push(customer)
@@ -148,8 +145,6 @@ export default {
         await Promise.all(customer.photos.map(async (photo, index) => {
           const photoId = `${customer.rut}${index}`
           const img = document.getElementById(photoId)
-          console.log('img')
-          console.log(img)
           const options = {
             detectionsEnabled: true,
             landmarksEnabled: true,
@@ -157,8 +152,6 @@ export default {
             expressionsEnabled: false
           }
           const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: img, options })
-          console.log('detections')
-        console.log(detections)
           detections.forEach((d) => {
             descriptors.push({
               path: photo,
@@ -185,7 +178,6 @@ export default {
         })
     },
     async loadFaces (){
-      console.log(this.faces)
       //this.saveOneFace(this.faces[N])
       this.faces.forEach(face => {
         this.username = face.user
@@ -215,7 +207,7 @@ export default {
       await axios
         .post(`${this.serverURL}/images/create/withData`, formData)
         .then(response => {
-          console.log(response.data)
+          console.log('descriptors saved')
         })
         .catch(e => {
           console.log('error'+e)

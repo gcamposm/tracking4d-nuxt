@@ -193,10 +193,8 @@ export default {
         var second = today.getSeconds();
         if(second == "0"){
           let filteredMatches = [...new Set(matchList)];
-          console.log(filteredMatches)
           this.saveMatches(filteredMatches)
           this.saveUnknowns(unknownList)
-          console.log(unknownList)
           filteredMatches.length=0
         }
         const t0 = performance.now()

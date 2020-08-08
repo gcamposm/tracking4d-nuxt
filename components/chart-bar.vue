@@ -129,8 +129,6 @@ export default {
         .get(`${this.serverURL}/matches/getVisitsBetweenDates`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(response);
-          console.log(result)
           if (result.length !== 0) {
           }
         })
@@ -145,7 +143,6 @@ export default {
         .post(`${this.serverURL}/customers/contactsBetweenCustomers`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(result)
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)

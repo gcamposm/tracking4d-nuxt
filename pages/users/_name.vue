@@ -229,10 +229,8 @@ export default {
             // mensaje
             //this.customers = response.data
             console.log('customers loaded')
-            console.log(response.data)
             response.data.forEach(element => {
               var customer = null
-              console.log(element)
               customer = element.customer
               customer.photos = element.paths
               this.customers.push(customer)
@@ -253,7 +251,6 @@ export default {
       self.isProgressActive = true
     },
     async loadFaces (){
-      console.log(this.faces)
       //this.saveOneFace(this.faces[N])
       this.faces.forEach(face => {
         this.username = face.user
@@ -273,7 +270,7 @@ export default {
       await axios
         .post(`${this.serverURL}/images/create/withData`, formData)
         .then(response => {
-          console.log(response.data)
+          console.log('descriptors saved')
         })
         .catch(e => {
           console.log('error'+e)
@@ -286,8 +283,6 @@ export default {
         const descriptors = []
         await Promise.all(this.photos.map(async (photo, index) => {
           const photoId = `${this.customer.rut}${index}`
-          console.log(photoId)
-          console.log('photoId')
           const img = document.getElementById(photoId)
           const options = {
             detectionsEnabled: true,
@@ -296,8 +291,6 @@ export default {
             expressionsEnabled: false
           }
           const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: img, options })
-          console.log('detections')
-        console.log(detections)
           detections.forEach((d) => {
             descriptors.push({
               path: photo,
@@ -316,7 +309,6 @@ export default {
         .then(() => {
           self.increaseProgress()
           self.isProgressActive = false
-          console.log('todo bien');
         })
         .catch((e) => {
           self.isProgressActive = false
@@ -329,7 +321,6 @@ export default {
           .then(response => {
             // mensaje
             console.log('paths loaded')
-            console.log(this.actualCustomer)
           })
           .catch(e => {
             console.log(e, e.response)
