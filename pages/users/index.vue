@@ -223,8 +223,8 @@ export default {
     },
     async register () {
       const self = this
-      await this.createCustomer()
       if (this.$refs.form.validate()) {
+        await this.createCustomer()
         return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
       }
     },
