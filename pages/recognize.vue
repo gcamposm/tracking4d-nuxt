@@ -165,6 +165,8 @@ export default {
           })
     },
     async saveMatches (filteredMatches){
+      console.log('filteredMatches')
+      console.log(filteredMatches)
       let formData = new FormData()
           formData.append('matches', filteredMatches)
           formData.append('cameraId', 1)
@@ -229,7 +231,6 @@ export default {
             self.isProgressActive = false
           }
           detections.forEach(async (detection) => {
-            console.log(detection);
             this.emotion = 0
             if (detection.expressions.angry > this.emotion){
               this.emotion = detection.expressions.angry

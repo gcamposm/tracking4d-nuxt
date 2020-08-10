@@ -25,12 +25,12 @@
                     Entrenando
                   </v-progress-circular>
                   </div>
-                  <v-flex v-for="customer in customers" :key="customer.firstName" xs12>
+                  <v-flex v-for="person in persons" :key="person.firstName" xs12>
                   
       <v-card>
         <v-card-title>
-          <strong class="headline"> {{ customer.firstName }} {{ customer.lastName }}</strong>
-          <v-btn @click="toUploadPhotosView(customer.rut)" style="margin-left: 3%;" fab dark small color="primary">
+          <strong class="headline"> {{ person.firstName }} {{ person.lastName }}</strong>
+          <v-btn @click="toUploadPhotosView(person.rut)" style="margin-left: 3%;" fab dark small color="primary">
             <v-icon dark>
               add_a_photo
             </v-icon>
@@ -39,12 +39,12 @@
         <v-layout row
                   wrap
         >
-            <v-flex v-for="(photo, index) in customer.photos"
+            <v-flex v-for="(photo, index) in person.photos"
                     :key="photo"
                     xs12 md6 lg4
             >
                 <center>
-                  <img :id="customer.rut + index" :src="photo">
+                  <img :id="person.rut + index" :src="photo">
                 </center> 
             </v-flex>
           
@@ -71,9 +71,9 @@ export default {
       counter: 0,
       progress: 0,
       isProgressActive: false,
-      customers: [],
-      rutToGetCustomer: null,
-      customerToUpload: {
+      persons: [],
+      rutToGetPerson: null,
+      personToUpload: {
         firstName: null,
         rut: null
       },
@@ -88,7 +88,7 @@ export default {
     }
   },
   async created(){
-    await this.getCustomers()
+    await this.getPersons()
   },
 
   async fetch ({ store }) {
@@ -102,33 +102,31 @@ export default {
   methods: {
     async toUploadPhotosView (rut) {
       const self = this
-      this.rutToGetCustomer = rut
-      await this.getCustomerByRut()
-      return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
+      this.rutToGetPerson = rut
+      await this.getPersonByRut()
+      return self.$router.push({ path: `/users/${self.personToUpload.rut}` })
     },
-    async getCustomerByRut(store){
+    async getPersonByRut(store){
       await axios
-      .get(`${this.serverURL}/customers/byRut/`+ this.rutToGetCustomer)
+      .get(`${this.serverURL}/persons/byRut/`+ this.rutToGetPerson)
         .then(response => {
-          this.$store.dispatch('user/editCustomer', response.data)
+          this.$store.dispatch('user/editPerson', response.data)
           console.log('Edit correct')
         })
         .catch(e => {
           console.log('error'+e)
         })
     },
-    async getCustomers(){
+    async getPersons(){
       await axios
-          .get(this.serverURL + '/images/pathsWithCustomer')
+          .get(this.serverURL + '/images/pathsWithPerson')
           .then(response => {
-            // mensaje
-            //this.customers = response.data
-            console.log('customers loaded')
+            console.log('persons loaded')
             response.data.forEach(element => {
-              var customer = null
-              customer = element.customer
-              customer.photos = element.paths
-              this.customers.push(customer)
+              var person = null
+              person = element.person
+              person.photos = element.paths
+              this.persons.push(person)
             });
           })
           .catch(e => {
@@ -140,10 +138,10 @@ export default {
       const self = this
       self.resetProgress()
       const faces = []
-      await Promise.all(self.customers.map(async (customer) => {
+      await Promise.all(self.persons.map(async (person) => {
         const descriptors = []
-        await Promise.all(customer.photos.map(async (photo, index) => {
-          const photoId = `${customer.rut}${index}`
+        await Promise.all(person.photos.map(async (photo, index) => {
+          const photoId = `${person.rut}${index}`
           const img = document.getElementById(photoId)
           const options = {
             detectionsEnabled: true,
@@ -161,7 +159,7 @@ export default {
           self.increaseProgress()
         }))
         faces.push({
-          user: customer.rut,
+          user: person.rut,
           descriptors
         })
       }))

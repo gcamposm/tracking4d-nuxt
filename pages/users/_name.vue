@@ -29,7 +29,7 @@
         icons-and-text
       >
       <center>
-        <h1>Imágenes Cliente : {{ customer.firstName }} {{ customer.lastName }}</h1>
+        <h1>Imágenes Cliente : {{ person.firstName }} {{ person.lastName }}</h1>
       </center>
         <v-tabs-slider color="blue" />
 <!--         <v-tab href="#tab-2">
@@ -131,10 +131,10 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
-        <img :id="customer.rut + index" :src="photo">
+        <img :id="person.rut + index" :src="photo">
       </v-card>
     </v-flex>
-    <v-flex v-for="(photo, index) in customer.photos"
+    <v-flex v-for="(photo, index) in person.photos"
             :key="photo"
             xs12 md6 lg4
     >
@@ -148,7 +148,7 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
-        <img :id="customer.firstName + index" :src="photo">
+        <img :id="person.firstName + index" :src="photo">
       </v-card>
     </v-flex>
   </v-layout>
@@ -168,13 +168,13 @@ export default {
       multiple: true,
       selectedPhoto: null,
       files: [],
-      customers: [],
+      persons: [],
       photos:[],
       counter: 0,
       progress: 0,
       isProgressActive: false,
-      rutToGetCustomer: null,
-      customerToUpload: {
+      rutToGetPerson: null,
+      personToUpload: {
         firstName: null,
         rut: null
       },
@@ -190,12 +190,12 @@ export default {
     isCameraStarted () {
       return this.$store.getters['camera/isCameraStarted']
     },
-    customer () {
-      return this.$store.getters['user/getCustomer']
+    person () {
+      return this.$store.getters['user/getPerson']
     }
   },
   async created(){
-    await this.getCustomers()
+    await this.getPersons()
   },
 
   async fetch ({ store }) {
@@ -222,18 +222,16 @@ export default {
     this.$store.dispatch('camera/stopCamera')
   },
   methods: {
-    async getCustomers(){
+    async getPersons(){
       await axios
-          .get(this.serverURL + '/images/pathsWithCustomer')
+          .get(this.serverURL + '/images/pathsWithPerson')
           .then(response => {
-            // mensaje
-            //this.customers = response.data
-            console.log('customers loaded')
+            console.log('persons loaded')
             response.data.forEach(element => {
-              var customer = null
-              customer = element.customer
-              customer.photos = element.paths
-              this.customers.push(customer)
+              var person = null
+              person = element.person
+              person.photos = element.paths
+              this.persons.push(person)
             });
           })
           .catch(e => {
@@ -282,7 +280,7 @@ export default {
       const faces = []
         const descriptors = []
         await Promise.all(this.photos.map(async (photo, index) => {
-          const photoId = `${this.customer.rut}${index}`
+          const photoId = `${this.person.rut}${index}`
           const img = document.getElementById(photoId)
           const options = {
             detectionsEnabled: true,
@@ -300,7 +298,7 @@ export default {
           self.increaseProgress()
         }))
         faces.push({
-          user: this.customer.rut,
+          user: this.person.rut,
           descriptors
         })
       this.faces = faces
@@ -317,7 +315,7 @@ export default {
     },
     async loadPaths(){
       await axios
-          .get(`${this.serverURL}/images/pathsByCustomer/${this.actualCustomer.id}`)
+          .get(`${this.serverURL}/images/pathsByPerson/${this.actualPerson.id}`)
           .then(response => {
             // mensaje
             console.log('paths loaded')
@@ -356,7 +354,7 @@ export default {
       this.files.forEach(element => {
         formData.append('file', element)
       });
-      await axios.post(`${this.serverURL}/images/uploadImages/${this.customer.rut}`, formData)
+      await axios.post(`${this.serverURL}/images/uploadImages/${this.person.rut}`, formData)
         .then(response => {
           const result = response.data
           this.photos = response.data
