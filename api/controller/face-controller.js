@@ -12,7 +12,6 @@ const facesFileName = 'faces.json'
 modelRoutes.get("/getAll", (req, res) => {
   res.header("Content-Type", "application/json")
   const facesFile = join(dataFolder, facesFileName)
-  console.log(facesFile)
   delete require.cache[facesFile]
   const result = require(facesFile)
   res.send(result);

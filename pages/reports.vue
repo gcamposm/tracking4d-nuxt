@@ -45,7 +45,7 @@
               </v-col>
             </v-row>
                <template>
-              <v-progress-linear color="warning" indeterminate></v-progress-linear>
+              <!-- <v-progress-linear color="warning" indeterminate></v-progress-linear> -->
             </template>
           </v-container>
         </div>
@@ -87,12 +87,11 @@ export default {
     async getIncomeOutcome (){
       let formData = new FormData()
       formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
-      formData.append('customerId', 1)
+      formData.append('personId', 1)
       await axios
         .post(`${this.serverURL}/matches/getIncomeOutcome`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(result)
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)
@@ -102,10 +101,9 @@ export default {
       let formData = new FormData()
       formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
       await axios
-        .post(`${this.serverURL}/customers/contactsBetweenCustomers`, formData)
+        .post(`${this.serverURL}/persons/contactsBetweenPersons`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(result)
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)
@@ -115,7 +113,7 @@ export default {
       let formData = new FormData()
       formData.append('day', moment(this.FinalDate).format('YYYY-MM-DD HH:mm'))
       await axios
-        .post(`${this.serverURL}/customers/write`, formData)
+        .post(`${this.serverURL}/persons/write`, formData)
         .then(async (response) => {
           console.log("Write correct")
         })
@@ -123,7 +121,7 @@ export default {
           console.log('getMostSoldProducts', e, e.response)
         })
         await axios({
-        url: `${this.serverURL}/customers/download`,
+        url: `${this.serverURL}/persons/download`,
         method: 'GET',
         responseType: 'blob' // important
       })
@@ -147,8 +145,6 @@ export default {
         .post(`${this.serverURL}/matches/getMatchesByDate`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(response);
-            console.log(result)
           if (result.length !== 0) {
           }
         })

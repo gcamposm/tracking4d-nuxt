@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       hours: [],
-      customers: [],
+      persons: [],
       today: '',
       firstMenu: false,
       secondMenu: false,
@@ -129,8 +129,6 @@ export default {
         .get(`${this.serverURL}/matches/getVisitsBetweenDates`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(response);
-          console.log(result)
           if (result.length !== 0) {
           }
         })
@@ -142,10 +140,9 @@ export default {
       let formData = new FormData()
       formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
       await axios
-        .post(`${this.serverURL}/customers/contactsBetweenCustomers`, formData)
+        .post(`${this.serverURL}/persons/contactsBetweenPersons`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(result)
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)

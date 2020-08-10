@@ -1,7 +1,7 @@
 export const state = () => ({
   list: [],
   fetched: false,
-  customer: {
+  person: {
   }
 })
 
@@ -10,8 +10,8 @@ export const mutations = {
     state.list = users
     state.fetched = true
   },
-  setCustomer(state, customer) {
-    state.customer = customer
+  setPerson(state, person) {
+    state.person = person
   },
   addUser (state, name) {
     state.list.push({
@@ -53,8 +53,10 @@ export const mutations = {
 }
 
 export const actions = {
-  editCustomer({ commit },customer){
-    commit('setCustomer', customer)
+  editPerson({ commit }, person){
+    var personToUpdate = person.person
+    personToUpdate.photos = person.paths
+    commit('setPerson', personToUpdate)
   },
   async getAll ({ commit }) {
     const data = await this.$axios.$get('/api/user/getAll')
@@ -69,9 +71,7 @@ export const actions = {
     await this.$axios.$post('/api/user/delete', { rut })
   },
   async upload ({ commit }, upload) {
-    console.log(upload);
     const data = await this.$axios.$post('/api/user/upload', upload)
-    console.log(data)
     commit('addPhotos', {
       user: upload.get('user'),
       photos: data
@@ -97,7 +97,7 @@ export const getters = {
   isFetched: (state) => {
     return !!state.fetched
   },
-  getCustomer: state => {
-    return state.customer
+  getPerson: state => {
+    return state.person
   },
 }

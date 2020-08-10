@@ -76,7 +76,7 @@
                     <img src="@/assets/img/camera.png" alt="" class="camera_2" title="Cámara 2">
                     <div class="camera_02_div" id="camera_02_div"> </div>
                     <img v-if="statistics.length>0" src="@/assets/img/mapclip.png" alt="" class="clipmap">
-                    <img :title=point.match.customer.firstName+point.match.customer.lastName+point.match.hour style="'top:' + point.top + '%; left:' + point.left + '%;" class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
+                    <img :title=point.match.person.firstName+point.match.person.lastName+point.match.hour style="'top:' + point.top + '%; left:' + point.left + '%;" class="clipmap2" src="@/assets/img/mapclip.png" v-for="point in statistics" :value="point.value" :key="point.value"> 
                   </div>
                 </center>
               </div>
@@ -91,7 +91,7 @@
             <center>
               <ul>
                 <li v-for="item in statistics" :value="item.value" :key="item.value">
-                  El cliente {{ item.match.customer.firstName}} {{item.match.customer.lastName }} se reconoció en la cámara Nº1 a las {{ item.match.hour }}
+                  {{ item.match.person.firstName}} {{item.match.person.lastName }} se reconoció en la cámara Nº1 a las {{ item.match.hour }}
                 </li>
               </ul>
             </center>
@@ -131,8 +131,6 @@ export default {
         .post(`${this.serverURL}/detections/getVisitsBetweenDates`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(response);
-          console.log(result)
           result.forEach(element => {
             this.unknowns = element.unknown+this.unknowns
             this.matches = element.matches+this.matches
@@ -149,10 +147,9 @@ export default {
       let formData = new FormData()
       formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
       await axios
-        .post(`${this.serverURL}/customers/contactsBetweenCustomers`, formData)
+        .post(`${this.serverURL}/persons/contactsBetweenpersons`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(result)
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)
@@ -166,8 +163,6 @@ export default {
         .post(`${this.serverURL}/matches/getMatchesByDateWithRandomLocation`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(response);
-          console.log(result)
           this.statistics = result
           if (result.length !== 0) {
           }

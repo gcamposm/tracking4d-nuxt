@@ -127,8 +127,6 @@ async created () {
         .post(`${this.serverURL}/detections/getVisitsBetweenDates`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(response);
-          console.log(result)
           result.forEach(element => {
             this.unknowns += element.unknowns
             this.matches += element.matches
@@ -136,7 +134,6 @@ async created () {
           });
           if (result.length !== 0) {
             this.datasets[0].data[0] = this.matches
-            console.log(this.datasets[0].data);
             this.renderChart(this.chartData)
           }
         })
@@ -148,10 +145,9 @@ async created () {
       let formData = new FormData()
       formData.append('day', moment(this.InitialDate).format('YYYY-MM-DD HH:mm'))
       await axios
-        .post(`${this.serverURL}/customers/contactsBetweenCustomers`, formData)
+        .post(`${this.serverURL}/persons/contactsBetweenPersons`, formData)
         .then(async (response) => {
           const result = response.data
-          console.log(result)
         })
         .catch(e => {
           console.log('getStatisticsDays', e, e.response)

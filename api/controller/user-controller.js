@@ -94,9 +94,9 @@ userRoutes.post("/register", (req, res) => {
 
 userRoutes.post("/delete", async(req, res) => {
   await axios
-    .delete(`http://localhost:8443/customers/delete/byRut/` + req.body.rut)
+    .delete(`http://localhost:8443/persons/delete/byRut/` + req.body.rut)
     .then(response => {
-      console.log('delete customer with rut ' + req.body.rut)
+      console.log('delete person with rut ' + req.body.rut)
     })
     .catch(e => {
       console.log('error' + e)

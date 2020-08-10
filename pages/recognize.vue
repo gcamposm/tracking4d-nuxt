@@ -92,11 +92,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import axios from "axios"
 export default {
   data () {
     return {
       interval: null,
+      realEmotion: 'neutral',
+      emotion: 0,
       fps: 1,
       realFps: 0,
       step: 2,
@@ -111,6 +114,8 @@ export default {
   },
 
   computed: {
+    ...mapState([
+    ]),
     models () {
       return this.$store.state.model.list
     },
@@ -130,7 +135,9 @@ export default {
 
   async beforeMount () {
     const self = this
-    await self.$store.dispatch('face/getAll')
+    //await self.$store.dispatch('face/getAll')
+      //.then(() => self.$store.dispatch('face/getFaceMatcher'))
+    await this.getFaces()
       .then(() => self.$store.dispatch('face/getFaceMatcher'))
   },
 
@@ -146,14 +153,26 @@ export default {
   },
 
   methods: {
+    async getFaces (){
+          await axios
+          .get(`${this.serverURL}/images/getAllFaces`)
+          .then(response => {
+            this.$store.dispatch('face/editFaces', response.data)
+            console.log('Faces loaded')
+          })
+          .catch(e => {
+            console.log(e, e.response)
+          })
+    },
     async saveMatches (filteredMatches){
+      console.log('filteredMatches')
+      console.log(filteredMatches)
       let formData = new FormData()
           formData.append('matches', filteredMatches)
           formData.append('cameraId', 1)
           await axios
           .post(`${this.serverURL}/matches/create/withFilteredMatches`, formData)
           .then(response => {
-            // mensaje
             console.log('matches saved')
           })
           .catch(e => {
@@ -193,10 +212,8 @@ export default {
         var second = today.getSeconds();
         if(second == "0"){
           let filteredMatches = [...new Set(matchList)];
-          console.log(filteredMatches)
           this.saveMatches(filteredMatches)
           this.saveUnknowns(unknownList)
-          console.log(unknownList)
           filteredMatches.length=0
         }
         const t0 = performance.now()
@@ -214,11 +231,40 @@ export default {
             self.isProgressActive = false
           }
           detections.forEach(async (detection) => {
+            this.emotion = 0
+            if (detection.expressions.angry > this.emotion){
+              this.emotion = detection.expressions.angry
+              this.realEmotion = 'Enojado'
+            }
+            if (detection.expressions.digusted > this.emotion) {
+              this.emotion = detection.expressions.disgusted
+              this.realEmotion = 'Disgustado'
+            }
+            if (detection.expressions.fearful > this.emotion) {
+              this.emotion = detection.expressions.fearful
+              this.realEmotion = 'Temeroso'
+            }
+            if (detection.expressions.happy > this.emotion) {
+              this.emotion = detection.expressions.happy
+              this.realEmotion = 'Feliz'
+            }
+            if (detection.expressions.neutral > this.emotion) {
+              this.emotion = detection.expressions.neutral
+              this.realEmotion = 'Neutral'
+            }
+            if (detection.expressions.sad > this.emotion) {
+              this.emotion = detection.expressions.sad
+              this.realEmotion = 'Triste'
+            }
+            if (detection.expressions.surprised > this.emotion) {
+              this.emotion = detection.expressions.surprised
+              this.realEmotion = 'Sorprendido'
+            }
             detection.recognition = await self.$store.dispatch('face/recognize', {
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownList
+              unknownList,
             })
             self.$store.dispatch('face/draw',
               {

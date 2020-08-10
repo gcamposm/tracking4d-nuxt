@@ -7,35 +7,35 @@
             <v-container>
               <v-form ref="form" v-model="valid" lazy-validation>
                 <v-text-field
-                  v-model="customerToUpload.firstName"
+                  v-model="personToUpload.firstName"
                   :rules="nameRules"
                   label="Nombres"
                   autocomplete="off"
                   required
                 />
                 <v-text-field
-                  v-model="customerToUpload.lastName"
+                  v-model="personToUpload.lastName"
                   :rules="lastNameRules"
                   label="Apellidos"
                   autocomplete="off"
                   required
                 />
                 <v-text-field
-                  v-model="customerToUpload.rut"
+                  v-model="personToUpload.rut"
                   :rules="rutRules"
                   label="Rut"
                   autocomplete="off"
                   required
                 />
                 <v-text-field
-                  v-model="customerToUpload.activity"
+                  v-model="personToUpload.activity"
                   :rules="activityRules"
                   label="Sección de trabajo o actividad"
                   autocomplete="off"
                   required
                 />
                 <v-text-field
-                  v-model="customerToUpload.mail"
+                  v-model="personToUpload.mail"
                   label="Correo electrónico"
                   type="email"
                   :rules="mailRules"
@@ -43,7 +43,7 @@
                   required
                 />
                 <v-text-field
-                  v-model="customerToUpload.phoneNumber"
+                  v-model="personToUpload.phoneNumber"
                   :rules="phoneRules"
                   label="Celular"
                   type="number"
@@ -87,15 +87,15 @@
           <v-card-text>
             <v-container>
               <v-list two-line subheader>
-                <v-list-item v-for="customer in customers" :key="customer.rut">
+                <v-list-item v-for="person in persons" :key="person.rut">
                   <v-list-item-avatar>
                     <v-avatar
                       slot="activator"
                       size="32px"
                     >
                       <img
-                        v-if="customer.photos.length"
-                        :src="customer.photos[0]"
+                        v-if="person.photos.length"
+                        :src="person.photos[0]"
                         alt="Avatar"
                       >
                       <v-icon
@@ -108,12 +108,12 @@
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-subtitle>
-                      <h2> Nombre Cliente: {{ customer.firstName }} {{ customer.lastName }} </h2>
+                      <h2> Nombre Cliente: {{ person.firstName }} {{ person.lastName }} </h2>
                       <v-divider />
                     </v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-btn @click="showDialog(customer.rut)" color="primary" fab small>
+                    <v-btn @click="showDialog(person.rut)" color="primary" fab small>
                       <v-icon>
                         close
                       </v-icon>
@@ -121,7 +121,7 @@
                     <v-divider />
                   </v-list-item-action>
                   <v-list-item-action>
-                    <v-btn @click="toUploadPhotosView(customer.rut)" color="primary" fab small>
+                    <v-btn @click="toUploadPhotosView(person.rut)" color="primary" fab small>
                       <v-icon>
                         add_a_photo
                       </v-icon>
@@ -129,7 +129,7 @@
                     <v-divider />
                   </v-list-item-action>
                   <v-list-item-action>
-                    <v-btn @click="sendWhatsapp(customer.phoneNumber)" color="#3fc151" fab small>
+                    <v-btn @click="sendWhatsapp(person.phoneNumber)" color="#3fc151" fab small>
                       <v-icon>
                         smartphone
                       </v-icon>
@@ -155,12 +155,12 @@ export default {
       selectedUser: null,
       valid: true,
       callingCode: '56',
-      customerToUpload: {
+      personToUpload: {
         firstName: null,
         rut: null
       },
-      rutToGetCustomer: null,
-      customers: [],
+      rutToGetPerson: null,
+      persons: [],
       nameRules: [
         v => !!v || 'Debe ingresar su nombre',
         v => (v && v.length > 2) || 'El nombre debe tener más de 2 caracters'
@@ -192,30 +192,25 @@ export default {
     serverURL () {
       return this.$store.state.general.serverURL
     },
-    customer () {
-      return this.$store.state.general.customer
+    person () {
+      return this.$store.state.general.person
     }
   },
   async created(){
-    await this.getCustomers()
+    await this.getPersons()
   },
 
   methods: {
-    async getCustomers(){
+    async getPersons(){
       await axios
-          .get(this.serverURL + '/images/pathsWithCustomer')
+          .get(this.serverURL + '/images/pathsWithPerson')
           .then(response => {
-            //this.customers.length = 0
-            // mensaje
-            //this.customers = response.data
-            console.log('customers loaded')
-            console.log(response.data)
+            console.log('persons loaded')
             response.data.forEach(element => {
-              var customer = null
-              console.log(element)
-              customer = element.customer
-              customer.photos = element.paths
-              this.customers.push(customer)
+              var person = null
+              person = element.person
+              person.photos = element.paths
+              this.persons.push(person)
             });
           })
           .catch(e => {
@@ -225,42 +220,39 @@ export default {
     },
     sendWhatsapp(phoneNumber){
       window.open('whatsapp://send?' + '&phone=' + this.callingCode + phoneNumber + '&abid=' + this.callingCode + phoneNumber)
-      console.log(phoneNumber)
     },
     async register () {
       const self = this
-      await this.createCustomer()
       if (this.$refs.form.validate()) {
-        return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
+        await this.createPerson()
+        return self.$router.push({ path: `/users/${self.personToUpload.rut}` })
       }
     },
     async toUploadPhotosView (rut) {
       const self = this
-      this.rutToGetCustomer = rut
-      await this.getCustomerByRut()
-      return self.$router.push({ path: `/users/${self.customerToUpload.rut}` })
+      this.rutToGetPerson = rut
+      await this.getPersonByRut()
+      return self.$router.push({ path: `/users/${self.personToUpload.rut}` })
     },
 
-    async createCustomer(store){
-      this.customerToUpload.deleted = false
+    async createPerson(store){
+      this.personToUpload.deleted = false
       await axios
-      .post(`${this.serverURL}/customers/create`, this.customerToUpload)
+      .post(`${this.serverURL}/persons/create`, this.personToUpload)
         .then(response => {
-          this.$store.dispatch('user/editCustomer', response.data)
-          console.log(response.data)
-
+          this.$store.dispatch('user/editPerson', response.data)
         })
         .catch(e => {
           console.log('error'+e)
         })
     },
 
-    async getCustomerByRut(store){
+    async getPersonByRut(store){
       await axios
-      .get(`${this.serverURL}/customers/byRut/`+ this.rutToGetCustomer)
+      .get(`${this.serverURL}/persons/byRut/`+ this.rutToGetPerson)
         .then(response => {
-          this.$store.dispatch('user/editCustomer', response.data)
-          console.log(response.data)
+          this.$store.dispatch('user/editPerson', response.data)
+          console.log('correct edit')
 
         })
         .catch(e => {
@@ -281,12 +273,10 @@ export default {
     async deleteUpload () {
       if (this.selectedUser) {
         await axios
-        .delete(`${this.serverURL}/customers/delete/byRut/`+ this.selectedUser)
+        .delete(`${this.serverURL}/persons/delete/byRut/`+ this.selectedUser)
           .then(response => {
-            //this.getCustomers()
-            console.log(response.data)
-            //return this.$router.push({ path: `/users` })
-
+            console.log("Person deleted")
+            this.persons = response.data
           })
           .catch(e => {
             console.log('error'+e)

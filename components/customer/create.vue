@@ -1,5 +1,5 @@
 <template>
-  <div id="customer-crate">
+  <div id="person-crate">
     <v-container fill-height fluid grid-list-xl>
       <v-layout justify-center wrap>
         <v-flex md12>
@@ -47,7 +47,7 @@
                     >
                       <v-text-field
                         color="warning"
-                        v-model="customer.firstName"
+                        v-model="person.firstName"
                         :rules="regularRules"
                         autocomplete="off"
                         label="Nombres"
@@ -60,7 +60,7 @@
                     >
                       <v-text-field
                         color="warning"
-                        v-model="customer.lastName"
+                        v-model="person.lastName"
                         label="Apellidos"
                         autocomplete="off"
                         required
@@ -75,7 +75,7 @@
                     >
                       <v-text-field
                         color="warning"
-                        v-model="customer.rut"
+                        v-model="person.rut"
                         autocomplete="off"
                         label="Rut"
                         :rules="regularRules"
@@ -90,7 +90,7 @@
                         color="warning"
                         type="number"
                         class="inputNumber"
-                        v-model="customer.phoneNumber"
+                        v-model="person.phoneNumber"
                         label="Número de celular"
                         :rules="numberRules"
                         autocomplete="off"
@@ -104,7 +104,7 @@
                     >
                     <v-text-field
                         color="warning"
-                        v-model="customer.genre"
+                        v-model="person.genre"
                         autocomplete="off"
                         label="Género"
                         :rules="regularRules"
@@ -119,7 +119,7 @@
                     >
                     <v-text-field
                         color="warning"
-                        v-model="customer.mail"
+                        v-model="person.mail"
                         autocomplete="off"
                         label="Correo"
                         :rules="regularRules"
@@ -162,7 +162,7 @@ import { mapState, mapActions } from 'vuex'
 import MaterialCard from '@/components/home/material/card.vue'
 
 export default {
-  name: 'customer-create',
+  name: 'person-create',
   components: {
     'material-card': MaterialCard
   },
@@ -182,43 +182,41 @@ export default {
     }
   },
   async created () {
-    this.customer = {}
+    this.person = {}
   },
   methods: {
     ...mapActions([
-      'getCustomer',
-      'getCustomers',
-      'editCustomer',
+      'getPerson',
+      'getPersons',
+      'editPerson',
       'setSnackbarAlert',
       'register'
     ]),
     getImageUrl () {
-      this.imageURL = this.serverURL + '/customers/web/' + `${this.customer.id}` + '/getprincipalimage/' + '?' + Math.random()
+      this.imageURL = this.serverURL + '/persons/web/' + `${this.person.id}` + '/getprincipalimage/' + '?' + Math.random()
     },
     back () {
-      this.createDialogCustomer = false
+      this.createDialogPerson = false
     },
     async saveChanges () {
       if (this.$refs.form.validate()) {
         this.loadConfirm = true
-        this.newCustomer = this.customer
+        this.newPerson = this.person
         await this.register()
         this.loadConfirm = false
-        this.createDialogCustomer = false
-        this.getCustomers()
-        this.customer = {}
-        this.newCustomer = {}
+        this.createDialogPerson = false
+        this.getPersons()
+        this.person = {}
+        this.newPerson = {}
       }
     },
     async uploadImage () {
-      if (this.customerImageList.length === 0) {
+      if (this.personImageList.length === 0) {
         let formData = new FormData()
         formData.append('file', this.file)
         await axios
-          .post(this.serverURL + '/customers/' + `${this.customer.id}` + '/uploadImage', formData)
+          .post(this.serverURL + '/persons/' + `${this.person.id}` + '/uploadImage', formData)
           .then(response => {
-            // mensaje
-            console.log('uploadImage')
             this.file = ''
           })
           .catch(e => {
@@ -230,10 +228,8 @@ export default {
         let formData = new FormData()
         formData.append('file', this.file)
         await axios
-          .post(this.serverURL + '/customers/' + `${this.customer.id}` + '/changePrincipalImage', formData)
+          .post(this.serverURL + '/persons/' + `${this.person.id}` + '/changePrincipalImage', formData)
           .then(response => {
-            // mensaje
-            console.log('changePrincipalImage')
             this.file = ''
           })
           .catch(e => {
@@ -247,12 +243,12 @@ export default {
       if (this.file !== null && this.file.length !== 0) {
         this.imageURL = URL.createObjectURL(this.file)
       } else {
-        this.imageURL = 'http://www.mayline.com/customers/images/customer/noimage.jpg'
+        this.imageURL = 'http://www.mayline.com/persons/images/person/noimage.jpg'
       }
     },
     async clean () {
       this.file = []
-      this.customer = {}
+      this.person = {}
       this.category = {}
       this.imageURL = ''
       await this.$refs.form.reset()
@@ -267,13 +263,13 @@ export default {
       'serverURL',
       'subCategory'
     ]),
-    customer: {
-      get () { return this.$store.state.customer },
-      set (payload) { this.$store.commit('updateCustomer', payload) }
+    person: {
+      get () { return this.$store.state.person },
+      set (payload) { this.$store.commit('updatePerson', payload) }
     },
-    customerId: {
-      get () { return this.$store.state.customerId },
-      set (payload) { this.$store.commit('updateCustomerId', payload) }
+    personId: {
+      get () { return this.$store.state.personId },
+      set (payload) { this.$store.commit('updatePersonId', payload) }
     },
     category: {
       get () { return this.$store.state.category },
@@ -283,21 +279,21 @@ export default {
       get () { return this.$store.state.imageURL },
       set (payload) { this.$store.commit('updateImageURL', payload) }
     },
-    createDialogCustomer: {
-      get () { return this.$store.state.createDialogCustomer },
-      set (payload) { this.$store.commit('updateCreateDialogCustomer', payload) }
+    createDialogPerson: {
+      get () { return this.$store.state.createDialogPerson },
+      set (payload) { this.$store.commit('updateCreateDialogPerson', payload) }
     },
-    newCustomer: {
-      get () { return this.$store.state.newCustomer },
-      set (payload) { this.$store.commit('updateNewCustomer', payload) }
+    newPerson: {
+      get () { return this.$store.state.newPerson },
+      set (payload) { this.$store.commit('updateNewPerson', payload) }
     },
-    referenceCustomer: {
-      get () { return this.$store.state.referenceCustomer },
-      set (payload) { this.$store.commit('updateReferenceCustomer', payload) }
+    referencePerson: {
+      get () { return this.$store.state.referencePerson },
+      set (payload) { this.$store.commit('updateReferencePerson', payload) }
     },
-    customerImageList: {
-      get () { return this.$store.state.customerImageList },
-      set (payload) { this.$store.commit('updateCustomerImageList', payload) }
+    personImageList: {
+      get () { return this.$store.state.personImageList },
+      set (payload) { this.$store.commit('updatePersonImageList', payload) }
     },
     categoryPlaceholder: {
       get () { return this.$store.state.categoryPlaceholder },
