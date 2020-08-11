@@ -232,7 +232,7 @@ export default {
       const self = this
       this.rutToGetPerson = rut
       await this.getPersonByRut()
-      return self.$router.push({ path: `/users/${self.personToUpload.rut}` })
+      return self.$router.push({ path: `/users/${self.rutToGetPerson}` })
     },
 
     async createPerson(store){

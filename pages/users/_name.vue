@@ -10,10 +10,10 @@
           <v-card-text>¿Está seguro que desea eliminar esta imágen?</v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="hideDialog()" color="blue" flat>
+            <v-btn @click="hideDialog()" color="blue" text>
               Cancelar
             </v-btn>
-            <v-btn @click="deleteUpload()" color="blue" flat>
+            <v-btn @click="deleteUpload()" color="blue" text>
               Confirmar
             </v-btn>
           </v-card-actions>
@@ -325,6 +325,8 @@ export default {
           })
     },
     showDialog (photo) {
+      console.log('photo')
+      console.log(photo)
       this.dialog = true
       this.selectedPhoto = photo
     },
@@ -336,14 +338,22 @@ export default {
 
     async deleteUpload () {
       if (this.selectedPhoto) {
-        const comps = this.selectedPhoto.split('/')
-        await this.$store.dispatch('user/deletePhoto', {
-          user: this.user.name,
-          file: comps[comps.length - 1]
-        })
-        this.selectedPhoto = null
-        this.dialog = false
+        console.log('selectedPhoto')
+      console.log(this.selectedPhoto)
+      let formData = new FormData()
+      formData.append('path', this.selectedPhoto)
+        //.get(`${this.serverURL}/matches/getVisitsBetweenDates`, formData)
+      await axios
+      .post(`${this.serverURL}/images/deleteWithPath`, formData)
+          .then(response => {
+            console.log('image deleted')
+          })
+          .catch(e => {
+            console.log(e, e.response)
+          })
       }
+      this.dialog = false
+      this.selectedPhoto = null
     },
     async uploadFiles () {
       await this.uploadFilesAux()
