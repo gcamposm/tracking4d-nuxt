@@ -122,19 +122,10 @@
             xs12 md6 lg4
     >
       <v-card flat tile class="d-flex">
-        <v-btn
-          @click="showDialog(photo)"
-          fab
-          small
-          color="blue"
-          dark
-        >
-          <v-icon>close</v-icon>
-        </v-btn>
         <img :id="person.rut + index" :src="photo">
       </v-card>
     </v-flex>
-    <v-flex v-for="(photo, index) in person.photos"
+    <v-flex v-for="(photo, index) in photosInPerson"
             :key="photo"
             xs12 md6 lg4
     >
@@ -170,6 +161,7 @@ export default {
       files: [],
       persons: [],
       photos:[],
+      photosInPerson: [],
       counter: 0,
       progress: 0,
       isProgressActive: false,
@@ -196,6 +188,7 @@ export default {
   },
   async created(){
     await this.getPersons()
+    this.photosInPerson = this.person.photos
   },
 
   async fetch ({ store }) {
@@ -269,9 +262,12 @@ export default {
         .post(`${this.serverURL}/images/create/withData`, formData)
         .then(response => {
           console.log('descriptors saved')
+          this.increaseProgress()
+          this.isProgressActive = false
         })
-        .catch(e => {
-          console.log('error'+e)
+        .catch((e) => {
+          this.isProgressActive = false
+          console.error(e)
         })
     },
     async train () {
@@ -303,15 +299,6 @@ export default {
         })
       this.faces = faces
       this.loadFaces()
-      await self.$store.dispatch('face/save', faces)
-        .then(() => {
-          self.increaseProgress()
-          self.isProgressActive = false
-        })
-        .catch((e) => {
-          self.isProgressActive = false
-          console.error(e)
-        })
     },
     async loadPaths(){
       await axios
@@ -338,15 +325,13 @@ export default {
 
     async deleteUpload () {
       if (this.selectedPhoto) {
-        console.log('selectedPhoto')
-      console.log(this.selectedPhoto)
       let formData = new FormData()
       formData.append('path', this.selectedPhoto)
-        //.get(`${this.serverURL}/matches/getVisitsBetweenDates`, formData)
       await axios
       .post(`${this.serverURL}/images/deleteWithPath`, formData)
           .then(response => {
             console.log('image deleted')
+            this.photosInPerson = response.data
           })
           .catch(e => {
             console.log(e, e.response)
