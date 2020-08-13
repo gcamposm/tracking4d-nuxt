@@ -176,9 +176,6 @@ export default {
     serverURL () {
       return this.$store.state.general.serverURL
     },
-    users () {
-      return this.$store.state.user.list
-    },
     isCameraStarted () {
       return this.$store.getters['camera/isCameraStarted']
     },
@@ -189,14 +186,6 @@ export default {
   async created(){
     await this.getPersons()
     this.photosInPerson = this.person.photos
-  },
-
-  async fetch ({ store }) {
-    const self = this
-    await store.dispatch('user/getAll')
-      .then((users) => {
-        self.step += users.length
-      })
   },
   watch: {
     async tab (val) {

@@ -80,23 +80,12 @@ export default {
     }
   },
   computed: {
-    users () {
-      return this.$store.state.user.list
-    },
     serverURL () {
       return this.$store.state.general.serverURL
     }
   },
   async created(){
     await this.getPersons()
-  },
-
-  async fetch ({ store }) {
-    const self = this
-    await store.dispatch('user/getAll')
-      .then((users) => {
-        self.step += users.length
-      })
   },
 
   methods: {
