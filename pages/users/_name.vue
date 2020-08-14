@@ -21,6 +21,11 @@
       </v-dialog>
     </v-flex>
     <v-flex xs12>
+      <center>
+        <h1>Imágenes Cliente : {{ person.firstName }} {{ person.lastName }}</h1>
+      </center>
+    </v-flex>
+    <v-flex xs12>
       <v-tabs
         v-model="tab"
         centered
@@ -28,14 +33,15 @@
         dark
         icons-and-text
       >
-      <center>
-        <h1>Imágenes Cliente : {{ person.firstName }} {{ person.lastName }}</h1>
-      </center>
         <v-tabs-slider color="blue" />
-<!--         <v-tab href="#tab-2">
+        <v-tab href="#tab-1">
+          Cargar archivos
+          <v-icon>camera</v-icon>
+        </v-tab>
+        <v-tab href="#tab-2">
           Camara
           <v-icon>camera</v-icon>
-        </v-tab> -->
+        </v-tab>
         <v-tab-item
           value="tab-1"
         >
@@ -91,12 +97,12 @@
         <v-tab-item
           value="tab-2"
         >
-          <v-card flat>
-            <v-btn v-if="isCameraStarted" @click="takePhoto" color="blue">
-              Take photo
-            </v-btn>
+        <v-flex xs4 sm4 offset-sm4 align-center justify-center>
+          <v-row>
+            <center>
+              <v-card class="elevation-12">
             <v-layout row wrap>
-              <v-flex xs12 md6>
+              <v-flex xs12 md6 justify-center>
                 <video
                   id="live-video"
                   v-if="isCameraStarted"
@@ -114,6 +120,15 @@
               </v-flex>
             </v-layout>
           </v-card>
+            </center>
+          </v-row>
+          <v-row>
+            <v-btn v-if="isCameraStarted" @click="takePhoto" color="blue">
+              Capturar
+          </v-btn>
+          </v-row>
+        
+        </v-flex>
         </v-tab-item>
       </v-tabs>
     </v-flex>
@@ -170,6 +185,7 @@ export default {
         firstName: null,
         rut: null
       },
+      cameraPhoto: null
     }
   },
   computed: {
@@ -301,8 +317,6 @@ export default {
           })
     },
     showDialog (photo) {
-      console.log('photo')
-      console.log(photo)
       this.dialog = true
       this.selectedPhoto = photo
     },
@@ -352,16 +366,42 @@ export default {
           console.log('uploadFiles', e, e.response)
         })
     },
+
+    async uploadPhotos () {
+      await this.uploadPhotosAux()
+      await this.train()
+    },
+    async uploadPhotosAux () {
+      let formData = new FormData()
+      formData.append('imageValue', this.cameraPhoto)
+      await axios.post(`${this.serverURL}/images/uploadPhotos/${this.person.rut}`, formData)
+        .then(response => {
+          const result = response.data
+          this.photos.push(response.data)
+          if (result.length !== 0) {
+            console.log('Photos loaded')
+            this.cameraPhoto = null
+          } else {
+            console.log('There is a problem with charge the photos.')
+          }
+        })
+        .catch(e => {
+          console.log('uploadFiles', e, e.response)
+        })
+    },
     async takePhoto () {
       const video = document.getElementById('live-video')
       const canvas = document.getElementById('live-canvas')
       const canvasCtx = canvas.getContext('2d')
       canvasCtx.drawImage(video, 0, 0, 320, 247)
       const content = canvas.toDataURL('image/jpeg')
-      await this.$store.dispatch('user/uploadBase64', {
-        user: this.user.name,
+      const contentInApi = content.split(',')[1]
+      this.cameraPhoto = contentInApi
+      await this.uploadPhotos()
+      /*await this.$store.dispatch('user/uploadBase64', {
+        user: this.person.rut,
         content
-      })
+      })*/
     }
   }
 }

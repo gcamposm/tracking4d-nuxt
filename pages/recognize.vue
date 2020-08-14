@@ -138,7 +138,6 @@ export default {
     await this.getFaces()
       .then(() => self.$store.dispatch('face/getFaceMatcher'))
   },
-
   async mounted () {
     await this.recognize()
   },

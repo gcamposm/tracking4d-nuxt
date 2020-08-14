@@ -36,9 +36,11 @@ userRoutes.post("/uploadBase64", async(req, res) => {
 })
 
 async function uploadBase64(upload) {
-  const fileName = `${upload.user}_${Date.now()}.jpg`
-  const imgPath = join(usersFolder, upload.user, fileName)
   const content = upload.content.split(',')[1]
+  console.log('content in api')
+  console.log(content)
+  const fileName = `${upload.user}_${Date.now()}.jpg`
+  const imgPath = join(upload.user, fileName)
   return new Promise(async(resolve, reject) => {
     writeFile(imgPath, content, 'base64', (err) => {
       if (err) {
