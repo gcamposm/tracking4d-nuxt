@@ -259,13 +259,18 @@ export default {
     /* Faces Stuffs */
     async loadFaces (){
       this.faces.forEach(face => {
+        console.log('face')
+        console.log(face)
         this.username = face.user
         face.descriptors.forEach(element => {
           let formData = new FormData()
           formData.append('rut', this.username)
           formData.append('descriptor', element.descriptor)
           formData.append('path', element.path)
-          this.saveDescriptorAwait(formData)
+          if(element.descriptor.length == 128)
+          {
+            this.saveDescriptorAwait(formData)
+          }
         });
       });
     },
@@ -300,8 +305,6 @@ export default {
             expressionsEnabled: false
           }
           const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: img, options })
-          console.log('detections')
-          console.log(detections)
           detections.forEach((d) => {
             descriptors.push({
               path: photo,
