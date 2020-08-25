@@ -81,7 +81,8 @@ const config = {
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
     '@nuxtjs/vuetify',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    'nuxt-material-design-icons',
   ],
   /*
    ** Axios module configuration

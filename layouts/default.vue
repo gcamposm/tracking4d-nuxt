@@ -13,11 +13,159 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
+      <v-app-bar-nav-icon
+      @click="drawer = !drawer"
+      ></v-app-bar-nav-icon>
       <v-btn @click.stop="miniVariant = !miniVariant" icon>
         <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
       </v-btn>
-      <v-toolbar-title v-html="title" />
+      <v-btn
+      icon
+      @click="goToAlert()"
+    >
+    <v-badge color="red" content="2"> 
+      <v-icon>warning</v-icon>
+    </v-badge> 
+    </v-btn>
     </v-app-bar>
+      <v-navigation-drawer
+  id="app-drawer"
+  app
+  dark
+  fixed
+  floating
+  persistent
+  mobile-breakpoint="991"
+  width="300"
+  :mini-variant="miniVariant"
+  :clipped="clipped"
+  v-model="drawer"
+  >
+    <v-layout
+      class="fill-height"
+      column
+    >
+      <v-list>
+        <v-list-item>
+          <v-avatar size="35" color="indigo" class="mb-2">
+            <v-icon size="x-large" dark>account_circle</v-icon>
+          </v-avatar>
+          <v-list-item-title class="ml-3 title">
+            ADMINTRACKING4D
+          </v-list-item-title>
+        </v-list-item>
+        <v-divider/>
+        <v-list-item
+          v-if="responsive"
+        >
+        </v-list-item>
+
+        <v-list-item href="https://tracking4dd.tk/dashboard">
+          <v-list-item-action>
+            <v-icon>_insert_chart</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Dashboard</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item href="https://tracking4dd.tk/person">
+          <v-list-item-action>
+            <v-icon>_supervisor_account</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Personas</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item href="https://tracking4dd.tk/report">
+          <v-list-item-action>
+            <v-icon>_library_books</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Reportes</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item href="https://tracking4dd.tk/heat-map">
+          <v-list-item-action>
+            <v-icon>_room</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Mapa de Calor</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item href="https://tracking4dd.tk/facial-recognition">
+          <v-list-item-action>
+            <v-icon>_videocam</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Cámara</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item href="https://tracking4dd.tk/temperature-detection">
+          <v-list-item-action>
+            <v-icon>_whatshot</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Detección de temperatura</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item href="https://tracking4dd.tk/temperature-alert">
+          <v-list-item-action>
+            <v-icon>_report_problem</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Alertas de temperatura</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+      </v-list>
+      <v-spacer></v-spacer>
+      <v-list>
+        <v-list-item
+          :active-class="color"
+          class="v-list-item"
+          exact
+        >
+          <v-list-item-action>
+            <v-icon @click="nightMode = !nightMode" v-if="!nightMode">brightness_3</v-icon>
+            <v-icon @click="nightMode = !nightMode" v-if="nightMode">brightness_3</v-icon>
+          </v-list-item-action>
+          <v-list-item-title
+            v-text="'Alternar modo nocturo'"
+          />
+          <v-switch
+            v-model="nightMode"
+            color="secondary"
+          ></v-switch>
+        </v-list-item>
+        <v-list-item
+          :active-class="color"
+          class="v-list-item"
+          exact
+          to="/help"
+        >
+          <v-list-item-action>
+            <v-icon>help</v-icon>
+          </v-list-item-action>
+          <v-list-item-title
+            v-text="'Ayuda'"
+          />
+        </v-list-item>
+        <v-list-item
+          :active-class="color"
+          class="v-list-item"
+          exact
+          @click="logout"
+        >
+          <v-list-item-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-item-action>
+          <v-list-item-title
+            v-text="'Salir'"
+          />
+        </v-list-item>
+      </v-list>
+    </v-layout>
+  </v-navigation-drawer>
     <v-content>
       <v-img
         :src="image"
@@ -43,18 +191,19 @@
       </v-container>
       </v-img>
     </v-content>
-    <v-footer :fixed="fixed" app>
-      <v-flex class="text-xs-right">
-        <a href="http://spaceweare.com/" style="color: white">
-          <span>SPACEWEARE - &copy; 2020</span>
-        </a>
-        &nbsp;
-      </v-flex>
-    </v-footer>
+    <v-footer dark :fixed="fixed" app>
+    <span class="ml-3">Desarrollado por SPACEWEARE&copy; {{ new Date().getFullYear() }}</span>
+    <v-spacer></v-spacer>
+      <span>Versión 1.1.0</span>
+        <v-spacer></v-spacer>
+      <span>Bienvenido al futuro!</span>
+  </v-footer>
   </v-app>
 </template>
 
 <script>
+
+
 export default {
   data () {
     return {
@@ -65,13 +214,13 @@ export default {
       drawer: true,
       fixed: false,
       items: [
-        { icon: 'bar_chart', title: 'Dashboard', to: '/dashboard' },
-        { icon: 'people', title: 'Clientes', to: '/users' },
-        { icon: 'map', title: 'Mapa de Calor', to: '/map' },
-        { icon: 'menu_book', title: 'Reportes', to: '/reports' },
-        { icon: 'camera_front', title: 'Cámara 1', to: '/recognize' },
-        { icon: 'camera_front', title: 'Cámara 2', to: '/recognize2' },
-        { icon: 'local_fire_department', title: 'Detección Temperatura', to: '/feature' },
+        { icon: 'fas fa-chart-line', title: 'Dashboard', to: 'www.google.cl' },
+        { icon: 'fas fa-users', title: 'Personas', to: '/person' },
+        { icon: 'fas fa-book-open', title: 'Reportes', to: '/report' },
+        { icon: 'fas fa-map', title: 'Mapa de calor', to: '/heat-map' },
+        { icon: 'fas fa-eye', title: 'Cámara', to: '/facial-recognition' },
+        { icon: 'fas fa-thermometer', title: 'Detección de temperatura', to: '/temperature-detection' },
+        { icon: 'fas fa-exclamation-triangle', title: 'Alertas de temperatura', to: '/temperature-alert' }
       ],
       miniVariant: false,
       right: true,
