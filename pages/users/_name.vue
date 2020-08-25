@@ -200,7 +200,7 @@ export default {
     }
   },
   async created(){
-    await this.getPersons()
+    await this.getActualPerson()
     this.photosInPerson = this.person.photos
   },
   watch: {
@@ -220,22 +220,14 @@ export default {
     this.$store.dispatch('camera/stopCamera')
   },
   methods: {
-    async getPersons(){
-      await axios
-          .get(this.serverURL + '/images/pathsWithPerson')
-          .then(response => {
-            console.log('persons loaded')
-            response.data.forEach(element => {
-              var person = null
-              person = element.person
-              person.photos = element.paths
-              this.persons.push(person)
-            });
-          })
-          .catch(e => {
-            console.log(e, e.response)
-            this.file = ''
-          })
+    /* General Stuffs */
+    showDialog (photo) {
+      this.dialog = true
+      this.selectedPhoto = photo
+    },
+    hideDialog () {
+      this.dialog = false
+      this.selectedPhoto = null
     },
     increaseProgress () {
       const self = this
@@ -246,16 +238,39 @@ export default {
       self.progress = self.counter = 0
       self.isProgressActive = true
     },
+    /* Person Stuffs */
+    async getActualPerson() {
+      await axios
+        .get(this.serverURL + '/persons/getActual')
+        .then(response => {
+          const result = response.data
+          if (result.length !== 0) {
+            var person = response.data.person
+            person.photos = response.data.paths
+            this.$store.dispatch('user/updatePerson', person)
+          } else {
+            console.log('Hubo un problema obteniendo a la persona.')
+          }
+        })
+        .catch(e => {
+          console.log('error' + e)
+        })
+    },
+    /* Faces Stuffs */
     async loadFaces (){
-      //this.saveOneFace(this.faces[N])
       this.faces.forEach(face => {
+        console.log('face')
+        console.log(face)
         this.username = face.user
         face.descriptors.forEach(element => {
           let formData = new FormData()
-          formData.append('user', this.username)
+          formData.append('rut', this.username)
           formData.append('descriptor', element.descriptor)
           formData.append('path', element.path)
-          this.saveDescriptorAwait(formData)
+          if(element.descriptor.length == 128)
+          {
+            this.saveDescriptorAwait(formData)
+          }
         });
       });
     },
@@ -305,27 +320,7 @@ export default {
       this.faces = faces
       this.loadFaces()
     },
-    async loadPaths(){
-      await axios
-          .get(`${this.serverURL}/images/pathsByPerson/${this.actualPerson.id}`)
-          .then(response => {
-            // mensaje
-            console.log('paths loaded')
-          })
-          .catch(e => {
-            console.log(e, e.response)
-          })
-    },
-    showDialog (photo) {
-      this.dialog = true
-      this.selectedPhoto = photo
-    },
-
-    hideDialog () {
-      this.dialog = false
-      this.selectedPhoto = null
-    },
-
+    /* File Stuffs */
     async deleteUpload () {
       if (this.selectedPhoto) {
       let formData = new FormData()
@@ -366,7 +361,7 @@ export default {
           console.log('uploadFiles', e, e.response)
         })
     },
-
+    /* Photos Stuffs */
     async uploadPhotos () {
       await this.uploadPhotosAux()
       await this.train()
@@ -398,10 +393,6 @@ export default {
       const contentInApi = content.split(',')[1]
       this.cameraPhoto = contentInApi
       await this.uploadPhotos()
-      /*await this.$store.dispatch('user/uploadBase64', {
-        user: this.person.rut,
-        content
-      })*/
     }
   }
 }

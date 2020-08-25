@@ -58,6 +58,9 @@ export const actions = {
     personToUpdate.photos = person.paths
     commit('setPerson', personToUpdate)
   },
+  updatePerson({ commit }, person) {
+    commit('setPerson', person)
+  },
   async getAll ({ commit }) {
     const data = await this.$axios.$get('/api/user/getAll')
     commit('setUsers', data)
