@@ -1,7 +1,6 @@
 import * as faceapi from 'face-api.js'
 
 export const state = () => ({
-  faces: [],
   facesBackend: [],
   loading: false,
   loaded: false,
@@ -44,10 +43,6 @@ export const mutations = {
     state.loaded = true
   },
 
-  setFaces (state, faces) {
-    state.faces = faces
-  },
-
   setFaceMatcher (state, matcher) {
     state.faceMatcher = matcher
   },
@@ -72,16 +67,8 @@ export const actions = {
         })
     }
   },
-  async getAll ({ commit, state }) {
-    const data = await this.$axios.$get('/api/face/getAll')
-    commit('setFaces', data)
-  },
   editFaces({ commit }, faces) {
     commit('setFacesBackend', faces)
-  },
-  async save ({ commit }, faces) {
-    const { data } = await this.$axios.$post('/api/face/save', { faces })
-    commit('setFaces', data)
   },
   getFaceMatcher ({ commit, state }) {
     const labeledDescriptors = []

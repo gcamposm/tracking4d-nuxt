@@ -135,12 +135,9 @@ export default {
 
   async beforeMount () {
     const self = this
-    //await self.$store.dispatch('face/getAll')
-      //.then(() => self.$store.dispatch('face/getFaceMatcher'))
     await this.getFaces()
       .then(() => self.$store.dispatch('face/getFaceMatcher'))
   },
-
   async mounted () {
     await this.recognize()
   },
