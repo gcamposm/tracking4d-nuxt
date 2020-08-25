@@ -154,7 +154,7 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
-        <img :id="person.firstName + index" :src="photo">
+        <img :id="person.rut + index" :src="photo">
       </v-card>
     </v-flex>
   </v-layout>
