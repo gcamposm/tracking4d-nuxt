@@ -19,11 +19,11 @@
       <v-btn @click.stop="miniVariant = !miniVariant" icon>
         <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
       </v-btn>
-      <v-btn
+      <v-btn v-if="numberAlerts > 0"
       icon
       @click="goToAlert()"
     >
-    <v-badge color="red" content="2"> 
+    <v-badge color="red" :content="numberAlerts"> 
       <v-icon>warning</v-icon>
     </v-badge> 
     </v-btn>
@@ -120,7 +120,7 @@
       </v-list>
       <v-spacer></v-spacer>
       <v-list>
-        <v-list-item
+        <!-- <v-list-item
           :active-class="color"
           class="v-list-item"
           exact
@@ -136,7 +136,7 @@
             v-model="nightMode"
             color="secondary"
           ></v-switch>
-        </v-list-item>
+        </v-list-item> -->
         <v-list-item
           :active-class="color"
           class="v-list-item"
@@ -144,7 +144,7 @@
           to="/help"
         >
           <v-list-item-action>
-            <v-icon>help</v-icon>
+            <v-icon>_help</v-icon>
           </v-list-item-action>
           <v-list-item-title
             v-text="'Ayuda'"
@@ -157,7 +157,7 @@
           @click="logout"
         >
           <v-list-item-action>
-            <v-icon>exit_to_app</v-icon>
+            <v-icon>_exit_to_app</v-icon>
           </v-list-item-action>
           <v-list-item-title
             v-text="'Salir'"
@@ -203,10 +203,13 @@
 
 <script>
 
-
+import axios from 'axios'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      numberAlerts: 0,
+      alerts: [],
       nightMode: true,
       image: require('@/assets/img/background.jpg'),
       sidebarBackgroundColor: 'rgba(27, 27, 27, 0.74)',
@@ -231,14 +234,38 @@ export default {
   computed: {
     loading () {
       return this.$store.state.face.loading
+    },
+    ...mapState([
+    ]),
+    serverURL () {
+      return this.$store.state.general.serverURL
     }
   },
   created () {
     this.$vuetify.theme.dark = this.nightMode
+    this.getAlerts()
   },
   async mounted () {
     const self = this
     await self.$store.dispatch('face/load')
+  },
+  methods: {
+    async getAlerts() {
+      await axios
+        .get(`${this.serverURL}/matches/alerts/`)
+        .then(response => {
+          const alerts = response.data
+          if (alerts.length !== 0) {
+            this.alerts = alerts
+            this.numberAlerts = alerts.length
+            console.log('Alert list loaded')
+          } else {
+            this.alerts = []
+            this.numberAlerts = 0
+            console.log('There is not alerts');
+          }
+        })
+    },
   }
 }
 </script>
