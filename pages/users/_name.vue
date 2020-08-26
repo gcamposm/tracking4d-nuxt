@@ -259,8 +259,6 @@ export default {
     /* Faces Stuffs */
     async loadFaces (){
       this.faces.forEach(face => {
-        console.log('face')
-        console.log(face)
         this.username = face.user
         face.descriptors.forEach(element => {
           let formData = new FormData()
@@ -273,6 +271,7 @@ export default {
           }
         });
       });
+      this.faces.length = 0
     },
     async saveDescriptorAwait(formData){
       await this.saveDescriptor(formData)
