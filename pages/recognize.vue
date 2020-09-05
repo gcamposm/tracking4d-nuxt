@@ -135,8 +135,15 @@ export default {
 
   async beforeMount () {
     const self = this
-    await this.getFaces()
-      .then(() => self.$store.dispatch('face/getFaceMatcher'))
+    const faces = await this.getFaces()
+    if(faces)
+    {
+      self.$store.dispatch('face/getFaceMatcher')
+    }
+    else{
+      return self.$router.push({ path: `/noFaces` })
+    }
+      //.then(() => self.$store.dispatch('face/getFaceMatcher'))
   },
   async mounted () {
     await this.recognize()
