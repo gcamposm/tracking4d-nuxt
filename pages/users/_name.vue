@@ -81,16 +81,6 @@
               </center>
             <div>
               <br><br>
-              <v-progress-circular
-                v-if="isProgressActive"
-                :rotate="360"
-                :size="100"
-                :width="15"
-                :value="progress"
-                color="blue"
-              >
-                Entrenando
-              </v-progress-circular>
             </div>
         </v-tab-item>
 
@@ -131,6 +121,16 @@
         </v-flex>
         </v-tab-item>
       </v-tabs>
+      <v-progress-circular
+        v-if="isProgressActive"
+        :rotate="360"
+        :size="100"
+        :width="15"
+        :value="progress"
+        color="blue"
+      >
+        Entrenando
+      </v-progress-circular>
     </v-flex>
     <v-flex v-for="(photo, index) in photos"
             :key="photo"
