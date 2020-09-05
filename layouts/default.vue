@@ -40,10 +40,7 @@
           </v-list-item-title>
         </v-list-item>
         <v-divider/>
-        <v-list-item
-          v-if="responsive"
-        >
-        </v-list-item>
+
 
         <v-list-item href="https://tracking4dd.tk/dashboard">
           <v-list-item-action>
@@ -139,7 +136,6 @@
           :active-class="color"
           class="v-list-item"
           exact
-          @click="logout"
         >
           <v-list-item-action>
             <v-icon>_exit_to_app</v-icon>
@@ -193,6 +189,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      color: 'secondary',
       numberAlerts: 0,
       alerts: [],
       nightMode: true,
