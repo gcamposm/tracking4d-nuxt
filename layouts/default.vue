@@ -48,7 +48,7 @@
         >
         </v-list-item>
 
-        <v-list-item href="https://tracking4dd.tk/dashboard">
+        <v-list-item href="http://localhost:8080/dashboard">
           <v-list-item-action>
             <v-icon>_insert_chart</v-icon>
           </v-list-item-action>
@@ -56,7 +56,7 @@
             <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/person">
+        <v-list-item href="http://localhost:8080/person">
           <v-list-item-action>
             <v-icon>_supervisor_account</v-icon>
           </v-list-item-action>
@@ -64,7 +64,7 @@
             <v-list-item-title>Personas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/report">
+        <v-list-item href="http://localhost:8080/report">
           <v-list-item-action>
             <v-icon>_library_books</v-icon>
           </v-list-item-action>
@@ -72,7 +72,7 @@
             <v-list-item-title>Reportes</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/heat-map">
+        <v-list-item href="http://localhost:8080/heat-map">
           <v-list-item-action>
             <v-icon>_room</v-icon>
           </v-list-item-action>
@@ -80,7 +80,7 @@
             <v-list-item-title>Mapa de Calor</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/facial-recognition">
+        <v-list-item href="http://localhost:3000/recognize">
           <v-list-item-action>
             <v-icon>_videocam</v-icon>
           </v-list-item-action>
@@ -88,7 +88,7 @@
             <v-list-item-title>Cámara</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/temperature-detection">
+        <v-list-item href="http://localhost:8080/temperature-detection">
           <v-list-item-action>
             <v-icon>_whatshot</v-icon>
           </v-list-item-action>
@@ -96,7 +96,7 @@
             <v-list-item-title>Detección de temperatura</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/temperature-alert">
+        <v-list-item href="http://localhost:8080/temperature-alert">
           <v-list-item-action>
             <v-icon>_report_problem</v-icon>
           </v-list-item-action>
