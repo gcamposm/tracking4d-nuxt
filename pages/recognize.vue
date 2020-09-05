@@ -59,9 +59,9 @@
     </v-flex>
     <v-flex xs12 md6>
       <video
+        width="512"
+        height="512"
         id="live-video"
-        width="640"
-        height="494"
         autoplay
         hidden
       />
@@ -70,8 +70,8 @@
       <center>
         <canvas
           id="live-canvas"
-          width="640"
-          height="494"
+          width="512"
+          height="512"
         />
       </center>
     </v-flex>
@@ -215,7 +215,7 @@ export default {
           filteredMatches.length=0
         }
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 640, 494)
+        canvasCtx.drawImage(videoDiv, 0, 0, 1024, 1024)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,
@@ -303,3 +303,4 @@ export default {
   }
 }
 </script>
+
