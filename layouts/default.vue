@@ -1,24 +1,9 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" permanent fixed app>
-      <v-list>
-        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router>
-          <v-list-item-action>
-            <v-icon v-html="item.icon" />
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon
       @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
-      <v-btn @click.stop="miniVariant = !miniVariant" icon>
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
-      </v-btn>
       <v-btn v-if="numberAlerts > 0"
       icon
       @click="goToAlert()"
@@ -55,12 +40,8 @@
           </v-list-item-title>
         </v-list-item>
         <v-divider/>
-        <v-list-item
-          v-if="responsive"
-        >
-        </v-list-item>
 
-        <v-list-item href="https://tracking4dd.tk/dashboard">
+        <v-list-item href="http://localhost:8080/dashboard">
           <v-list-item-action>
             <v-icon>_insert_chart</v-icon>
           </v-list-item-action>
@@ -68,7 +49,7 @@
             <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/person">
+        <v-list-item href="http://localhost:8080/person">
           <v-list-item-action>
             <v-icon>_supervisor_account</v-icon>
           </v-list-item-action>
@@ -76,7 +57,7 @@
             <v-list-item-title>Personas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/report">
+        <v-list-item href="http://localhost:8080/report">
           <v-list-item-action>
             <v-icon>_library_books</v-icon>
           </v-list-item-action>
@@ -84,7 +65,7 @@
             <v-list-item-title>Reportes</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/heat-map">
+        <v-list-item href="http://localhost:8080/heat-map">
           <v-list-item-action>
             <v-icon>_room</v-icon>
           </v-list-item-action>
@@ -92,7 +73,7 @@
             <v-list-item-title>Mapa de Calor</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/facial-recognition">
+        <v-list-item href="http://localhost:3000/recognize">
           <v-list-item-action>
             <v-icon>_videocam</v-icon>
           </v-list-item-action>
@@ -100,7 +81,7 @@
             <v-list-item-title>Cámara</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/temperature-detection">
+        <v-list-item href="http://localhost:8080/temperature-detection">
           <v-list-item-action>
             <v-icon>_whatshot</v-icon>
           </v-list-item-action>
@@ -108,7 +89,7 @@
             <v-list-item-title>Detección de temperatura</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://tracking4dd.tk/temperature-alert">
+        <v-list-item href="http://localhost:8080/temperature-alert">
           <v-list-item-action>
             <v-icon>_report_problem</v-icon>
           </v-list-item-action>
@@ -154,7 +135,6 @@
           :active-class="color"
           class="v-list-item"
           exact
-          @click="logout"
         >
           <v-list-item-action>
             <v-icon>_exit_to_app</v-icon>
@@ -208,6 +188,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      color: 'secondary',
       numberAlerts: 0,
       alerts: [],
       nightMode: true,

@@ -1,4 +1,5 @@
 import * as faceapi from 'face-api.js'
+import { FaceExpressions } from 'face-api.js'
 
 export const state = () => ({
   facesBackend: [],
@@ -8,14 +9,15 @@ export const state = () => ({
   matches: [],
   useTiny: false,
   finalEmotion: '',
+  numberTemp: 0,
 
   detections: {
     scoreThreshold: 0.5,
     inputSize: 320,
     boxColor: 'blue',
-    textColor: 'red',
+    textColor: 'green',
     lineWidth: 1,
-    fontSize: 20,
+    fontSize: 40,
     fontStyle: 'Georgia'
   },
   expressions: {
@@ -113,11 +115,14 @@ export const actions = {
     detections = await detections
     return detections
   },
-  async recognize({ commit, state, dispatch }, { descriptor, options, matchList, unknownList }) {
+  async recognize({ commit, state, dispatch }, { photoUnknown, descriptor, options, matchList, unknownsJson }) {
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
       if (bestMatch._label === "unknown"){
-        unknownList.push(descriptor)
+        const unknown = {}
+        unknown.descriptors = descriptor
+        unknown.photo = photoUnknown
+        unknownsJson.push(unknown)
       }
       else{
         matchList.push(bestMatch._label)
@@ -148,7 +153,6 @@ export const actions = {
     if (options.descriptorsEnabled && detection.recognition) {
       name = detection.recognition.toString(state.descriptors.withDistance)
     }
-
     const text = `${name}${emotions ? (name ? ' is ' : '') : ''}${emotions}`
     const box = detection.box || detection.detection.box
     this.state.finalEmotion = emotions
@@ -160,10 +164,16 @@ export const actions = {
     }
     if (text && detection && box) {
       // draw text
+      var numTemp = (Math.random() * 2)+35.6
+      var s = numTemp.toString()
+      var decimalLength = s.indexOf('.') + 1
+      var numStr = s.substr(0, decimalLength + 2)
+      numTemp = Number(numStr)
       const padText = 2 + state.detections.lineWidth
       canvasCtx.fillStyle = state.detections.textColor
       canvasCtx.font = state.detections.fontSize + 'px ' + state.detections.fontStyle
       canvasCtx.fillText(text, box.x + padText, box.y + box.height + padText + (state.detections.fontSize * 0.6))
+      canvasCtx.fillText(numTemp+'º', box.x + padText, box.y + padText + (state.detections.fontSize * -0.6))
     }
 
     if (options.landmarksEnabled && detection.landmarks) {
