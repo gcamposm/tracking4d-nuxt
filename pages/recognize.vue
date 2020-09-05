@@ -24,7 +24,7 @@
         </v-progress-circular>
       </center>
     </v-flex>
-    <v-flex v-if="!isProgressActive" xs12>
+    <v-flex xs12>
       <v-card>
         <v-card-actions class="justify-center">
           <v-btn-toggle v-model="withOptions" multiple>
@@ -37,7 +37,7 @@
               <span>Puntos Faciales</span>
             </v-btn>
             <v-btn>
-              <v-icon>how_to_reg</v-icon>
+              <v-icon></v-icon>
               <span>Reconocimiento</span>
             </v-btn>
             <v-btn>
@@ -55,35 +55,23 @@
                   thumb-label="always"
                   ticks
         /> -->
-        <p>
-          <v-chip label color="blue" text-color="white">
-            <v-icon left>
-              local_movies
-            </v-icon> FPS: {{ realFps }}
-          </v-chip>
-          <v-chip label color="blue" text-color="white">
-            <v-icon left>
-              timer
-            </v-icon> Duración: {{ duration }} ms
-          </v-chip>
-        </p>
       </v-card>
     </v-flex>
-    <v-flex xs12 md12>
+    <v-flex xs12 md6>
       <video
         id="live-video"
-        width="1000"
-        height="580"
+        width="640"
+        height="494"
         autoplay
         hidden
       />
     </v-flex>
-    <v-flex xs12 md12>
+    <v-flex xs12 md>
       <center>
         <canvas
           id="live-canvas"
-          width="1000"
-          height="580"
+          width="640"
+          height="494"
         />
       </center>
     </v-flex>
@@ -227,7 +215,7 @@ export default {
           filteredMatches.length=0
         }
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
+        canvasCtx.drawImage(videoDiv, 0, 0, 640, 494)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,
