@@ -4,9 +4,6 @@
       <v-app-bar-nav-icon
       @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
-      <v-btn @click.stop="miniVariant = !miniVariant" icon>
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
-      </v-btn>
       <v-btn v-if="numberAlerts > 0"
       icon
       @click="goToAlert()"
@@ -43,10 +40,6 @@
           </v-list-item-title>
         </v-list-item>
         <v-divider/>
-        <v-list-item
-          v-if="responsive"
-        >
-        </v-list-item>
 
         <v-list-item href="http://localhost:8080/dashboard">
           <v-list-item-action>
