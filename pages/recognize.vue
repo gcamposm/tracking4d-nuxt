@@ -190,6 +190,7 @@ export default {
           .post(`${this.serverURL}/persons/createUnknown`, formData)
           .then(response => {
             // mensaje
+            this.getFaces()
             console.log('unknown saved')
           })
           .catch(e => {
