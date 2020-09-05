@@ -199,7 +199,7 @@ export default {
           .post(`${this.serverURL}/persons/createUnknown`, formData)
           .then(response => {
             // mensaje
-            this.getFaces()
+            this.$store.dispatch('face/editFaces', response.data)
             console.log('unknown saved')
           })
           .catch(e => {
@@ -222,8 +222,8 @@ export default {
         if((parseInt(second) % 4) == 0){
         //if(true){
           let filteredMatches = [...new Set(matchList)];
-          this.saveMatches(filteredMatches)
-          this.saveUnknownsJson(unknownsJson)
+          await this.saveMatches(filteredMatches)
+          await this.saveUnknownsJson(unknownsJson)
           filteredMatches.length=0
         }
         const t0 = performance.now()

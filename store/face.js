@@ -1,4 +1,5 @@
 import * as faceapi from 'face-api.js'
+import { FaceExpressions } from 'face-api.js'
 
 export const state = () => ({
   facesBackend: [],
