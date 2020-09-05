@@ -219,8 +219,8 @@ export default {
         var h = today.getHours();
         var m = today.getMinutes();
         var second = today.getSeconds();
-        //if((parseInt(second) % 4) == 0){
-        if(true){
+        if((parseInt(second) % 4) == 0){
+        //if(true){
           let filteredMatches = [...new Set(matchList)];
           this.saveMatches(filteredMatches)
           this.saveUnknownsJson(unknownsJson)
@@ -234,6 +234,8 @@ export default {
           descriptorsEnabled: self.withOptions.find(o => o === 2) === 2,
           expressionsEnabled: self.withOptions.find(o => o === 3) === 3
         }
+        const content = canvasDiv.toDataURL('image/jpeg')
+        const photoUnknown = content.split(',')[1]
         const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: canvasDiv, options })
         if (detections.length) {
           if (self.isProgressActive) {
@@ -271,6 +273,7 @@ export default {
               this.realEmotion = 'Sorprendido'
             }
             detection.recognition = await self.$store.dispatch('face/recognize', {
+              photoUnknown,
               descriptor: detection.descriptor,
               options,
               matchList,
