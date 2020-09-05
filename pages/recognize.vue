@@ -150,6 +150,7 @@ export default {
   },
 
   methods: {
+    /* Face Stuffs */
     async getFaces (){
           await axios
           .get(`${this.serverURL}/images/getAllFaces`)
@@ -176,17 +177,17 @@ export default {
             console.log(e, e.response)
           })
     },
-    async saveUnknowns (unknownList){
+    async saveUnknownsJson (unknownList){
       unknownList.forEach(unknown => {
-        this.saveUnknown(unknown)
+        let formData = new FormData()
+          formData.append('descriptors', unknown.descriptors)
+          formData.append('photoUnknown', unknown.photo)
+          this.saveUnknownsJsonAux(formData)
       });
     },
-    async saveUnknown (unknown){
-      let formData = new FormData()
-          formData.append('unknown', unknown)
-          formData.append('cameraId', this.camId)
-          await axios
-          .post(`${this.serverURL}/detections/saveUnknown`, formData)
+    async saveUnknownsJsonAux(formData){
+      await axios
+          .post(`${this.serverURL}/persons/createUnknown`, formData)
           .then(response => {
             // mensaje
             console.log('unknown saved')
@@ -195,13 +196,14 @@ export default {
             console.log(e, e.response)
           })
     },
+    /* Camera Stuffs */
     start (videoDiv, canvasDiv, canvasCtx, fps) {
       const self = this
       if (self.interval) {
         clearInterval(self.interval)
       }
       var matchList = []
-      var unknownList = []
+      var unknownsJson = []
       self.interval = setInterval(async () => {
         var today = new Date();
         var h = today.getHours();
@@ -210,7 +212,7 @@ export default {
         if(second == "0"){
           let filteredMatches = [...new Set(matchList)];
           this.saveMatches(filteredMatches)
-          this.saveUnknowns(unknownList)
+          this.saveUnknownsJson(unknownsJson)
           filteredMatches.length=0
         }
         const t0 = performance.now()
@@ -261,7 +263,7 @@ export default {
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownList,
+              unknownsJson
             })
             self.$store.dispatch('face/draw',
               {

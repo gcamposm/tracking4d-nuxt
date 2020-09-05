@@ -113,11 +113,14 @@ export const actions = {
     detections = await detections
     return detections
   },
-  async recognize({ commit, state, dispatch }, { descriptor, options, matchList, unknownList }) {
+  async recognize({ commit, state, dispatch }, { descriptor, options, matchList, unknownsJson }) {
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
       if (bestMatch._label === "unknown"){
-        unknownList.push(descriptor)
+        const unknown = {}
+        unknown.descriptors = descriptor
+        unknown.photo = photoUnknown
+        unknownsJson.push(unknown)
       }
       else{
         matchList.push(bestMatch._label)
