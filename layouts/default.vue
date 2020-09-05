@@ -4,6 +4,9 @@
       <v-app-bar-nav-icon
       @click="drawer = !drawer"
       ></v-app-bar-nav-icon>
+      <v-btn @click.stop="miniVariant = !miniVariant" icon>
+        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'" />
+      </v-btn>
       <v-btn v-if="numberAlerts > 0"
       icon
       @click="goToAlert()"
@@ -40,7 +43,10 @@
           </v-list-item-title>
         </v-list-item>
         <v-divider/>
-
+        <v-list-item
+          v-if="responsive"
+        >
+        </v-list-item>
 
         <v-list-item href="https://tracking4dd.tk/dashboard">
           <v-list-item-action>
@@ -194,8 +200,6 @@ export default {
       alerts: [],
       nightMode: true,
       image: require('@/assets/img/background.jpg'),
-      color: 'secondary',
-      responsive: false,
       sidebarBackgroundColor: 'rgba(27, 27, 27, 0.74)',
       clipped: false,
       drawer: true,
@@ -223,11 +227,7 @@ export default {
     ]),
     serverURL () {
       return this.$store.state.general.serverURL
-    },
-    miniVariant: {
-      get () { return this.$store.state.general.miniVariant },
-      set (payload) { this.$store.commit('updateMiniVariant', payload) }
-    },
+    }
   },
   created () {
     this.$vuetify.theme.dark = this.nightMode
@@ -238,13 +238,6 @@ export default {
     await self.$store.dispatch('face/load')
   },
   methods: {
-    onResponsiveInverted () {
-      if (window.innerWidth < 991) {
-        this.responsive = true
-      } else {
-        this.responsive = false
-      }
-    },
     async getAlerts() {
       await axios
         .get(`${this.serverURL}/matches/alerts/`)
@@ -261,44 +254,6 @@ export default {
           }
         })
     },
-  },
-  mounted () {
-    this.onResponsiveInverted()
-    window.addEventListener('resize', this.onResponsiveInverted)
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.onResponsiveInverted)
-  },
+  }
 }
 </script>
-
-<style>
-  #app-drawer a{
-    color: white;
-  }
-  #app-drawer a:hover{
-    color: black !important;
-  }
-  #app-drawer .v-list__tile {
-    border-radius: 4px;
-  }
-  #app-drawer .v-list__tile--buy {
-    margin-top: auto;
-    margin-bottom: 17px;
-  }
-  #app-drawer .v-image__image--contain {
-    top: 9px;
-    height: 60%;
-  }
-  #app-drawer .search-input {
-    margin-bottom: 30px !important;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-  #app-drawer div.v-responsive.v-image > div.v-responsive__content {
-    overflow-y: auto;
-  }
-  .title {
-    text-transform: uppercase;
-  }
-</style>
