@@ -210,7 +210,8 @@ export default {
         var h = today.getHours();
         var m = today.getMinutes();
         var second = today.getSeconds();
-        if(second == "0"){
+        //if((parseInt(second) % 4) == 0){
+        if(true){
           let filteredMatches = [...new Set(matchList)];
           this.saveMatches(filteredMatches)
           this.saveUnknownsJson(unknownsJson)
