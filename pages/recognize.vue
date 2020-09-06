@@ -92,7 +92,7 @@
 
           <v-card-actions>
             <v-spacer />
-            <v-btn href="" color="blue" text>
+            <v-btn href="http://localhost:8080/temperature-alert" color="blue" text>
               Ir al listado de Alertas
             </v-btn>
             <v-btn @click="hideDialog()" color="blue" text>
