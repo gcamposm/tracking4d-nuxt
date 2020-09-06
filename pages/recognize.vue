@@ -151,15 +151,6 @@ export default {
     const self = this
     await this.getFaces()
       .then(() => self.$store.dispatch('face/getFaceMatcher'))
-    // const faces = await this.getFaces()
-    // if(faces)
-    // {
-    //   self.$store.dispatch('face/getFaceMatcher')
-    // }
-    // else{
-    //   return self.$router.push({ path: `/noFaces` })
-    // }
-      //.then(() => self.$store.dispatch('face/getFaceMatcher'))
   },
   async mounted () {
     await this.recognize()
@@ -173,8 +164,32 @@ export default {
   },
 
   methods: {
-    /* Face Stuffs */
-    async getAlertsActive () {
+    /* Alert Stuffs */
+    async sendEmailAux(alerts){
+      alerts.forEach(person => {
+        this.sendEmail(person)
+      });
+    },
+    async sendEmail(person){
+      let formData = new FormData()
+      formData.append('user', "guillermo.campos19@gmail.com")
+      formData.append('name', person.firstName)
+      formData.append('mail', person.mail)
+      formData.append('rut', person.rut)
+      formData.append('phone', person.phoneNumber)
+      formData.append('msg', "Debe acercarse al local")
+      formData.append('subject', "Alerta de temperatura")
+      formData.append('mailTo', "guillermo.campos19@gmail.com")
+      await axios
+        .post(`${this.serverURL}/mailAlert/`, formData)
+        .then(async (response) => {
+          console.log("correo enviado con exito")
+        })
+        .catch(e => {
+          console.log('error al enviar correo', e, e.response)
+        })
+    },
+      async getAlertsActive () {
       await axios
         .get(`${this.serverURL}/matches/activeAlerts/`)
         .then(response => {
@@ -182,6 +197,7 @@ export default {
           if (alerts.length !== 0) {
             console.log('Active alerts founded')
             this.soundAlarm()
+            this.sendEmailAux(alerts)
           } else {
             console.log('There is not active alerts');
           }
@@ -217,6 +233,7 @@ export default {
       }, 1000)
       
     },
+    /* Face Stuffs */
     async getFaces (){
           await axios
           .get(`${this.serverURL}/images/getAllFaces`)
