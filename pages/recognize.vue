@@ -184,6 +184,7 @@ export default {
         .post(`${this.serverURL}/mailAlert/`, formData)
         .then(async (response) => {
           console.log("correo enviado con exito")
+          this.deleteAlert(person.rut)
         })
         .catch(e => {
           console.log('error al enviar correo', e, e.response)
@@ -204,6 +205,14 @@ export default {
           
         }
           )
+    },
+    async deleteAlert (rut) {
+      await axios
+        .post(`${this.serverURL}/persons/deleteAlert/`+rut)
+        .then(response => {
+          console.log("Alert deleted")
+        }
+      )
     },
     hideDialog () {
       this.dialog = false
