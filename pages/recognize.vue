@@ -8,6 +8,10 @@
     <center>
       <v-flex>
         <h1>Reconocimiento Facial - Cámara {{camId}} </h1>
+        <v-btn outlined @click="soundAlarm()">
+          <v-icon class="mr-3"></v-icon>
+          Alarma
+        </v-btn>
       </v-flex>
     </center>
     <v-flex xs12>
@@ -75,6 +79,28 @@
         />
       </center>
     </v-flex>
+    <v-dialog v-model="dialogAlarm" persistent max-width="1000" heigth="500">
+        <v-card>
+          <v-card-title class="headline">
+            Advertencia!
+          </v-card-title>
+          <v-card-text>Se ha detectado una persona con una temperatura mayor a 38ºC</v-card-text>
+          <v-card-text>Persona: </v-card-text>
+          <v-card-text>Temperatura: </v-card-text>
+          <v-card-text>Hora: </v-card-text>
+          <v-card-text>Lugar: </v-card-text>
+
+          <v-card-actions>
+            <v-spacer />
+            <v-btn href="" color="blue" text>
+              Ir al listado de Alertas
+            </v-btn>
+            <v-btn @click="hideDialog()" color="blue" text>
+              Volver a la cámara
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </v-container>
   </v-layout>
 </template>
@@ -85,6 +111,7 @@ import axios from "axios"
 export default {
   data () {
     return {
+      dialogAlarm: false,
       interval: null,
       realEmotion: 'neutral',
       emotion: 0,
@@ -148,6 +175,23 @@ export default {
 
   methods: {
     /* Face Stuffs */
+    hideDialog () {
+      this.dialog = false
+      this.dialogAlarm = false
+      this.idSelectedUser = null
+    },
+    async soundAlarm () {
+      this.dialogAlarm = true
+      var context = new AudioContext()
+      var o = context.createOscillator()
+      var g = context.createGain()
+      o.connect(g)
+      o.type = "sawtooth"
+      o.frequency.value = 100
+      g.connect(context.destination)
+      o.start(0);
+      g.gain.exponentialRampToValueAtTime(0.00001,context.currentTime+3)
+    },
     async getFaces (){
           await axios
           .get(`${this.serverURL}/images/getAllFaces`)
