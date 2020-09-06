@@ -248,6 +248,8 @@ export default {
         let formData = new FormData()
           formData.append('descriptors', unknown.descriptors)
           formData.append('photoUnknown', unknown.photo)
+          console.log("unknownphoto")
+          console.log(unknown.photo)
           this.saveUnknownsJsonAux(formData)
       });
     },
@@ -285,7 +287,7 @@ export default {
           await this.getAlertsActive()
         }
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 1024, 1024)
+        canvasCtx.drawImage(videoDiv, 0, 0, 500, 500)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,
