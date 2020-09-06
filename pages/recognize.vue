@@ -74,21 +74,17 @@
       <center>
         <canvas
           id="live-canvas"
-          width="512"
-          height="512"
+          width="1024"
+          height="1024"
         />
       </center>
     </v-flex>
-    <v-dialog v-model="dialogAlarm" persistent max-width="1000" heigth="500">
-        <v-card>
+    <v-dialog v-model="dialogAlarm" persistent max-width="2000" heigth="2000">
+        <v-card color="red">
           <v-card-title class="headline">
             Advertencia!
           </v-card-title>
           <v-card-text>Se ha detectado una persona con una temperatura mayor a 38ºC</v-card-text>
-          <v-card-text>Persona: </v-card-text>
-          <v-card-text>Temperatura: </v-card-text>
-          <v-card-text>Hora: </v-card-text>
-          <v-card-text>Lugar: </v-card-text>
 
           <v-card-actions>
             <v-spacer />
@@ -111,7 +107,9 @@ import axios from "axios"
 export default {
   data () {
     return {
+      activateAlarm: false,
       dialogAlarm: false,
+      alarmInterval: null,
       interval: null,
       realEmotion: 'neutral',
       emotion: 0,
@@ -127,7 +125,8 @@ export default {
       camId: 1,
     }
   },
-
+  async created () {
+  },
   computed: {
     ...mapState([
     ]),
@@ -175,22 +174,48 @@ export default {
 
   methods: {
     /* Face Stuffs */
+    async getAlertsActive () {
+      await axios
+        .get(`${this.serverURL}/matches/activeAlerts/`)
+        .then(response => {
+          const alerts = response.data
+          if (alerts.length !== 0) {
+            console.log('Active alerts founded')
+            this.soundAlarm()
+          } else {
+            console.log('There is not active alerts');
+          }
+          
+        }
+          )
+    },
     hideDialog () {
       this.dialog = false
       this.dialogAlarm = false
       this.idSelectedUser = null
+      this.activateAlarm = false
+      clearInterval(this.alarmInterval)
+    },
+    intervalAlarm(){
+      if(this.activateAlarm){
+        var context = new AudioContext()
+        var o = context.createOscillator()
+        var g = context.createGain()
+        o.connect(g)
+        o.type = "sawtooth"
+        o.frequency.value = 100
+        g.connect(context.destination)
+        o.start(0);
+        g.gain.exponentialRampToValueAtTime(0.000001,context.currentTime+3)
+      }
     },
     async soundAlarm () {
       this.dialogAlarm = true
-      var context = new AudioContext()
-      var o = context.createOscillator()
-      var g = context.createGain()
-      o.connect(g)
-      o.type = "sawtooth"
-      o.frequency.value = 100
-      g.connect(context.destination)
-      o.start(0);
-      g.gain.exponentialRampToValueAtTime(0.00001,context.currentTime+3)
+      this.activateAlarm = true
+      this.alarmInterval = setInterval(async () => {
+        this.intervalAlarm()
+      }, 1000)
+      
     },
     async getFaces (){
           await axios
@@ -257,6 +282,7 @@ export default {
           await this.saveMatches(filteredMatches)
           await this.saveUnknownsJson(unknownsJson)
           filteredMatches.length=0
+          await this.getAlertsActive()
         }
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 1024, 1024)
