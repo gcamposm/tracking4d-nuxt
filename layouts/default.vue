@@ -73,12 +73,20 @@
             <v-list-item-title>Mapa de Calor</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item href="http://localhost:3000/recognize2">
+          <v-list-item-action>
+            <v-icon>_videocam</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Cámara Tracking</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item href="http://localhost:3000/recognize">
           <v-list-item-action>
             <v-icon>_videocam</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Cámara</v-list-item-title>
+            <v-list-item-title>Cámara COVID</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item href="http://localhost:8080/temperature-detection">
@@ -97,6 +105,16 @@
             <v-list-item-title>Alertas de temperatura</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item href="http://localhost:8080/unknown">
+          <v-list-item-action>
+            <v-icon>_help</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Desconocidos</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        
+        
 
       </v-list>
       <v-spacer></v-spacer>
@@ -118,7 +136,7 @@
             color="secondary"
           ></v-switch>
         </v-list-item> -->
-        <v-list-item
+       <!--  <v-list-item
           :active-class="color"
           class="v-list-item"
           exact
@@ -130,11 +148,12 @@
           <v-list-item-title
             v-text="'Ayuda'"
           />
-        </v-list-item>
+        </v-list-item> -->
         <v-list-item
           :active-class="color"
           class="v-list-item"
           exact
+          href="http://localhost:8080/logout"
         >
           <v-list-item-action>
             <v-icon>_exit_to_app</v-icon>
