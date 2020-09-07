@@ -41,7 +41,7 @@
         </v-list-item>
         <v-divider/>
 
-        <v-list-item href="http://tracking4dd.tk/dashboard">
+        <v-list-item href="https://tracking4dd.tk/dashboard">
           <v-list-item-action>
             <v-icon>_insert_chart</v-icon>
           </v-list-item-action>
@@ -49,7 +49,7 @@
             <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="http://tracking4dd.tk/person">
+        <v-list-item href="https://tracking4dd.tk/person">
           <v-list-item-action>
             <v-icon>_supervisor_account</v-icon>
           </v-list-item-action>
@@ -57,7 +57,7 @@
             <v-list-item-title>Personas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="http://tracking4dd.tk/report">
+        <v-list-item href="https://tracking4dd.tk/report">
           <v-list-item-action>
             <v-icon>_library_books</v-icon>
           </v-list-item-action>
@@ -65,7 +65,7 @@
             <v-list-item-title>Reportes</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="http://tracking4dd.tk/heat-map">
+        <v-list-item href="https://tracking4dd.tk/heat-map">
           <v-list-item-action>
             <v-icon>_room</v-icon>
           </v-list-item-action>
@@ -73,15 +73,23 @@
             <v-list-item-title>Mapa de Calor</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="http://camsa.tk/recognize">
+        <v-list-item href="https://camsa.tk/recognize2">
           <v-list-item-action>
             <v-icon>_videocam</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Cámara</v-list-item-title>
+            <v-list-item-title>Cámara Tracking</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="http://tracking4dd.tk/temperature-detection">
+        <v-list-item href="https://camsa.tk/recognize">
+          <v-list-item-action>
+            <v-icon>_videocam</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Cámara COVID</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item href="https://tracking4dd.tk/temperature-detection">
           <v-list-item-action>
             <v-icon>_whatshot</v-icon>
           </v-list-item-action>
@@ -89,7 +97,7 @@
             <v-list-item-title>Detección de temperatura</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="http://tracking4dd.tk/temperature-alert">
+        <v-list-item href="https://tracking4dd.tk/temperature-alert">
           <v-list-item-action>
             <v-icon>_report_problem</v-icon>
           </v-list-item-action>
@@ -97,6 +105,16 @@
             <v-list-item-title>Alertas de temperatura</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item href="https://tracking4dd.tk/unknown">
+          <v-list-item-action>
+            <v-icon>_help</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Desconocidos</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        
+        
 
       </v-list>
       <v-spacer></v-spacer>
@@ -118,7 +136,7 @@
             color="secondary"
           ></v-switch>
         </v-list-item> -->
-        <v-list-item
+       <!--  <v-list-item
           :active-class="color"
           class="v-list-item"
           exact
@@ -130,11 +148,12 @@
           <v-list-item-title
             v-text="'Ayuda'"
           />
-        </v-list-item>
+        </v-list-item> -->
         <v-list-item
           :active-class="color"
           class="v-list-item"
           exact
+          href="https://tracking4dd.tk/logout"
         >
           <v-list-item-action>
             <v-icon>_exit_to_app</v-icon>

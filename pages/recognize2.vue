@@ -7,7 +7,7 @@
   <v-container fluid>
     <center>
       <v-flex>
-        <h1>Reconocimiento Facial - Cámara {{camId}} </h1>
+        <h1>Reconocimiento Facial y Cámara {{camId}} </h1>
       </v-flex>
     </center>
     <v-flex xs12>
@@ -24,7 +24,7 @@
         </v-progress-circular>
       </center>
     </v-flex>
-    <v-flex v-if="!isProgressActive" xs12>
+    <v-flex xs12>
       <v-card>
         <v-card-actions class="justify-center">
           <v-btn-toggle v-model="withOptions" multiple>
@@ -37,7 +37,7 @@
               <span>Puntos Faciales</span>
             </v-btn>
             <v-btn>
-              <v-icon>how_to_reg</v-icon>
+              <v-icon></v-icon>
               <span>Reconocimiento</span>
             </v-btn>
             <v-btn>
@@ -55,35 +55,23 @@
                   thumb-label="always"
                   ticks
         /> -->
-        <p>
-          <v-chip label color="blue" text-color="white">
-            <v-icon left>
-              local_movies
-            </v-icon> FPS: {{ realFps }}
-          </v-chip>
-          <v-chip label color="blue" text-color="white">
-            <v-icon left>
-              timer
-            </v-icon> Duración: {{ duration }} ms
-          </v-chip>
-        </p>
       </v-card>
     </v-flex>
-    <v-flex xs12 md12>
+    <v-flex xs12 md6>
       <video
+        width="512"
+        height="512"
         id="live-video"
-        width="1000"
-        height="580"
         autoplay
         hidden
       />
     </v-flex>
-    <v-flex xs12 md12>
+    <v-flex xs12 md>
       <center>
         <canvas
           id="live-canvas"
-          width="1000"
-          height="580"
+          width="1024"
+          height="1024"
         />
       </center>
     </v-flex>
@@ -109,10 +97,11 @@ export default {
       isProgressActive: true,
       recognition: '',
       withOptions: [0, 1, 2, 3],
-      camId: 2,
+      camId: 1,
     }
   },
-
+  async created () {
+  },
   computed: {
     ...mapState([
     ]),
@@ -138,7 +127,6 @@ export default {
     await this.getFaces()
       .then(() => self.$store.dispatch('face/getFaceMatcher'))
   },
-
   async mounted () {
     await this.recognize()
   },
@@ -151,6 +139,13 @@ export default {
   },
 
   methods: {
+    /* Alert Stuffs */
+
+    hideDialog () {
+      this.dialog = false
+      this.idSelectedUser = null
+    },
+    /* Face Stuffs */
     async getFaces (){
           await axios
           .get(`${this.serverURL}/images/getAllFaces`)
@@ -177,51 +172,58 @@ export default {
             console.log(e, e.response)
           })
     },
-    async saveUnknowns (unknownList){
+    async saveUnknownsJson (unknownList){
       unknownList.forEach(unknown => {
-        this.saveUnknown(unknown)
+        let formData = new FormData()
+          formData.append('descriptors', unknown.descriptors)
+          formData.append('photoUnknown', unknown.photo)
+          console.log("unknownphoto")
+          console.log(unknown.photo)
+          this.saveUnknownsJsonAux(formData)
       });
     },
-    async saveUnknown (unknown){
-      let formData = new FormData()
-          formData.append('unknown', unknown)
-          formData.append('cameraId', this.camId)
-          await axios
-          .post(`${this.serverURL}/detections/saveUnknown`, formData)
+    async saveUnknownsJsonAux(formData){
+      await axios
+          .post(`${this.serverURL}/persons/createUnknown`, formData)
           .then(response => {
             // mensaje
+            this.$store.dispatch('face/editFaces', response.data)
             console.log('unknown saved')
           })
           .catch(e => {
             console.log(e, e.response)
           })
     },
+    /* Camera Stuffs */
     start (videoDiv, canvasDiv, canvasCtx, fps) {
       const self = this
       if (self.interval) {
         clearInterval(self.interval)
       }
       var matchList = []
-      var unknownList = []
+      var unknownsJson = []
       self.interval = setInterval(async () => {
         var today = new Date();
         var h = today.getHours();
         var m = today.getMinutes();
         var second = today.getSeconds();
-        if(second == "0"){
+        if((parseInt(second) % 4) == 0){
+        //if(true){
           let filteredMatches = [...new Set(matchList)];
-          this.saveMatches(filteredMatches)
-          this.saveUnknowns(unknownList)
+          await this.saveMatches(filteredMatches)
+          await this.saveUnknownsJson(unknownsJson)
           filteredMatches.length=0
         }
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 1000, 580)
+        canvasCtx.drawImage(videoDiv, 0, 0, 800, 500)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,
           descriptorsEnabled: self.withOptions.find(o => o === 2) === 2,
           expressionsEnabled: self.withOptions.find(o => o === 3) === 3
         }
+        const content = canvasDiv.toDataURL('image/jpeg')
+        const photoUnknown = content.split(',')[1]
         const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: canvasDiv, options })
         if (detections.length) {
           if (self.isProgressActive) {
@@ -259,10 +261,11 @@ export default {
               this.realEmotion = 'Sorprendido'
             }
             detection.recognition = await self.$store.dispatch('face/recognize', {
+              photoUnknown,
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownList,
+              unknownsJson
             })
             self.$store.dispatch('face/draw',
               {
@@ -300,3 +303,4 @@ export default {
   }
 }
 </script>
+

@@ -7,7 +7,11 @@
   <v-container fluid>
     <center>
       <v-flex>
-        <h1>Reconocimiento Facial - Cámara {{camId}} </h1>
+        <h1>Reconocimiento Facial y Temperatura </h1>
+        <v-btn outlined @click="soundAlarm()">
+          <v-icon class="mr-3"></v-icon>
+          Alarma
+        </v-btn>
       </v-flex>
     </center>
     <v-flex xs12>
@@ -70,11 +74,29 @@
       <center>
         <canvas
           id="live-canvas"
-          width="512"
-          height="512"
+          width="1024"
+          height="1024"
         />
       </center>
     </v-flex>
+    <v-dialog v-model="dialogAlarm" persistent max-width="2000" heigth="2000">
+        <v-card color="red">
+          <v-card-title class="headline">
+            Advertencia!
+          </v-card-title>
+          <v-card-text>Se ha detectado una persona con una temperatura mayor a 38ºC</v-card-text>
+
+          <v-card-actions>
+            <v-spacer />
+            <v-btn href="http://localhost:8080/temperature-alert" color="blue" text>
+              Ir al listado de Alertas
+            </v-btn>
+            <v-btn @click="hideDialog()" color="blue" text>
+              Volver a la cámara
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </v-container>
   </v-layout>
 </template>
@@ -85,6 +107,9 @@ import axios from "axios"
 export default {
   data () {
     return {
+      activateAlarm: false,
+      dialogAlarm: false,
+      alarmInterval: null,
       interval: null,
       realEmotion: 'neutral',
       emotion: 0,
@@ -100,7 +125,8 @@ export default {
       camId: 1,
     }
   },
-
+  async created () {
+  },
   computed: {
     ...mapState([
     ]),
@@ -125,15 +151,6 @@ export default {
     const self = this
     await this.getFaces()
       .then(() => self.$store.dispatch('face/getFaceMatcher'))
-    // const faces = await this.getFaces()
-    // if(faces)
-    // {
-    //   self.$store.dispatch('face/getFaceMatcher')
-    // }
-    // else{
-    //   return self.$router.push({ path: `/noFaces` })
-    // }
-      //.then(() => self.$store.dispatch('face/getFaceMatcher'))
   },
   async mounted () {
     await this.recognize()
@@ -147,6 +164,84 @@ export default {
   },
 
   methods: {
+    /* Alert Stuffs */
+    async sendEmailAux(alerts){
+      alerts.forEach(person => {
+        this.sendEmail(person)
+      });
+    },
+    async sendEmail(person){
+      let formData = new FormData()
+      formData.append('user', "guillermo.campos19@gmail.com")
+      formData.append('name', person.firstName)
+      formData.append('mail', person.mail)
+      formData.append('rut', person.rut)
+      formData.append('phone', person.phoneNumber)
+      formData.append('msg', "Debe acercarse al local")
+      formData.append('subject', "Alerta de temperatura")
+      formData.append('mailTo', "guillermo.campos19@gmail.com")
+      await axios
+        .post(`${this.serverURL}/mailAlert/`, formData)
+        .then(async (response) => {
+          console.log("correo enviado con exito")
+          this.deleteAlert(person.rut)
+        })
+        .catch(e => {
+          console.log('error al enviar correo', e, e.response)
+        })
+    },
+      async getAlertsActive () {
+      await axios
+        .get(`${this.serverURL}/matches/activeAlerts/`)
+        .then(response => {
+          const alerts = response.data
+          if (alerts.length !== 0) {
+            console.log('Active alerts founded')
+            this.soundAlarm()
+            this.sendEmailAux(alerts)
+          } else {
+            console.log('There is not active alerts');
+          }
+          
+        }
+          )
+    },
+    async deleteAlert (rut) {
+      await axios
+        .post(`${this.serverURL}/persons/deleteAlert/`+rut)
+        .then(response => {
+          console.log("Alert deleted")
+        }
+      )
+    },
+    hideDialog () {
+      this.dialog = false
+      this.dialogAlarm = false
+      this.idSelectedUser = null
+      this.activateAlarm = false
+      clearInterval(this.alarmInterval)
+    },
+    intervalAlarm(){
+      if(this.activateAlarm){
+        var context = new AudioContext()
+        var o = context.createOscillator()
+        var g = context.createGain()
+        o.connect(g)
+        o.type = "sawtooth"
+        o.frequency.value = 100
+        g.connect(context.destination)
+        o.start(0);
+        g.gain.exponentialRampToValueAtTime(0.000001,context.currentTime+3)
+      }
+    },
+    async soundAlarm () {
+      this.dialogAlarm = true
+      this.activateAlarm = true
+      this.alarmInterval = setInterval(async () => {
+        this.intervalAlarm()
+      }, 1000)
+      
+    },
     /* Face Stuffs */
     async getFaces (){
           await axios
@@ -179,6 +274,8 @@ export default {
         let formData = new FormData()
           formData.append('descriptors', unknown.descriptors)
           formData.append('photoUnknown', unknown.photo)
+          console.log("unknownphoto")
+          console.log(unknown.photo)
           this.saveUnknownsJsonAux(formData)
       });
     },
@@ -213,9 +310,10 @@ export default {
           await this.saveMatches(filteredMatches)
           await this.saveUnknownsJson(unknownsJson)
           filteredMatches.length=0
+          await this.getAlertsActive()
         }
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 1024, 1024)
+        canvasCtx.drawImage(videoDiv, 0, 0, 500, 500)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,
