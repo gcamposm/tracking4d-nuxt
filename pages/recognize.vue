@@ -7,7 +7,7 @@
   <v-container fluid>
     <center>
       <v-flex>
-        <h1>Reconocimiento Facial - Cámara {{camId}} </h1>
+        <h1>Reconocimiento Facial y Temperatura </h1>
         <v-btn outlined @click="soundAlarm()">
           <v-icon class="mr-3"></v-icon>
           Alarma
