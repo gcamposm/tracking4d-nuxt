@@ -63,8 +63,8 @@
     </v-flex>
     <v-flex xs12 md6>
       <video
-        width="512"
-        height="512"
+        width="640"
+        height="480"
         id="live-video"
         autoplay
         hidden
@@ -74,8 +74,8 @@
       <center>
         <canvas
           id="live-canvas"
-          width="1024"
-          height="1024"
+          width="640"
+          height="480"
         />
       </center>
     </v-flex>
@@ -292,6 +292,17 @@ export default {
           })
     },
     /* Camera Stuffs */
+    async getDetectionTemperature(formData){
+      await axios
+            .post(`${this.serverURL}/temperatures/detectionTemperature/`, formData)
+            .then(async (response) => {
+              console.log("se obtuvo la temperatura")
+              return response.data
+            })
+            .catch(e => {
+              console.log('error al enviar correo', e, e.response)
+            })
+    },
     start (videoDiv, canvasDiv, canvasCtx, fps) {
       const self = this
       if (self.interval) {
@@ -323,6 +334,19 @@ export default {
         const content = canvasDiv.toDataURL('image/jpeg')
         const photoUnknown = content.split(',')[1]
         const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: canvasDiv, options })
+        detections.forEach(detection => {
+          let formData = new FormData()
+          formData.append('x', detection.detection._box._x)
+          formData.append('y', detection.detection._box._y)
+          formData.append('height', detection.detection._box._height)
+          formData.append('width', detection.detection._box._width)
+
+          console.log("Datos a enviar")
+          console.log(detection.detection._box._x)
+          console.log(detection.detection._box._y)
+          detection.temperature = this.getDetectionTemperature(formData)  
+          //detection.temperature = 38
+        });
         if (detections.length) {
           if (self.isProgressActive) {
             self.increaseProgress()
