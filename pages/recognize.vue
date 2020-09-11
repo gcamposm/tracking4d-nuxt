@@ -113,6 +113,7 @@ export default {
       interval: null,
       realEmotion: 'neutral',
       emotion: 0,
+      tempDetection: 37.5,
       fps: 1,
       realFps: 0,
       step: 2,
@@ -297,7 +298,7 @@ export default {
             .post(`${this.serverURL}/temperatures/getDetectionTemperature`, formData)
             .then(async (response) => {
               console.log("se obtuvo la temperatura")
-              return response.data
+              this.tempDetection = response.data
             })
             .catch(e => {
               console.log('error al enviar correo', e, e.response)
@@ -344,7 +345,8 @@ export default {
           console.log("Datos a enviar")
           console.log(detection.detection._box._x | 0)
           console.log(detection.detection._box._y| 0)
-          detection.temperature = this.getDetectionTemperature(formData)  
+          this.getDetectionTemperature(formData)
+          detection.temperature = this.tempDetection
           //detection.temperature = 38
         });
         if (detections.length) {
