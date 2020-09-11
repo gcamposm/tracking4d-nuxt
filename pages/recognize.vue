@@ -336,14 +336,14 @@ export default {
         const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: canvasDiv, options })
         detections.forEach(detection => {
           let formData = new FormData()
-          formData.append('x', detection.detection._box._x)
-          formData.append('y', detection.detection._box._y)
-          formData.append('height', detection.detection._box._height)
-          formData.append('width', detection.detection._box._width)
+          formData.append('x', detection.detection._box._x | 0)
+          formData.append('y', detection.detection._box._y | 0)
+          formData.append('height', detection.detection._box._height | 0)
+          formData.append('width', detection.detection._box._width | 0)
 
           console.log("Datos a enviar")
-          console.log(detection.detection._box._x)
-          console.log(detection.detection._box._y)
+          console.log(detection.detection._box._x | 0)
+          console.log(detection.detection._box._y| 0)
           detection.temperature = this.getDetectionTemperature(formData)  
           //detection.temperature = 38
         });
