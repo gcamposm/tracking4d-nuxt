@@ -293,6 +293,9 @@ export default {
           })
     },
     /* Camera Stuffs */
+    async getDetectionTemperatureAux(formData){
+      await this.getDetectionTemperature(formData)
+    },
     async getDetectionTemperature(formData){
       await axios
             .post(`${this.serverURL}/temperatures/getDetectionTemperature`, formData)
@@ -345,7 +348,7 @@ export default {
           console.log("Datos a enviar")
           console.log(detection.detection._box._x | 0)
           console.log(detection.detection._box._y| 0)
-          this.getDetectionTemperature(formData)
+          this.getDetectionTemperatureAux(formData)
           detection.temperature = this.tempDetection
           //detection.temperature = 38
         });
