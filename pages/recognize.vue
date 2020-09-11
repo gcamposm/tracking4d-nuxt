@@ -88,7 +88,7 @@
 
           <v-card-actions>
             <v-spacer />
-            <v-btn href="http://localhost:8080/temperature-alert" color="blue" text>
+            <v-btn href="https://tracking4dd.tk/temperature-alert" color="blue" text>
               Ir al listado de Alertas
             </v-btn>
             <v-btn @click="hideDialog()" color="blue" text>
