@@ -294,7 +294,7 @@ export default {
     /* Camera Stuffs */
     async getDetectionTemperature(formData){
       await axios
-            .post(`${this.serverURL}/temperatures/detectionTemperature/`, formData)
+            .post(`${this.serverURL}/temperatures/getDetectionTemperature`, formData)
             .then(async (response) => {
               console.log("se obtuvo la temperatura")
               return response.data
