@@ -7,7 +7,7 @@
   <v-container fluid>
     <center>
       <v-flex>
-        <h1>Reconocimiento Facial y Cámara {{camId}} </h1>
+        <h1>Reconocimiento Facial - Cámara {{camId}} </h1>
       </v-flex>
     </center>
     <v-flex xs12>
@@ -267,7 +267,7 @@ export default {
               matchList,
               unknownsJson
             })
-            self.$store.dispatch('face/draw',
+            self.$store.dispatch('face/drawWithoutTemp',
               {
                 canvasDiv,
                 canvasCtx,
