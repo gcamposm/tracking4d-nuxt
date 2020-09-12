@@ -141,7 +141,7 @@ export const actions = {
     // filter only emontions above confidence treshold and exclude 'neutral'
     if (options.expressionsEnabled && detection.expressions) {
       for (const expr in detection.expressions) {
-        if (detection.expressions[expr] > state.expressions.minConfidence && expr !== 'neutral') {
+        if (detection.expressions[expr] > state.expressions.minConfidence && expr !== 'neutral' && false) {
           emotions += ` ${expr} &`
         }
       }
@@ -193,7 +193,7 @@ export const actions = {
     // filter only emontions above confidence treshold and exclude 'neutral'
     if (options.expressionsEnabled && detection.expressions) {
       for (const expr in detection.expressions) {
-        if (detection.expressions[expr] > state.expressions.minConfidence && expr !== 'neutral') {
+        if (detection.expressions[expr] > state.expressions.minConfidence && expr !== 'neutral' && false) {
           emotions += ` ${expr} &`
         }
       }
