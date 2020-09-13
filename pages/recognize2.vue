@@ -173,26 +173,25 @@ export default {
           })
     },
     async saveUnknownsJson (unknownList){
-      unknownList.forEach(unknown => {
-        let formData = new FormData()
-          formData.append('descriptors', unknown.descriptors)
-          formData.append('photoUnknown', unknown.photo)
-          console.log("unknownphoto")
-          console.log(unknown.photo)
-          this.saveUnknownsJsonAux(formData)
-      });
+      var unknown = unknownList[0]
+      let formData = new FormData()
+      formData.append('descriptors', unknown.descriptors)
+      formData.append('photoUnknown', unknown.photo)
+      console.log("unknownphoto")
+      console.log(unknown.photo)
+      this.saveUnknownsJsonAux(formData)
     },
     async saveUnknownsJsonAux(formData){
       await axios
-          .post(`${this.serverURL}/persons/createUnknown`, formData)
-          .then(response => {
-            // mensaje
-            this.$store.dispatch('face/editFaces', response.data)
-            console.log('unknown saved')
-          })
-          .catch(e => {
-            console.log(e, e.response)
-          })
+        .post(`${this.serverURL}/persons/createUnknown`, formData)
+        .then(response => {
+          // mensaje
+          this.$store.dispatch('face/editFaces', response.data)
+          console.log('unknown saved')
+        })
+        .catch(e => {
+          console.log(e, e.response)
+        })
     },
     /* Camera Stuffs */
     start (videoDiv, canvasDiv, canvasCtx, fps) {
@@ -207,12 +206,14 @@ export default {
         var h = today.getHours();
         var m = today.getMinutes();
         var second = today.getSeconds();
+        let filteredMatches = [...new Set(matchList)];
+        await this.saveMatches(filteredMatches)
+        filteredMatches.length=0
         if((parseInt(second) % 4) == 0){
-        //if(true){
-          let filteredMatches = [...new Set(matchList)];
-          await this.saveMatches(filteredMatches)
           await this.saveUnknownsJson(unknownsJson)
-          filteredMatches.length=0
+          unknownsJson.length=0
+          await this.getFaces()
+            .then(() => self.$store.dispatch('face/getFaceMatcher'))
         }
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 800, 500)
