@@ -210,7 +210,7 @@ export const actions = {
       canvasCtx.fillStyle = state.detections.textColor
       canvasCtx.font = state.detections.fontSize + 'px ' + state.detections.fontStyle
       canvasCtx.fillText(text, box.x + padText, box.y + box.height + padText + (state.detections.fontSize * -0.2))
-      canvasCtx.fillText(detection.temperature+'º', box.x + padText, box.y + padText + (state.detections.fontSize * -0.6))
+      //canvasCtx.fillText(detection.temperature+'º', box.x + padText, box.y + padText + (state.detections.fontSize * -0.6))
     }
 
     if (options.landmarksEnabled && detection.landmarks) {
