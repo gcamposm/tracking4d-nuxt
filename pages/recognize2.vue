@@ -158,8 +158,6 @@ export default {
           })
     },
     async saveMatches (filteredMatches){
-      console.log('filteredMatches')
-      console.log(filteredMatches)
       let formData = new FormData()
           formData.append('matches', filteredMatches)
           formData.append('cameraId', 1)
@@ -173,13 +171,16 @@ export default {
           })
     },
     async saveUnknownsJson (unknownList){
-      var unknown = unknownList[0]
-      let formData = new FormData()
-      formData.append('descriptors', unknown.descriptors)
-      formData.append('photoUnknown', unknown.photo)
-      console.log("unknownphoto")
-      console.log(unknown.photo)
-      this.saveUnknownsJsonAux(formData)
+      if(unknownList.length>0)
+      {
+        var unknown = unknownList[0]
+        let formData = new FormData()
+        formData.append('descriptors', unknown.descriptors)
+        formData.append('photoUnknown', unknown.photo)
+        formData.append('temperature', unknown.temperature)
+        formData.append('isTemperature', false)
+        this.saveUnknownsJsonAux(formData)
+      }
     },
     async saveUnknownsJsonAux(formData){
       await axios

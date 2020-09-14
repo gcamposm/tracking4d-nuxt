@@ -271,13 +271,16 @@ export default {
           })
     },
     async saveUnknownsJson (unknownList){
-      var unknown = unknownList[0]
-      let formData = new FormData()
-      formData.append('descriptors', unknown.descriptors)
-      formData.append('photoUnknown', unknown.photo)
-      console.log("unknownphoto")
-      console.log(unknown.photo)
-      this.saveUnknownsJsonAux(formData)
+      if(unknownList.length>0)
+      {
+        var unknown = unknownList[0]
+        let formData = new FormData()
+        formData.append('descriptors', unknown.descriptors)
+        formData.append('photoUnknown', unknown.photo)
+        formData.append('temperature', unknown.temperature)
+        formData.append('isTemperature', false)
+        this.saveUnknownsJsonAux(formData)
+      }
     },
     async saveUnknownsJsonAux(formData){
       await axios
@@ -348,7 +351,6 @@ export default {
           formData.append('width', detection.detection._box._width | 0)
           this.getDetectionTemperatureAux(formData)
           detection.temperature = this.tempDetection
-          //detection.temperature = 38
         });
         if (detections.length) {
           if (self.isProgressActive) {
@@ -385,12 +387,13 @@ export default {
               this.emotion = detection.expressions.surprised
               this.realEmotion = 'Sorprendido'
             }
-            detection.recognition = await self.$store.dispatch('face/recognize', {
+            detection.recognition = await self.$store.dispatch('face/recognizeWithTemp', {
               photoUnknown,
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownsJson
+              unknownsJson,
+              temperature: detection.temperature
             })
             self.$store.dispatch('face/draw',
               {
