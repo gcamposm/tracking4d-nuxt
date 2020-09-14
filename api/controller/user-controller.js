@@ -16,7 +16,7 @@ const userRoutes = express.Router()
 
 userRoutes.post("/delete", async(req, res) => {
   await axios
-    .delete(`http://localhost:8443/persons/delete/byRut/` + req.body.rut)
+    .delete(`https://tracking4dd.tk:8443/persons/delete/byRut/` + req.body.rut)
     .then(response => {
       console.log('delete person with rut ' + req.body.rut)
     })
