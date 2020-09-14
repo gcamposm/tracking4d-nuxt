@@ -209,7 +209,7 @@ export const actions = {
       const padText = 2 + state.detections.lineWidth
       canvasCtx.fillStyle = state.detections.textColor
       canvasCtx.font = state.detections.fontSize + 'px ' + state.detections.fontStyle
-      canvasCtx.fillText(text, box.x + padText, box.y + box.height + padText + (state.detections.fontSize * 0.6))
+      canvasCtx.fillText(text, box.x + padText, box.y + box.height + padText + (state.detections.fontSize * -0.2))
       canvasCtx.fillText(detection.temperature+'º', box.x + padText, box.y + padText + (state.detections.fontSize * -0.6))
     }
 
@@ -261,7 +261,7 @@ export const actions = {
       const padText = 2 + state.detections.lineWidth
       canvasCtx.fillStyle = state.detections.textColor
       canvasCtx.font = state.detections.fontSize + 'px ' + state.detections.fontStyle
-      canvasCtx.fillText(text, box.x + padText, box.y + box.height + padText + (state.detections.fontSize * 0.6))
+      canvasCtx.fillText(text, box.x + padText, box.y + box.height + padText + (state.detections.fontSize * -0.2))
     }
 
     if (options.landmarksEnabled && detection.landmarks) {

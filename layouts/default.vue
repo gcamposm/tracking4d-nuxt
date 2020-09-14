@@ -12,6 +12,7 @@
       <v-icon>warning</v-icon>
     </v-badge> 
     </v-btn>
+    <h2 class="toolbarTitle"> Usuario:  - Nombre lugar</h2>
     </v-app-bar>
       <v-navigation-drawer
   id="app-drawer"
@@ -269,3 +270,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.toolbarTitle{
+    margin-left: 10%;
+  }
+
+</style>
