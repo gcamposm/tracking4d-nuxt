@@ -1,7 +1,11 @@
 import * as faceapi from 'face-api.js'
 import { FaceExpressions } from 'face-api.js'
+import axios from "axios"
 
 export const state = () => ({
+  serverURL: 'http://localhost:8441',
+  //serverURL: 'https://tracking4dd.tk:8443',
+
   facesBackend: [],
   loading: false,
   loaded: false,
@@ -122,6 +126,7 @@ export const actions = {
         const unknown = {}
         unknown.descriptors = descriptor
         unknown.photo = photoUnknown
+        unknown.temperature = 0
         unknownsJson.push(unknown)
       }
       else{
@@ -132,8 +137,40 @@ export const actions = {
     return null
   },
 
+  async recognizeWithTemp({ commit, state, dispatch }, { photoUnknown, descriptor, options, matchList, unknownsJson, temperature }) {
+    if (options.descriptorsEnabled) {
+      const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
+      if (bestMatch._label === "unknown") {
+        const unknown = {}
+        unknown.descriptors = descriptor
+        unknown.photo = photoUnknown
+        unknown.temperature = temperature
+        unknownsJson.push(unknown)
+      }
+      else {
+        await dispatch('updateTemperature', { rut: bestMatch._label, temperature })
+        matchList.push(bestMatch._label)
+      }
+      return bestMatch
+    }
+    return null
+  },
+
   saveUnknowns({ state }, { unknownList }) {
     unknownList.length = 0
+  },
+  async updateTemperature({ state }, {rut, temperature}) {
+    let formData = new FormData()
+    formData.append('rut', rut)
+    formData.append('temperature', temperature)
+    await axios
+      .post(`${state.serverURL}/persons/updateTemperature`, formData)
+      .then(response => {
+        console.log('temperature updated')
+      })
+      .catch(e => {
+        console.log(e, e.response)
+      })
   },
 
   draw ({ commit, state }, { canvasDiv, canvasCtx, detection, options }) {

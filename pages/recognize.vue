@@ -271,14 +271,16 @@ export default {
           })
     },
     async saveUnknownsJson (unknownList){
-      unknownList.forEach(unknown => {
+      if(unknownList.length>0)
+      {
+        var unknown = unknownList[0]
         let formData = new FormData()
-          formData.append('descriptors', unknown.descriptors)
-          formData.append('photoUnknown', unknown.photo)
-          console.log("unknownphoto")
-          console.log(unknown.photo)
-          this.saveUnknownsJsonAux(formData)
-      });
+        formData.append('descriptors', unknown.descriptors)
+        formData.append('photoUnknown', unknown.photo)
+        formData.append('temperature', unknown.temperature)
+        formData.append('isTemperature', false)
+        this.saveUnknownsJsonAux(formData)
+      }
     },
     async saveUnknownsJsonAux(formData){
       await axios
@@ -319,12 +321,15 @@ export default {
         var h = today.getHours();
         var m = today.getMinutes();
         var second = today.getSeconds();
+        let filteredMatches = [...new Set(matchList)];
+        await this.saveMatches(filteredMatches)
+        filteredMatches.length=0
         if((parseInt(second) % 4) == 0){
         //if(true){
-          let filteredMatches = [...new Set(matchList)];
-          await this.saveMatches(filteredMatches)
           await this.saveUnknownsJson(unknownsJson)
-          filteredMatches.length=0
+          unknownsJson.length=0
+          await this.getFaces()
+            .then(() => self.$store.dispatch('face/getFaceMatcher'))
           await this.getAlertsActive()
         }
         const t0 = performance.now()
@@ -344,13 +349,8 @@ export default {
           formData.append('y', detection.detection._box._y | 0)
           formData.append('height', detection.detection._box._height | 0)
           formData.append('width', detection.detection._box._width | 0)
-
-          console.log("Datos a enviar")
-          console.log(detection.detection._box._x | 0)
-          console.log(detection.detection._box._y| 0)
           this.getDetectionTemperatureAux(formData)
           detection.temperature = this.tempDetection
-          //detection.temperature = 38
         });
         if (detections.length) {
           if (self.isProgressActive) {
@@ -387,12 +387,13 @@ export default {
               this.emotion = detection.expressions.surprised
               this.realEmotion = 'Sorprendido'
             }
-            detection.recognition = await self.$store.dispatch('face/recognize', {
+            detection.recognition = await self.$store.dispatch('face/recognizeWithTemp', {
               photoUnknown,
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownsJson
+              unknownsJson,
+              temperature: detection.temperature
             })
             self.$store.dispatch('face/draw',
               {
