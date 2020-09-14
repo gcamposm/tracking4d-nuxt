@@ -3,8 +3,8 @@ import { FaceExpressions } from 'face-api.js'
 import axios from "axios"
 
 export const state = () => ({
-  serverURL: 'http://localhost:8441',
-  //serverURL: 'https://tracking4dd.tk:8443',
+  //serverURL: 'http://localhost:8441',
+  serverURL: 'https://tracking4dd.tk:8443',
 
   facesBackend: [],
   loading: false,
