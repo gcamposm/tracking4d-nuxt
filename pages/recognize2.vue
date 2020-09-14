@@ -40,10 +40,10 @@
               <v-icon></v-icon>
               <span>Reconocimiento</span>
             </v-btn>
-            <v-btn>
+            <!-- <v-btn>
               <v-icon>insert_emoticon</v-icon>
               <span>Emociones</span>
-            </v-btn>
+            </v-btn> -->
           </v-btn-toggle>
         </v-card-actions>
         <!-- <v-slider v-model="fps"
