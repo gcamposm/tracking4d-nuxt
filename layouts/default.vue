@@ -74,7 +74,7 @@
             <v-list-item-title>Mapa de Calor</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://camsa.tk/recognize2">
+        <v-list-item href="https://trackinglite.tk/recognize2">
           <v-list-item-action>
             <v-icon>_videocam</v-icon>
           </v-list-item-action>
@@ -82,7 +82,7 @@
             <v-list-item-title>Cámara Tracking</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item href="https://camsa.tk/recognize">
+        <v-list-item href="https://trackinglite.tk/recognize">
           <v-list-item-action>
             <v-icon>_videocam</v-icon>
           </v-list-item-action>

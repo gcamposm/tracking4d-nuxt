@@ -8,7 +8,7 @@ ADD VERSION .
 ENV NODE_ENV production
 ENV HOST 0.0.0.0
 ENV PORT 3000
-ENV API_URL https://camsa.tk
+ENV API_URL https://trackinglite.tk
 
 # Install packages & git clone source code and build the application
 RUN apk add --update --no-cache --virtual .build-deps \
