@@ -65,8 +65,8 @@
   <v-flex class="paddVideo">
     <center>
       <video
-        width="960"
-        height="720"
+        width="640"
+        height="480"
         id="live-video"
         autoplay
         hidden
@@ -75,8 +75,8 @@
 
         <canvas
           id="live-canvas"
-          width="960"
-          height="720"
+          width="640"
+          height="480"
         />
       </center>
     </v-flex>
@@ -321,7 +321,7 @@ export default {
       }
       self.interval = setInterval(async () => {
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 1000, 1000)
+        canvasCtx.drawImage(videoDiv, 0, 0, 800, 800)
         const t1 = performance.now()
         self.duration = (t1 - t0).toFixed(2)
         self.realFps = (1000 / (t1 - t0)).toFixed(2)
