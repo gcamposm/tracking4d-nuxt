@@ -46,15 +46,15 @@
             </v-btn> -->
           </v-btn-toggle>
         </v-card-actions>
-        <!-- <v-slider v-model="fps"
-                  :max="60"
-                  :min="1"
-                  :step="1"
-                  label="FPS"
-                  prepend-icon="local_movies"
-                  thumb-label="always"
-                  ticks
-        /> -->
+        <v-flex xl3 md3 xs3>
+          <v-text-field
+          v-model="fpsToRefresh"
+          label="FPS"
+          type="number"
+          autocomplete="off"
+          required
+        />
+        </v-flex>
       </v-card>
     </v-flex>
     <v-flex xs12 md6>
@@ -98,6 +98,7 @@ export default {
       recognition: '',
       withOptions: [0, 1, 2, 3],
       camId: 1,
+      fpsToRefresh:1
     }
   },
   async created () {
@@ -118,8 +119,9 @@ export default {
       const videoDiv = document.getElementById('live-video')
       const canvasDiv = document.getElementById('live-canvas')
       const canvasCtx = canvasDiv.getContext('2d')
-      this.start(videoDiv, canvasDiv, canvasCtx, newFps)
-      this.refresh(videoDiv, canvasDiv, canvasCtx, 120)
+      //this.start(videoDiv, canvasDiv, canvasCtx, newFps)
+      this.start(videoDiv, canvasDiv, canvasCtx, this.fpsToRefresh)
+      //this.refresh(videoDiv, canvasDiv, canvasCtx, this.fpsToRefresh)
     }
   },
 
