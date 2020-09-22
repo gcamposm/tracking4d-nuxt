@@ -61,9 +61,9 @@
         /> -->
       </v-card>
     </v-flex>
-    <br>
-    <br>
-    <v-flex xs12 md6>
+    <br><br><br>
+  <v-flex class="paddVideo">
+    <center>
       <video
         width="640"
         height="480"
@@ -71,9 +71,8 @@
         autoplay
         hidden
       />
-    </v-flex>
-    <v-flex xs12 md>
-      <center>
+
+
         <canvas
           id="live-canvas"
           width="640"
@@ -81,6 +80,9 @@
         />
       </center>
     </v-flex>
+
+
+
     <v-dialog v-model="dialogAlarm" persistent max-width="2000" heigth="2000">
         <v-card color="red">
           <v-card-title class="headline">
@@ -447,4 +449,12 @@ export default {
   }
 }
 </script>
+
+<style>
+
+.paddVideo{
+  margin-left: 10% !important;
+}
+  
+</style>
 
