@@ -65,8 +65,8 @@
   <v-flex class="paddVideo">
     <center>
       <video
-        width="800"
-        height="600"
+        width="640"
+        height="480"
         id="live-video"
         autoplay
         hidden
@@ -75,8 +75,8 @@
 
         <canvas
           id="live-canvas"
-          width="800"
-          height="600"
+          width="640"
+          height="480"
         />
       </center>
     </v-flex>
@@ -321,7 +321,7 @@ export default {
       }
       self.interval = setInterval(async () => {
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 700, 700)
+        canvasCtx.drawImage(videoDiv, 0, 0, 800, 800)
         const t1 = performance.now()
         self.duration = (t1 - t0).toFixed(2)
         self.realFps = (1000 / (t1 - t0)).toFixed(2)
@@ -351,7 +351,7 @@ export default {
         }
         await this.getAlertsActive()
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 150, 750, 750)
+        canvasCtx.drawImage(videoDiv, 0, 0, 800, 800)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,
