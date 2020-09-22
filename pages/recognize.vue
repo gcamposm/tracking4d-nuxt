@@ -145,7 +145,7 @@ export default {
       const canvasDiv = document.getElementById('live-canvas')
       const canvasCtx = canvasDiv.getContext('2d')
       this.start(videoDiv, canvasDiv, canvasCtx, newFps)
-      this.refresh(videoDiv, canvasDiv, canvasCtx, 60)
+      //this.refresh(videoDiv, canvasDiv, canvasCtx, 60)
     }
   },
 
