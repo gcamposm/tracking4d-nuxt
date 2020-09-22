@@ -145,6 +145,7 @@ export default {
       const canvasDiv = document.getElementById('live-canvas')
       const canvasCtx = canvasDiv.getContext('2d')
       this.start(videoDiv, canvasDiv, canvasCtx, newFps)
+      this.refresh(videoDiv, canvasDiv, canvasCtx, 60)
     }
   },
 
@@ -308,6 +309,19 @@ export default {
             .catch(e => {
               console.log('error al enviar correo', e, e.response)
             })
+    },
+    refresh (videoDiv, canvasDiv, canvasCtx, fps) {
+      const self = this
+      if (self.interval) {
+        clearInterval(self.interval)
+      }
+      self.interval = setInterval(async () => {
+        const t0 = performance.now()
+        canvasCtx.drawImage(videoDiv, 0, 0, 800, 500)
+        const t1 = performance.now()
+        self.duration = (t1 - t0).toFixed(2)
+        self.realFps = (1000 / (t1 - t0)).toFixed(2)
+      }, 1000 / fps)
     },
     start (videoDiv, canvasDiv, canvasCtx, fps) {
       const self = this
