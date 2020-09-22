@@ -157,14 +157,19 @@ export default {
             console.log(e, e.response)
           })
     },
-    async saveMatches (filteredMatches){
-      let formData = new FormData()
-          formData.append('matches', filteredMatches)
-          formData.append('cameraId', 1)
+    async saveMatchesAux (matches){
+      matches.forEach(match => {
+        let formData = new FormData()
+          formData.append('rut', match.rut)
+          formData.append('cameraId', match.camId)
+          this.saveMatches(formData)
+      });
+    },
+    async saveMatches (formData){
           await axios
-          .post(`${this.serverURL}/matches/create/withFilteredMatches`, formData)
+          .post(`${this.serverURL}/matches/create/withMatch`, formData)
           .then(response => {
-            console.log('matches saved')
+            console.log('match saved')
           })
           .catch(e => {
             console.log(e, e.response)
@@ -181,6 +186,20 @@ export default {
         formData.append('isTemperature', false)
         this.saveUnknownsJsonAux(formData)
       }
+    },
+    async getDetectionCameraAux(formData){
+      await this.getDetectionCamera(formData)
+    },
+    async getDetectionCamera(formData){
+      await axios
+            .post(`${this.serverURL}/cameras/getDetectionCamWithSplitCam4`, formData)
+            .then(async (response) => {
+              console.log("se obtuvo la cam")
+              this.camId = response.data
+            })
+            .catch(e => {
+              console.log('error al detectar la cam', e, e.response)
+            })
     },
     async saveUnknownsJsonAux(formData){
       await axios
@@ -207,9 +226,9 @@ export default {
         var h = today.getHours();
         var m = today.getMinutes();
         var second = today.getSeconds();
-        let filteredMatches = [...new Set(matchList)];
-        await this.saveMatches(filteredMatches)
-        filteredMatches.length=0
+        //let filteredMatches = [...new Set(matchList)];
+        await this.saveMatchesAux(matchList)
+        //filteredMatches.length=0
         if((parseInt(second) % 4) == 0){
           await this.saveUnknownsJson(unknownsJson)
           unknownsJson.length=0
@@ -227,6 +246,15 @@ export default {
         const content = canvasDiv.toDataURL('image/jpeg')
         const photoUnknown = content.split(',')[1]
         const detections = await self.$store.dispatch('face/getFaceDetections', { canvas: canvasDiv, options })
+        detections.forEach(detection => {
+          let formData = new FormData()
+          formData.append('x', detection.detection._box._x | 0)
+          formData.append('y', detection.detection._box._y | 0)
+          formData.append('height', detection.detection._box._height | 0)
+          formData.append('width', detection.detection._box._width | 0)
+          this.getDetectionCameraAux(formData)
+          detection.cam = this.camId
+        });
         if (detections.length) {
           if (self.isProgressActive) {
             self.increaseProgress()
@@ -267,7 +295,8 @@ export default {
               descriptor: detection.descriptor,
               options,
               matchList,
-              unknownsJson
+              unknownsJson,
+              camId: detection.cam
             })
             self.$store.dispatch('face/drawWithoutTemp',
               {
