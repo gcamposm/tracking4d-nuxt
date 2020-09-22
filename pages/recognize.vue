@@ -61,6 +61,8 @@
         /> -->
       </v-card>
     </v-flex>
+    <br>
+    <br>
     <v-flex xs12 md6>
       <video
         width="640"
@@ -317,7 +319,7 @@ export default {
       }
       self.interval = setInterval(async () => {
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 800, 500)
+        canvasCtx.drawImage(videoDiv, 0, 0, 700, 700)
         const t1 = performance.now()
         self.duration = (t1 - t0).toFixed(2)
         self.realFps = (1000 / (t1 - t0)).toFixed(2)
