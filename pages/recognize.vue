@@ -453,7 +453,7 @@ export default {
 <style>
 
 .paddVideo{
-  margin-left: 15% !important;
+  margin-left: 10% !important;
 }
   
 </style>
