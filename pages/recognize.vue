@@ -61,12 +61,12 @@
         /> -->
       </v-card>
     </v-flex>
-    <br><br><br>
+    <br><br>
   <v-flex class="paddVideo">
     <center>
       <video
-        width="1200"
-        height="900"
+        width="640"
+        height="480"
         id="live-video"
         autoplay
         hidden
@@ -75,8 +75,8 @@
 
         <canvas
           id="live-canvas"
-          width="1200"
-          height="900"
+          width="640"
+          height="480"
         />
       </center>
     </v-flex>
@@ -149,7 +149,7 @@ export default {
       const canvasDiv = document.getElementById('live-canvas')
       const canvasCtx = canvasDiv.getContext('2d')
       this.start(videoDiv, canvasDiv, canvasCtx, newFps)
-      //this.refresh(videoDiv, canvasDiv, canvasCtx, 60)
+      this.refresh(videoDiv, canvasDiv, canvasCtx, 120)
     }
   },
 
