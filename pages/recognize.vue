@@ -65,8 +65,8 @@
   <v-flex class="paddVideo">
     <center>
       <video
-        width="640"
-        height="480"
+        width="960"
+        height="720"
         id="live-video"
         autoplay
         hidden
@@ -75,8 +75,8 @@
 
         <canvas
           id="live-canvas"
-          width="640"
-          height="480"
+          width="960"
+          height="720"
         />
       </center>
     </v-flex>
@@ -351,7 +351,7 @@ export default {
         }
         await this.getAlertsActive()
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 800, 800)
+        canvasCtx.drawImage(videoDiv, 0, 100, 700, 700)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,
