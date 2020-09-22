@@ -351,7 +351,7 @@ export default {
         }
         await this.getAlertsActive()
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 100, 700, 700)
+        canvasCtx.drawImage(videoDiv, 0, 0, 800, 500)
         const options = {
           detectionsEnabled: self.withOptions.find(o => o === 0) === 0,
           landmarksEnabled: self.withOptions.find(o => o === 1) === 1,
