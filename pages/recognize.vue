@@ -321,7 +321,7 @@ export default {
       }
       self.interval = setInterval(async () => {
         const t0 = performance.now()
-        canvasCtx.drawImage(videoDiv, 0, 0, 800, 800)
+        canvasCtx.drawImage(videoDiv, 0, 0, 1000, 1000)
         const t1 = performance.now()
         self.duration = (t1 - t0).toFixed(2)
         self.realFps = (1000 / (t1 - t0)).toFixed(2)
