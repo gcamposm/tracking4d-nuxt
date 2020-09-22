@@ -253,7 +253,7 @@ export default {
   methods: {
     async getAlerts() {
       await axios
-        .get(`${this.serverURL}/matches/alerts/`)
+        .get(`${this.serverURL}/alerts/`)
         .then(response => {
           const alerts = response.data
           if (alerts.length !== 0) {
