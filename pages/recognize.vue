@@ -193,7 +193,7 @@ export default {
     },
       async getAlertsActive () {
       await axios
-        .get(`${this.serverURL}/matches/activeAlerts/`)
+        .get(`${this.serverURL}/alerts/get/active`)
         .then(response => {
           const alerts = response.data
           if (alerts.length !== 0) {
@@ -330,8 +330,8 @@ export default {
           unknownsJson.length=0
           await this.getFaces()
             .then(() => self.$store.dispatch('face/getFaceMatcher'))
-          await this.getAlertsActive()
         }
+        await this.getAlertsActive()
         const t0 = performance.now()
         canvasCtx.drawImage(videoDiv, 0, 0, 500, 500)
         const options = {
