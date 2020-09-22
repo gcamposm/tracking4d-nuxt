@@ -65,8 +65,8 @@
   <v-flex class="paddVideo">
     <center>
       <video
-        width="960"
-        height="720"
+        width="640"
+        height="480"
         id="live-video"
         autoplay
         hidden
@@ -75,8 +75,8 @@
 
         <canvas
           id="live-canvas"
-          width="960"
-          height="720"
+          width="640"
+          height="480"
         />
       </center>
     </v-flex>
