@@ -95,7 +95,7 @@
             <v-icon>_whatshot</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Detección de temperatura</v-list-item-title>
+            <v-list-item-title>Reportes de temperatura</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item href="https://tracking4dd.tk/temperature-alert">
@@ -223,7 +223,7 @@ export default {
         { icon: 'fas fa-book-open', title: 'Reportes', to: '/report' },
         { icon: 'fas fa-map', title: 'Mapa de calor', to: '/heat-map' },
         { icon: 'fas fa-eye', title: 'Cámara', to: '/facial-recognition' },
-        { icon: 'fas fa-thermometer', title: 'Detección de temperatura', to: '/temperature-detection' },
+        { icon: 'fas fa-thermometer', title: 'Reportes de temperatura', to: '/temperature-detection' },
         { icon: 'fas fa-exclamation-triangle', title: 'Alertas de temperatura', to: '/temperature-alert' }
       ],
       miniVariant: false,
