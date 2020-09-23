@@ -17,7 +17,7 @@ RUN apk add --update --no-cache --virtual .build-deps \
   --repository http://nl.alpinelinux.org/alpine/edge/testing/ \
   --repository http://nl.alpinelinux.org/alpine/edge/main && \
   cd / && \
-  git clone https://github.com/gcamposg/tracking4d-nuxt.git && \
+  git clone https://github.com/username/tracking4d-nuxt.git && \
   cd /tracking4d-nuxt && \
   npm i pm2 -g && \
   npm i --production && \
