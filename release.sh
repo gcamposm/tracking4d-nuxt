@@ -1,6 +1,6 @@
 set -ex
 # SET THE FOLLOWING VARIABLES
-USERNAME=gcamposg
+USERNAME=username
 IMAGE=tracking4d-nuxt
 
 # ensure we're up to date

@@ -179,14 +179,14 @@ export default {
     },
     async sendEmail(person){
       let formData = new FormData()
-      formData.append('user', "guillermo.campos19@gmail.com")
+      formData.append('user', "mail@example.com")
       formData.append('name', person.firstName)
       formData.append('mail', person.mail)
       formData.append('rut', person.rut)
       formData.append('phone', person.phoneNumber)
       formData.append('msg', "Debe acercarse al local")
       formData.append('subject', "Alerta de temperatura")
-      formData.append('mailTo', "guillermo.campos19@gmail.com")
+      formData.append('mailTo', "mail@example.com")
       await axios
         .post(`${this.serverURL}/mailAlert/`, formData)
         .then(async (response) => {
